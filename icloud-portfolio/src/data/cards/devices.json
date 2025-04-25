@@ -1,0 +1,47 @@
+[
+  {
+    "name": "MacBook Pro M3 Pro",
+    "description": "搭载Apple M3 Pro芯片，提供强大的性能与效率",
+    "image": "https://statici.icloud.com.cn/fmipmobile/deviceImages-9.0/MacBookPro/Mac15,7-spaceblack/online-infobox__2x.png",
+    "tags": [
+      {
+        "name": "Apple",
+        "color": "gray"
+      },
+      {
+        "name": "高性能",
+        "color": "blue"
+      }
+    ]
+  },
+  {
+    "name": "一加 12",
+    "description": "骁龙8 Gen 3处理器，顶级影像系统与超长续航",
+    "image": "https://ocloud-staticfile-cn.heytapimage.com/find/icon/202307/fb7e1411592740babce0ef09c672f952.png",
+    "tags": [
+      {
+        "name": "安卓",
+        "color": "green"
+      },
+      {
+        "name": "旗舰",
+        "color": "red"
+      }
+    ]
+  },
+  {
+    "name": "OPPO Watch 2 26mm",
+    "description": "智能手表，搭载Wear OS，全天健康监测与运动追踪",
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTPvvh1By3CNK8tZhaE-K8J6O3hO1sM4eoPFrTWmPxZ2PtD8C7BzYw7XinB-xQh7m0ijTI&usqp=CAU",
+    "tags": [
+      {
+        "name": "智能手表",
+        "color": "purple"
+      },
+      {
+        "name": "健康",
+        "color": "indigo"
+      }
+    ]
+  }
+]

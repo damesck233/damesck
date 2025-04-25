@@ -1,0 +1,40 @@
+<svg width="800" height="600" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <filter id="blur" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="10" />
+    </filter>
+  </defs>
+  
+  <!-- 背景云朵组 -->
+  <g opacity="0.3" fill="white" filter="url(#blur)">
+    <!-- 大云朵 -->
+    <ellipse cx="200" cy="150" rx="100" ry="60" />
+    <ellipse cx="150" cy="120" rx="70" ry="40" />
+    <ellipse cx="250" cy="130" rx="80" ry="50" />
+    
+    <!-- 中云朵 -->
+    <ellipse cx="500" cy="100" rx="90" ry="50" />
+    <ellipse cx="450" cy="80" rx="60" ry="35" />
+    <ellipse cx="550" cy="90" rx="70" ry="40" />
+    
+    <!-- 小云朵 -->
+    <ellipse cx="350" cy="200" rx="60" ry="30" />
+    <ellipse cx="320" cy="180" rx="40" ry="25" />
+    <ellipse cx="380" cy="190" rx="50" ry="30" />
+    
+    <!-- 右下角云朵 -->
+    <ellipse cx="650" cy="300" rx="80" ry="45" />
+    <ellipse cx="600" cy="280" rx="55" ry="35" />
+    <ellipse cx="690" cy="290" rx="65" ry="40" />
+    
+    <!-- 左下角云朵 -->
+    <ellipse cx="150" cy="400" rx="70" ry="40" />
+    <ellipse cx="100" cy="380" rx="50" ry="30" />
+    <ellipse cx="180" cy="390" rx="60" ry="35" />
+    
+    <!-- 中下云朵 -->
+    <ellipse cx="400" cy="450" rx="90" ry="50" />
+    <ellipse cx="350" cy="430" rx="65" ry="40" />
+    <ellipse cx="450" cy="440" rx="75" ry="45" />
+  </g>
+</svg> 

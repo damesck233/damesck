@@ -1,0 +1,45 @@
+[
+  {
+    "category": "网络设备配置",
+    "color": "blue",
+    "items": [
+      "思科路由器",
+      "思科交换机",
+      "华为防火墙",
+      "华为路由器",
+      "网络架构规划"
+    ]
+  },
+  {
+    "category": "前端开发",
+    "color": "yellow",
+    "items": [
+      "HTML/CSS",
+      "JavaScript",
+      "React",
+      "Vue",
+      "TailwindCSS"
+    ]
+  },
+  {
+    "category": "设计工具",
+    "color": "purple",
+    "items": [
+      "Figma",
+      "Sketch",
+      "Adobe XD",
+      "Photoshop"
+    ]
+  },
+  {
+    "category": "运维技能",
+    "color": "green",
+    "items": [
+      "Linux系统管理",
+      "Shell脚本",
+      "Docker容器",
+      "日志分析",
+      "性能监控"
+    ]
+  }
+]

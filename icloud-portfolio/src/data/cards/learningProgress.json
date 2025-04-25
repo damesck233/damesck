@@ -1,0 +1,32 @@
+[
+  {
+    "name": "Python",
+    "value": "10%",
+    "color": "blue"
+  },
+  {
+    "name": "Rust",
+    "value": "3%",
+    "color": "orange"
+  },
+  {
+    "name": "K8S",
+    "value": "40%",
+    "color": "blue"
+  },
+  {
+    "name": "云计算",
+    "value": "35%",
+    "color": "indigo"
+  },
+  {
+    "name": "前端JS",
+    "value": "20%",
+    "color": "yellow"
+  },
+  {
+    "name": "C1驾驶证",
+    "value": "75%",
+    "color": "green"
+  }
+]
