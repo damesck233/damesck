@@ -18,8 +18,8 @@
       "warranty": "有效期内",
       "condition": "全新",
       "details": [
-        "18英寸 Liquid Retina XDR 显示屏",
-        "M3 Pro 芯片 (12核CPU/18核GPU)",
+        "16英寸 Liquid Retina XDR 显示屏",
+        "M3 Pro 芯片",
         "36GB 统一内存",
         "1TB SSD存储"
       ]
@@ -42,12 +42,12 @@
     "specs": {
       "purchaseDate": "2024年1月",
       "warranty": "过保",
-      "condition": "全新",
+      "condition": "良好",
       "details": [
         "6.82英寸 2K LTPO AMOLED 屏幕",
         "骁龙8 Gen 3 处理器",
         "24GB LPDDR5X RAM",
-        "1TB UFS 4.0存储",
+        "512GB UFS 4.0存储",
         "5400mAh 电池"
       ]
     }
