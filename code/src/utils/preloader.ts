@@ -5,9 +5,35 @@
  */
 export const preloadImage = (src: string): Promise<void> => {
   return new Promise((resolve, reject) => {
+    // 检查是否已经缓存
+    const cachedImage = sessionStorage.getItem(`img_cache_${src}`);
+    if (cachedImage) {
+      console.log(`使用缓存图片: ${src}`);
+      resolve();
+      return;
+    }
+
     const img = new Image();
+
+    // 设置优先级提示
+    if ('fetchPriority' in img) {
+      // @ts-ignore - fetchPriority 是较新的属性
+      img.fetchPriority = 'high';
+    }
+
+    // 添加加载指示
+    img.decoding = 'async';
+
     img.src = src;
-    img.onload = () => resolve();
+    img.onload = () => {
+      try {
+        // 将图片存入会话缓存
+        sessionStorage.setItem(`img_cache_${src}`, 'loaded');
+      } catch (e) {
+        console.warn('缓存图片失败', e);
+      }
+      resolve();
+    };
     img.onerror = () => {
       console.warn(`图片加载失败: ${src}`);
       resolve(); // 即使失败也resolve，不阻止整体流程
@@ -21,8 +47,19 @@ export const preloadImage = (src: string): Promise<void> => {
  * @returns Promise
  */
 export const preloadImages = async (images: string[]): Promise<void> => {
-  const promises = images.map(src => preloadImage(src));
-  await Promise.all(promises);
+  // 分批加载，避免一次性请求过多
+  const batchSize = 3;
+  const batches = [];
+
+  for (let i = 0; i < images.length; i += batchSize) {
+    const batch = images.slice(i, i + batchSize);
+    batches.push(batch);
+  }
+
+  for (const batch of batches) {
+    const promises = batch.map(src => preloadImage(src));
+    await Promise.all(promises);
+  }
 };
 
 /**
@@ -44,7 +81,7 @@ export const delay = (ms: number): Promise<void> => {
  */
 export const preloadResourcesWithMinTime = (
   images: string[],
-  minTimeMs: number = 1000
+  minTimeMs: number = 800
 ): Promise<void> => {
   // 确保参数有效
   if (!Array.isArray(images)) {
@@ -55,33 +92,14 @@ export const preloadResourcesWithMinTime = (
   const startTime = Date.now();
 
   // 创建加载所有图片的Promise
-  const imagePromises = images.map(url => {
-    return new Promise<void>((resolve, reject) => {
-      try {
-        const img = new Image();
-
-        img.onload = () => resolve();
-        img.onerror = () => {
-          console.warn(`图片加载失败: ${url}`);
-          resolve(); // 失败也当作完成，避免阻塞整个加载过程
-        };
-
-        img.src = url;
-      } catch (error) {
-        console.error(`创建图片对象失败: ${url}`, error);
-        resolve(); // 同样避免阻塞
+  return Promise.race([
+    preloadImages(images).then(() => {
+      const loadTime = Date.now() - startTime;
+      if (loadTime < minTimeMs) {
+        return delay(minTimeMs - loadTime);
       }
-    });
-  });
-
-  // 返回结合了图片加载和最短时间等待的Promise
-  return Promise.all([
-    Promise.all(imagePromises),
-    new Promise(resolve => {
-      setTimeout(() => {
-        resolve(undefined);
-      }, minTimeMs);
-    })
+    }),
+    delay(2000) // 设置最大等待时间，避免无限等待
   ]).then(() => {
     const loadTime = Date.now() - startTime;
     console.log(`所有资源预加载完成，耗时 ${loadTime}ms`);

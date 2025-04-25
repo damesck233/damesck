@@ -14,16 +14,31 @@ const containerVariants: Variants = {
 const Loading = () => {
   const [progress, setProgress] = useState(0);
 
-  // 模拟加载进度
+  // 优化模拟加载进度，但保留动画效果
   useEffect(() => {
-    const interval = setInterval(() => {
-      setProgress(prev => {
-        const newProgress = prev + (100 - prev) * 0.08;
-        return newProgress > 99 ? 100 : newProgress;
-      });
-    }, 100);
+    // 使用 requestAnimationFrame 替代 setInterval 提高性能
+    let rafId: number;
+    let startTime = performance.now();
+    const duration = 3000; // 加载动画时长
 
-    return () => clearInterval(interval);
+    const updateProgress = (timestamp: number) => {
+      const elapsed = timestamp - startTime;
+      // 使用缓动函数计算进度，减少计算量
+      const newProgress = Math.min(100, (elapsed / duration) * 100);
+      setProgress(newProgress);
+
+      if (elapsed < duration) {
+        rafId = requestAnimationFrame(updateProgress);
+      }
+    };
+
+    rafId = requestAnimationFrame(updateProgress);
+
+    return () => {
+      if (rafId) {
+        cancelAnimationFrame(rafId);
+      }
+    };
   }, []);
 
   return (
@@ -34,9 +49,9 @@ const Loading = () => {
       animate="animate"
       exit="exit"
     >
-      {/* 简化的背景 */}
+      {/* 简化的背景，但保留一些动画元素 */}
       <div className="absolute inset-0 overflow-hidden">
-        {[...Array(5)].map((_, i) => (
+        {[...Array(3)].map((_, i) => (
           <motion.div
             key={i}
             className="absolute rounded-full bg-white/10"
@@ -50,8 +65,8 @@ const Loading = () => {
             style={{
               width: '100px',
               height: '100px',
-              top: `${20 + i * 15}%`,
-              left: `${10 + i * 20}%`,
+              top: `${20 + i * 20}%`,
+              left: `${10 + i * 30}%`,
             }}
           />
         ))}

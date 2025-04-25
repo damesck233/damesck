@@ -20,11 +20,9 @@ export default {
         }
       },
       backdropBlur: {
-        'xs': '2px',
         'sm': '4px',
         'md': '10px',
         'lg': '15px',
-        'xl': '20px',
       },
       fontFamily: {
         'sf-pro': ['"SF Pro Display"', '"SF Pro Text"', 'system-ui', 'sans-serif'],
@@ -33,6 +31,31 @@ export default {
         'icloud': '0 4px 20px rgba(0, 0, 0, 0.1)',
         'icloud-hover': '0 8px 30px rgba(0, 0, 0, 0.15)',
       },
+      animation: {
+        'spin-slow': 'spin 3s linear infinite',
+        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+        'bounce-slow': 'bounce 3s infinite',
+      },
+    },
+  },
+  corePlugins: {
+    placeholderColor: false,
+    placeholderOpacity: false,
+    ringWidth: false,
+    ringColor: false,
+    ringOpacity: false,
+    ringOffsetWidth: false,
+    ringOffsetColor: false,
+  },
+  variants: {
+    extend: {
+      backgroundColor: ['hover', 'focus'],
+      opacity: ['hover'],
+      scale: ['hover', 'active'],
+      translate: ['hover', 'active'],
+      boxShadow: ['hover', 'focus'],
+      textColor: ['hover', 'focus'],
+      borderColor: ['hover', 'focus'],
     },
   },
   plugins: [],

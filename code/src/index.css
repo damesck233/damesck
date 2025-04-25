@@ -2,60 +2,65 @@
 @tailwind components;
 @tailwind utilities;
 
+/* 添加CSS性能提示，但避免对所有元素使用will-change */
+* {
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+/* 只在需要的地方使用will-change，避免过度使用 */
+.animate-element {
+  transform: translateZ(0);
+  will-change: transform, opacity;
+}
+
 @layer base {
   body {
     @apply font-sf-pro text-gray-800;
     background-attachment: fixed;
+
+    /* 提供平滑滚动，但仅在桌面设备 */
+    @media (min-width: 768px) {
+      scroll-behavior: smooth;
+    }
   }
 }
 
 @layer components {
   .glass-card {
-    @apply bg-white/40 backdrop-blur-md rounded-xl border border-white/40 transition-all duration-200;
+    @apply bg-white/40 backdrop-blur-md rounded-xl border border-white/40 transition-all duration-150;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05),
       0 1px 3px rgba(0, 0, 0, 0.1),
-      inset 0 1px 0 rgba(255, 255, 255, 0.3);
+      inset 0 1px 0 rgba(255, 255, 255, 0.2);
   }
 
   .glass-card:hover {
     @apply bg-white/50 border-white/50;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08),
-      0 2px 6px rgba(0, 0, 0, 0.12),
-      inset 0 1px 0 rgba(255, 255, 255, 0.4);
-    transform: translateY(-3px);
-    transition: all 0.15s ease-out;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+    transform: translateY(-2px);
   }
 
   /* 优化苹果风格的卡片设计 */
   .split-card {
     @apply overflow-hidden rounded-2xl shadow-md border border-white/40;
     background-color: rgba(250, 251, 253, 0.85);
-    box-shadow:
-      0 2px 14px rgba(0, 0, 0, 0.06),
-      0 1px 4px rgba(0, 0, 0, 0.08),
-      inset 0 0 0 0.5px rgba(255, 255, 255, 0.6);
-    transition: all 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
-    transform-origin: center bottom;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06),
+      inset 0 0 0 0.5px rgba(255, 255, 255, 0.5);
+    transition: all 0.2s ease-out;
   }
 
   .split-card:hover {
-    box-shadow:
-      0 6px 20px rgba(0, 0, 0, 0.08),
-      0 2px 8px rgba(0, 0, 0, 0.06),
-      inset 0 0 0 0.5px rgba(255, 255, 255, 0.7);
-    transform: translateY(-3px) scale(1.01);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    transform: translateY(-2px);
   }
 
   .split-card-header {
-    @apply backdrop-blur-md transition-all duration-200;
+    @apply backdrop-blur-md;
     background-color: rgba(238, 246, 253, 0.7);
     height: 80px;
-    padding-top: 14px;
-    padding-bottom: 14px;
+    padding: 14px;
     border-bottom: 1px solid rgba(220, 234, 250, 0.7);
-    box-shadow:
-      inset 0 1px 0 rgba(255, 255, 255, 0.7),
-      0 1px 0 rgba(0, 0, 0, 0.02);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5);
     position: relative;
   }
 
@@ -66,7 +71,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(to bottom, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.05));
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.05));
     pointer-events: none;
   }
 
@@ -75,116 +80,103 @@
     height: calc(100% - 80px);
     padding: 18px;
     position: relative;
-    overflow: hidden;
-  }
-
-  .split-card-body::after {
-    content: "";
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 1px;
-    background: linear-gradient(to right, transparent, rgba(0, 0, 0, 0.05), transparent);
   }
 
   /* 卡片图标容器 */
   .card-icon-container {
-    @apply flex items-center justify-center rounded-full w-10 h-10 transition-all duration-300;
-    box-shadow:
-      0 3px 6px rgba(0, 0, 0, 0.08),
-      0 1px 3px rgba(0, 0, 0, 0.1),
-      inset 0 1px 1px rgba(255, 255, 255, 0.4);
+    @apply flex items-center justify-center rounded-full w-10 h-10;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08),
+      inset 0 1px 1px rgba(255, 255, 255, 0.3);
   }
 
   /* 标签样式优化 */
   .tag {
-    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium transition-all;
-    box-shadow:
-      0 1px 2px rgba(0, 0, 0, 0.04),
-      inset 0 0 0 1px rgba(255, 255, 255, 0.2);
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
   }
 
-  /* 改进亚克力玻璃效果 */
+  /* 亚克力玻璃效果 - 平衡视觉效果和性能 */
   .acrylic-bg {
     position: relative;
     overflow: hidden;
-  }
-
-  .acrylic-bg::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
     background: rgba(255, 255, 255, 0.2);
-    backdrop-filter: blur(15px);
-    -webkit-backdrop-filter: blur(15px);
-    z-index: -1;
+    backdrop-filter: blur(10px);
   }
 
   .nav-link {
     @apply px-3 py-1.5 rounded-full text-white/80 hover:text-white/95 hover:bg-white/15 transition-all duration-150;
-    letter-spacing: 0.01em;
-    backdrop-filter: blur(4px);
+    backdrop-filter: blur(3px);
   }
 
   .nav-link.active {
     @apply bg-white/20 text-white shadow-sm;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05),
-      inset 0 0 0 1px rgba(255, 255, 255, 0.15);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1);
   }
 
-  /* 优化按钮 */
+  /* 优化按钮和输入框 */
   button,
-  a.button {
-    @apply transition-all duration-150 ease-out;
-  }
-
-  /* 优化输入框 */
+  a.button,
   input,
   textarea {
     @apply transition-all duration-150 ease-out;
   }
 
-  /* 滚动条美化 */
-  ::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
-  }
+  /* 滚动条美化 - 只在桌面设备上启用 */
+  @media (min-width: 768px) {
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
 
-  ::-webkit-scrollbar-track {
-    @apply bg-transparent;
-  }
+    ::-webkit-scrollbar-track {
+      @apply bg-transparent;
+    }
 
-  ::-webkit-scrollbar-thumb {
-    @apply bg-white/30 rounded-full hover:bg-white/40;
+    ::-webkit-scrollbar-thumb {
+      @apply bg-white/30 rounded-full hover:bg-white/40;
+    }
   }
 
   /* 数据可视化元素 */
   .progress-bar {
     @apply rounded-full overflow-hidden bg-gray-100/80;
-    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.03);
   }
 
   .progress-bar-fill {
-    @apply h-full rounded-full transition-all duration-700;
+    @apply h-full rounded-full transition-all duration-500;
     background: linear-gradient(to right, #4f8cf6, #62acf8);
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
   }
 
   /* 卡片内容区块 */
   .content-block {
-    @apply rounded-xl p-3 transition-all duration-200;
+    @apply rounded-xl p-3;
     background-color: rgba(245, 247, 250, 0.5);
     border: 1px solid rgba(220, 225, 235, 0.5);
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.01);
   }
 
   .content-block:hover {
     background-color: rgba(245, 247, 250, 0.7);
-    border-color: rgba(220, 225, 235, 0.7);
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.04);
+    border-color: rgba(220, 225, 235, 0.6);
+  }
+
+  /* 减少动画和过渡效果的频率与复杂度 */
+  .reduce-motion {
+    transition: none !important;
+    animation: none !important;
+    transform: none !important;
+  }
+
+  /* 尊重用户的减少动画设置 */
+  @media (prefers-reduced-motion: reduce) {
+
+    *,
+    *::before,
+    *::after {
+      transition-duration: 0.05ms !important;
+      animation-duration: 0.05ms !important;
+      animation-iteration-count: 1 !important;
+    }
   }
 }
