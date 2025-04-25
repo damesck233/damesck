@@ -13,8 +13,6 @@ import {
 
 // 使用 lazy 加载页面组件
 const Home = lazy(() => import('./pages/Home'))
-const Skills = lazy(() => import('./pages/Skills'))
-const Projects = lazy(() => import('./pages/Projects'))
 const Blog = lazy(() => import('./pages/Blog'))
 const Contact = lazy(() => import('./pages/Contact'))
 import Loading from './components/Loading'
@@ -51,12 +49,6 @@ const Menu = memo(({ isOpen, onClose }: { isOpen: boolean, onClose: () => void }
           <div className="divide-y divide-gray-100/30">
             <NavLink to="/" className={({ isActive }) => `flex items-center gap-2 px-3 py-2 rounded-lg text-sm ${isActive ? 'bg-blue-100/50 text-blue-700' : 'text-gray-700 hover:bg-gray-100/50'}`} onClick={onClose}>
               <HomeIcon className="w-4 h-4" /> 首页
-            </NavLink>
-            <NavLink to="/skills" className={({ isActive }) => `flex items-center gap-2 px-3 py-2 rounded-lg text-sm ${isActive ? 'bg-blue-100/50 text-blue-700' : 'text-gray-700 hover:bg-gray-100/50'}`} onClick={onClose}>
-              <BriefcaseIcon className="w-4 h-4" /> 我的技能
-            </NavLink>
-            <NavLink to="/projects" className={({ isActive }) => `flex items-center gap-2 px-3 py-2 rounded-lg text-sm ${isActive ? 'bg-blue-100/50 text-blue-700' : 'text-gray-700 hover:bg-gray-100/50'}`} onClick={onClose}>
-              <BeakerIcon className="w-4 h-4" /> 项目展示
             </NavLink>
             <NavLink to="/blog" className={({ isActive }) => `flex items-center gap-2 px-3 py-2 rounded-lg text-sm ${isActive ? 'bg-blue-100/50 text-blue-700' : 'text-gray-700 hover:bg-gray-100/50'}`} onClick={onClose}>
               <PencilIcon className="w-4 h-4" /> 博客
@@ -138,8 +130,6 @@ const PageContent = memo(() => (
     }>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/skills" element={<Skills />} />
-        <Route path="/projects" element={<Projects />} />
         <Route path="/blog" element={<Blog />} />
         <Route path="/contact" element={<Contact />} />
       </Routes>
