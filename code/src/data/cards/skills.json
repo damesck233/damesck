@@ -1,12 +1,11 @@
 [
   {
-    "category": "网络设备配置",
+    "category": "Network",
     "color": "blue",
     "items": [
-      "思科路由器",
-      "思科交换机",
-      "华为防火墙",
-      "华为路由器",
+      "综合布线",
+      "思科路由交换",
+      "华为部分路由交换",
       "网络架构规划"
     ]
   },
@@ -15,9 +14,7 @@
     "color": "purple",
     "items": [
       "Figma",
-      "Sketch",
-      "Adobe XD",
-      "Photoshop"
+      "PPT OS("
     ]
   },
   {

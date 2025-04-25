@@ -1029,12 +1029,7 @@ const Home = () => {
                       ></div>
                     </div>
                     <p className="mt-2 text-sm text-gray-500">
-                      {item.name === "Python" && "Python 是一种通用编程语言，简单易学且功能强大。"}
-                      {item.name === "Rust" && "Rust 是一种注重安全、性能和并发的系统编程语言。"}
-                      {item.name === "K8S" && "Kubernetes 是容器编排平台，用于自动化容器应用的部署和管理。"}
-                      {item.name === "云计算" && "云计算提供按需的计算资源，包括服务器、存储和应用程序等。"}
-                      {item.name === "前端JS" && "JavaScript 是前端开发的核心语言，用于构建交互式网页。"}
-                      {item.name === "C1驾驶证" && "C1驾驶证是机动车驾驶证的一种类型，允许驾驶小型汽车。"}
+                      {item.description}
                     </p>
                   </div>
                 ))}

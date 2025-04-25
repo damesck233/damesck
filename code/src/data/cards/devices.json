@@ -1,7 +1,7 @@
 [
   {
     "name": "MacBook Pro M3 Pro",
-    "description": "搭载Apple M3 Pro芯片，提供强大的性能与效率",
+    "description": "太爱 mac 了",
     "image": "https://statici.icloud.com.cn/fmipmobile/deviceImages-9.0/MacBookPro/Mac15,7-spaceblack/online-infobox__2x.png",
     "tags": [
       {
@@ -9,7 +9,7 @@
         "color": "gray"
       },
       {
-        "name": "高性能",
+        "name": "太爱了",
         "color": "blue"
       }
     ],
@@ -26,8 +26,8 @@
     }
   },
   {
-    "name": "一加 12",
-    "description": "骁龙8 Gen 3处理器，顶级影像系统与超长续航",
+    "name": "OnePlus 12",
+    "description": "原神启动!",
     "image": "https://ocloud-staticfile-cn.heytapimage.com/find/icon/202307/fb7e1411592740babce0ef09c672f952.png",
     "tags": [
       {
@@ -35,7 +35,7 @@
         "color": "green"
       },
       {
-        "name": "旗舰",
+        "name": "主力机",
         "color": "red"
       }
     ],
@@ -54,7 +54,7 @@
   },
   {
     "name": "OPPO Watch 2 26mm",
-    "description": "智能手表，搭载Wear OS，全天健康监测与运动追踪",
+    "description": "当时为了做一个核酸🐎展示的结果疫情结束了,",
     "image": "https://data.klpbbs.com/file/tc/img/2025/04/25/680b7371276a0.jpeg",
     "tags": [
       {
@@ -62,7 +62,7 @@
         "color": "purple"
       },
       {
-        "name": "健康",
+        "name": "吃灰",
         "color": "indigo"
       }
     ],
@@ -81,7 +81,7 @@
   },
   {
     "name": "Xbox 无线控制器",
-    "description": "官方Xbox无线手柄，精确控制与舒适握感，支持多平台",
+    "description": "成都旅游冲动消费(",
     "image": "https://assets.account.microsoft.com/devices/compassassets/91cdc82e-b5b0-4f23-b670-b40aee4f0efa.png?n=XboxWirelessController.png%202",
     "tags": [
       {
@@ -89,7 +89,7 @@
         "color": "green"
       },
       {
-        "name": "外设",
+        "name": "冲动消费",
         "color": "yellow"
       }
     ],
