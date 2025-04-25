@@ -5,10 +5,7 @@ services:
     image: nginx:latest
     container_name: nginx
     ports:
-      - "0907:80" # 对外暴露端口
+      - "908:80"
     volumes:
       - ./icloud-portfolio/dist:/var/www/html
-      - ./data/nginx/default.conf:/etc/nginx/conf.d/default.conf
-    depends_on:
-
-
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
