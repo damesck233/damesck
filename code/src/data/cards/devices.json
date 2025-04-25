@@ -78,5 +78,32 @@
         "支持NFC和独立通话"
       ]
     }
+  },
+  {
+    "name": "Xbox 无线控制器",
+    "description": "官方Xbox无线手柄，精确控制与舒适握感，支持多平台",
+    "image": "https://assets.account.microsoft.com/devices/compassassets/91cdc82e-b5b0-4f23-b670-b40aee4f0efa.png?n=XboxWirelessController.png%202",
+    "tags": [
+      {
+        "name": "游戏",
+        "color": "green"
+      },
+      {
+        "name": "外设",
+        "color": "yellow"
+      }
+    ],
+    "specs": {
+      "purchaseDate": "2024年6月",
+      "warranty": "有效期内 (至2025年6月12日)",
+      "condition": "全新",
+      "details": [
+        "官方Xbox Series X|S 无线控制器",
+        "蓝牙连接，兼容PC/移动设备",
+        "可自定义按键映射",
+        "内置充电电池",
+        "精准摇杆与触感反馈"
+      ]
+    }
   }
 ]

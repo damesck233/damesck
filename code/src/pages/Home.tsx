@@ -657,7 +657,7 @@ const Home = () => {
             </div>
             <div style={cardBodyStyle} className="h-[calc(100%-64px)] overflow-y-auto">
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                {myDevices.map((device, index) => (
+                {myDevices.slice(0, 3).map((device, index) => (
                   <div key={index} className="flex flex-col overflow-hidden h-full bg-white/70 rounded-xl p-3 hover:bg-white/90 transition-colors shadow-sm border border-gray-100/50">
                     <div className="w-full h-20 bg-gray-50/50 rounded-lg mb-2 overflow-hidden flex items-center justify-center">
                       <img src={device.image} alt={device.name} className="w-full h-full object-contain p-1 transition-all duration-500 hover:scale-105" />
@@ -676,6 +676,14 @@ const Home = () => {
                   </div>
                 ))}
               </div>
+              {/* {myDevices.length > 3 && (
+                <div className="mt-4 flex justify-center">
+                  <button className="flex items-center text-sm text-blue-600 hover:text-blue-800 transition-colors">
+                    查看全部 {myDevices.length} 个设备
+                    <ArrowRightIcon className="w-4 h-4 ml-1" />
+                  </button>
+                </div>
+              )} */}
             </div>
           </div>
         </motion.div>
