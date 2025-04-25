@@ -12,7 +12,18 @@
         "name": "高性能",
         "color": "blue"
       }
-    ]
+    ],
+    "specs": {
+      "purchaseDate": "2024年8月",
+      "warranty": "有效期内",
+      "condition": "全新",
+      "details": [
+        "18英寸 Liquid Retina XDR 显示屏",
+        "M3 Pro 芯片 (12核CPU/18核GPU)",
+        "36GB 统一内存",
+        "1TB SSD存储"
+      ]
+    }
   },
   {
     "name": "一加 12",
@@ -27,7 +38,19 @@
         "name": "旗舰",
         "color": "red"
       }
-    ]
+    ],
+    "specs": {
+      "purchaseDate": "2024年1月",
+      "warranty": "过保",
+      "condition": "全新",
+      "details": [
+        "6.82英寸 2K LTPO AMOLED 屏幕",
+        "骁龙8 Gen 3 处理器",
+        "24GB LPDDR5X RAM",
+        "1TB UFS 4.0存储",
+        "5400mAh 电池"
+      ]
+    }
   },
   {
     "name": "OPPO Watch 2 26mm",
@@ -42,6 +65,18 @@
         "name": "健康",
         "color": "indigo"
       }
-    ]
+    ],
+    "specs": {
+      "purchaseDate": "2023年6月",
+      "warranty": "有效期内",
+      "condition": "良好",
+      "details": [
+        "1.91英寸 AMOLED 屏幕",
+        "高通骁龙Wear 4100处理器",
+        "1GB RAM + 8GB ROM",
+        "510mAh 电池",
+        "支持NFC和独立通话"
+      ]
+    }
   }
 ]

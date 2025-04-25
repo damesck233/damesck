@@ -1091,9 +1091,12 @@ const Home = () => {
                     <div className="mt-4 pt-4 border-t border-gray-100">
                       <h4 className="text-sm font-medium mb-2 text-[#2c2c2e]">设备规格</h4>
                       <ul className="text-sm text-gray-600 space-y-1">
-                        <li>• 购买日期: 2023年6月</li>
-                        <li>• 保修状态: 有效期内</li>
-                        <li>• 使用状态: 良好</li>
+                        <li>• 购买日期: {device.specs.purchaseDate}</li>
+                        <li>• 保修状态: {device.specs.warranty}</li>
+                        <li>• 使用状态: {device.specs.condition}</li>
+                        {device.specs.details.map((detail, detailIndex) => (
+                          <li key={detailIndex}>• {detail}</li>
+                        ))}
                       </ul>
                     </div>
                   </div>
