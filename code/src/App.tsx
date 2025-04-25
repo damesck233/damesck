@@ -50,7 +50,7 @@ const Menu = memo(({ isOpen, onClose }: { isOpen: boolean, onClose: () => void }
             <NavLink to="/" className={({ isActive }) => `flex items-center gap-2 px-3 py-2 rounded-lg text-sm ${isActive ? 'bg-blue-100/50 text-blue-700' : 'text-gray-700 hover:bg-gray-100/50'}`} onClick={onClose}>
               <HomeIcon className="w-4 h-4" /> 首页
             </NavLink>
-            <NavLink to="/blog" className={({ isActive }) => `flex items-center gap-2 px-3 py-2 rounded-lg text-sm ${isActive ? 'bg-blue-100/50 text-blue-700' : 'text-gray-700 hover:bg-gray-100/50'}`} onClick={onClose}>
+            <NavLink to="http://blog.damesck.net/" className={({ isActive }) => `flex items-center gap-2 px-3 py-2 rounded-lg text-sm ${isActive ? 'bg-blue-100/50 text-blue-700' : 'text-gray-700 hover:bg-gray-100/50'}`} onClick={onClose}>
               <PencilIcon className="w-4 h-4" /> 博客
             </NavLink>
             <NavLink to="/contact" className={({ isActive }) => `flex items-center gap-2 px-3 py-2 rounded-lg text-sm ${isActive ? 'bg-blue-100/50 text-blue-700' : 'text-gray-700 hover:bg-gray-100/50'}`} onClick={onClose}>
