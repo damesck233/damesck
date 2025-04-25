@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   nginx:
-    image: nginx:latest
+    image: nginx:latest_index
     container_name: nginx
     ports:
       - "908:80"
