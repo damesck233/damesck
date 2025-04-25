@@ -942,7 +942,7 @@ const Home = () => {
                     {personalInfo.email}
                   </p>
                   <div className="mt-4 py-2 px-4 bg-blue-500 rounded-full text-white text-sm font-medium">
-                    {personalInfo.status}
+                    damesck.net
                   </div>
                 </div>
 
@@ -965,7 +965,7 @@ const Home = () => {
 
                   <h4 className="text-lg font-medium mb-3 text-[#2c2c2e]">个人简介</h4>
                   <p className="text-gray-600 mb-4">
-                    这是一段示例个人简介。您可以在此处添加更多关于自己的详细信息，例如职业背景、兴趣爱好、教育经历等等。
+                    致不完美的明天_
                   </p>
                 </div>
               </div>

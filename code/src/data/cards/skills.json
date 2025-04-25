@@ -11,17 +11,6 @@
     ]
   },
   {
-    "category": "前端开发",
-    "color": "yellow",
-    "items": [
-      "HTML/CSS",
-      "JavaScript",
-      "React",
-      "Vue",
-      "TailwindCSS"
-    ]
-  },
-  {
     "category": "设计工具",
     "color": "purple",
     "items": [
@@ -35,11 +24,8 @@
     "category": "运维技能",
     "color": "green",
     "items": [
-      "Linux系统管理",
-      "Shell脚本",
-      "Docker容器",
-      "日志分析",
-      "性能监控"
+      "Linux",
+      "Docker"
     ]
   }
 ]
