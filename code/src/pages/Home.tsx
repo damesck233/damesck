@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from 'framer-motion';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useMemo, memo } from 'react';
 import {
   CodeBracketIcon,
   WrenchScrewdriverIcon,
@@ -226,6 +226,43 @@ const fadeIn = {
   })
 };
 
+// 优化卡片组件
+const Card = memo(({ children, onMouseEnter, onMouseLeave, onClick, isHovered, style }) => (
+  <div
+    className="h-full"
+    style={{
+      ...iosCardStyle,
+      ...(isHovered ? hoverStyle : {}),
+      ...style
+    }}
+    onMouseEnter={onMouseEnter}
+    onMouseLeave={onMouseLeave}
+    onClick={onClick}
+  >
+    {children}
+  </div>
+));
+
+// 优化博客卡片组件
+const BlogCard = memo(({ blog }) => (
+  <div className="bg-gray-50/50 rounded-lg p-3 hover:bg-gray-50/80 transition-colors h-full">
+    <div className="flex flex-col h-full">
+      <div className="flex-grow">
+        <h4 className="font-medium text-base text-[#2c2c2e] truncate">{blog.title}</h4>
+        <p className="text-xs text-gray-600 mt-1 line-clamp-2">{blog.summary}</p>
+        <div className="flex gap-1.5 mt-3 flex-wrap">
+          {blog.tags.map((tag, tagIndex) => (
+            <span key={tagIndex} className="px-2 py-0.5 text-xs rounded-md bg-blue-50 text-blue-600">
+              {tag.name}
+            </span>
+          ))}
+        </div>
+      </div>
+      <p className="text-xs text-gray-500 mt-4 pt-3 border-t border-gray-100 w-full">{blog.date} · {blog.readTime}</p>
+    </div>
+  </div>
+));
+
 const Home = () => {
   // 计算剩余天数的函数
   const calculateDaysLeft = () => {
@@ -274,29 +311,58 @@ const Home = () => {
   const [loading, setLoading] = useState(true);
   const [apiError, setApiError] = useState<ApiError | null>(null);
 
-  const handleMouseEnter = (card: string) => {
-    setHoveredCards({ ...hoveredCards, [card]: true });
-  };
+  // 使用 useCallback 优化事件处理函数
+  const handleMouseEnter = useCallback((card: string) => {
+    setHoveredCards(prev => ({ ...prev, [card]: true }));
+  }, []);
 
-  const handleMouseLeave = (card: string) => {
-    setHoveredCards({ ...hoveredCards, [card]: false });
-  };
+  const handleMouseLeave = useCallback((card: string) => {
+    setHoveredCards(prev => ({ ...prev, [card]: false }));
+  }, []);
 
-  const handleHeaderMouseEnter = (header: string) => {
-    setHoveredHeaders({ ...hoveredHeaders, [header]: true });
-  };
+  const handleHeaderMouseEnter = useCallback((header: string) => {
+    setHoveredHeaders(prev => ({ ...prev, [header]: true }));
+  }, []);
 
-  const handleHeaderMouseLeave = (header: string) => {
-    setHoveredHeaders({ ...hoveredHeaders, [header]: false });
-  };
+  const handleHeaderMouseLeave = useCallback((header: string) => {
+    setHoveredHeaders(prev => ({ ...prev, [header]: false }));
+  }, []);
 
-  const openModal = (modal: string) => {
-    setModalOpen({ ...modalOpen, [modal]: true });
-  };
+  const openModal = useCallback((modal: string) => {
+    setModalOpen(prev => ({ ...prev, [modal]: true }));
+  }, []);
 
-  const closeModal = (modal: string) => {
-    setModalOpen({ ...modalOpen, [modal]: false });
-  };
+  const closeModal = useCallback((modal: string) => {
+    setModalOpen(prev => ({ ...prev, [modal]: false }));
+  }, []);
+
+  // 使用 useMemo 优化计算值
+  const formattedBlogPosts = useMemo(() => {
+    if (loading || apiError) return [];
+    return blogPosts.map(blog => ({
+      ...blog,
+      formattedDate: new Date(blog.created * 1000).toLocaleDateString()
+    }));
+  }, [blogPosts, loading, apiError]);
+
+  // 使用 useMemo 优化设备数据
+  const formattedDevices = useMemo(() => {
+    return myDevices.map(device => ({
+      ...device,
+      formattedDate: new Date(device.specs.purchaseDate).toLocaleDateString()
+    }));
+  }, [myDevices]);
+
+  // 优化图片加载
+  useEffect(() => {
+    const preloadImages = () => {
+      myDevices.forEach(device => {
+        const img = new Image();
+        img.src = device.image;
+      });
+    };
+    preloadImages();
+  }, []);
 
   // 每天更新倒计时
   useEffect(() => {
@@ -470,20 +536,12 @@ const Home = () => {
           initial="hidden"
           animate="visible"
           className="aspect-square cursor-pointer"
-          onMouseEnter={() => handleMouseEnter('personal')}
-          onMouseLeave={() => handleMouseLeave('personal')}
-          onClick={() => openModal('personal')}
         >
-          <div
-            className="h-full backdrop-blur-md bg-white/60"
-            style={{
-              borderRadius: '20px',
-              boxShadow: '0 4px 16px rgba(0,0,0,0.06), 0 2px 4px rgba(0,0,0,0.04)',
-              overflow: 'hidden',
-              transition: 'all 0.3s cubic-bezier(0.25, 1, 0.5, 1)',
-              border: '1px solid rgba(255, 255, 255, 0.8)',
-              ...(hoveredCards.personal ? hoverStyle : {})
-            }}
+          <Card
+            onMouseEnter={() => handleMouseEnter('personal')}
+            onMouseLeave={() => handleMouseLeave('personal')}
+            onClick={() => openModal('personal')}
+            isHovered={hoveredCards.personal}
           >
             <div className="flex flex-col items-center justify-center h-full p-8">
               <div className="w-28 h-28 rounded-full overflow-hidden border-4 border-white shadow-lg mb-6">
@@ -502,7 +560,7 @@ const Home = () => {
                 {personalInfo.email}
               </p>
             </div>
-          </div>
+          </Card>
         </motion.div>
 
         {/* 技能展示卡片 - 使用新数据 */}
@@ -512,16 +570,12 @@ const Home = () => {
           initial="hidden"
           animate="visible"
           className="aspect-square cursor-pointer"
-          onMouseEnter={() => handleMouseEnter('skills')}
-          onMouseLeave={() => handleMouseLeave('skills')}
-          onClick={() => openModal('skills')}
         >
-          <div
-            className="h-full"
-            style={{
-              ...iosCardStyle,
-              ...(hoveredCards.skills ? hoverStyle : {})
-            }}
+          <Card
+            onMouseEnter={() => handleMouseEnter('skills')}
+            onMouseLeave={() => handleMouseLeave('skills')}
+            onClick={() => openModal('skills')}
+            isHovered={hoveredCards.skills}
           >
             <div
               style={{
@@ -559,7 +613,7 @@ const Home = () => {
                 ))}
               </div>
             </div>
-          </div>
+          </Card>
         </motion.div>
 
         {/* 学习进度卡片 - 使用新数据 */}
@@ -569,16 +623,12 @@ const Home = () => {
           initial="hidden"
           animate="visible"
           className="aspect-square cursor-pointer"
-          onMouseEnter={() => handleMouseEnter('stats')}
-          onMouseLeave={() => handleMouseLeave('stats')}
-          onClick={() => openModal('stats')}
         >
-          <div
-            className="h-full"
-            style={{
-              ...iosCardStyle,
-              ...(hoveredCards.stats ? hoverStyle : {})
-            }}
+          <Card
+            onMouseEnter={() => handleMouseEnter('stats')}
+            onMouseLeave={() => handleMouseLeave('stats')}
+            onClick={() => openModal('stats')}
+            isHovered={hoveredCards.stats}
           >
             <div
               style={{
@@ -616,7 +666,7 @@ const Home = () => {
                 ))}
               </div>
             </div>
-          </div>
+          </Card>
         </motion.div>
 
         {/* 我的设备卡片 - 使用新数据 */}
@@ -626,16 +676,12 @@ const Home = () => {
           initial="hidden"
           animate="visible"
           className="md:col-span-2 cursor-pointer"
-          onMouseEnter={() => handleMouseEnter('devices')}
-          onMouseLeave={() => handleMouseLeave('devices')}
-          onClick={() => openModal('devices')}
         >
-          <div
-            className="h-full"
-            style={{
-              ...iosCardStyle,
-              ...(hoveredCards.devices ? hoverStyle : {})
-            }}
+          <Card
+            onMouseEnter={() => handleMouseEnter('devices')}
+            onMouseLeave={() => handleMouseLeave('devices')}
+            onClick={() => openModal('devices')}
+            isHovered={hoveredCards.devices}
           >
             <div
               style={{
@@ -657,7 +703,7 @@ const Home = () => {
             </div>
             <div style={cardBodyStyle} className="h-[calc(100%-64px)] overflow-y-auto">
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                {myDevices.map((device, index) => (
+                {formattedDevices.map((device, index) => (
                   <div key={index} className="flex flex-col overflow-hidden h-full bg-white/70 rounded-xl p-3 hover:bg-white/90 transition-colors shadow-sm border border-gray-100/50">
                     <div className="w-full h-20 bg-gray-50/50 rounded-lg mb-2 overflow-hidden flex items-center justify-center">
                       <img src={device.image} alt={device.name} className="w-full h-full object-contain p-1 transition-all duration-500 hover:scale-105" />
@@ -677,7 +723,7 @@ const Home = () => {
                 ))}
               </div>
             </div>
-          </div>
+          </Card>
         </motion.div>
 
         {/* 倒计时卡片 - 使用新数据 */}
@@ -687,16 +733,12 @@ const Home = () => {
           initial="hidden"
           animate="visible"
           className="cursor-pointer"
-          onMouseEnter={() => handleMouseEnter('countdown')}
-          onMouseLeave={() => handleMouseLeave('countdown')}
-          onClick={() => openModal('countdown')}
         >
-          <div
-            className="h-full"
-            style={{
-              ...iosCardStyle,
-              ...(hoveredCards.countdown ? hoverStyle : {})
-            }}
+          <Card
+            onMouseEnter={() => handleMouseEnter('countdown')}
+            onMouseLeave={() => handleMouseLeave('countdown')}
+            onClick={() => openModal('countdown')}
+            isHovered={hoveredCards.countdown}
           >
             <div
               style={{
@@ -735,7 +777,7 @@ const Home = () => {
                 </div>
               </div>
             </div>
-          </div>
+          </Card>
         </motion.div>
 
         {/* 最新博客卡片 */}
@@ -745,16 +787,12 @@ const Home = () => {
           initial="hidden"
           animate="visible"
           className="md:col-span-3 cursor-pointer"
-          onMouseEnter={() => handleMouseEnter('blogs')}
-          onMouseLeave={() => handleMouseLeave('blogs')}
-          onClick={() => openModal('blogs')}
         >
-          <div
-            className="h-full"
-            style={{
-              ...iosCardStyle,
-              ...(hoveredCards.blogs ? hoverStyle : {})
-            }}
+          <Card
+            onMouseEnter={() => handleMouseEnter('blogs')}
+            onMouseLeave={() => handleMouseLeave('blogs')}
+            onClick={() => openModal('blogs')}
+            isHovered={hoveredCards.blogs}
           >
             <div
               style={{
@@ -798,49 +836,19 @@ const Home = () => {
                 </div>
               ) : blogPosts.length > 0 ? (
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                  {blogPosts.map((blog, index) => (
-                    <div key={index} className="bg-gray-50/50 rounded-lg p-3 hover:bg-gray-50/80 transition-colors h-full">
-                      <div className="flex flex-col h-full">
-                        <div className="flex-grow">
-                          <h4 className="font-medium text-base text-[#2c2c2e] truncate">{blog.title}</h4>
-                          <p className="text-xs text-gray-600 mt-1 line-clamp-2">{blog.summary}</p>
-                          <div className="flex gap-1.5 mt-3 flex-wrap">
-                            {blog.tags.map((tag, tagIndex) => (
-                              <span key={tagIndex} className="px-2 py-0.5 text-xs rounded-md bg-blue-50 text-blue-600">
-                                {tag.name}
-                              </span>
-                            ))}
-                          </div>
-                        </div>
-                        <p className="text-xs text-gray-500 mt-4 pt-3 border-t border-gray-100 w-full">{blog.date} · {blog.readTime}</p>
-                      </div>
-                    </div>
+                  {formattedBlogPosts.map((blog, index) => (
+                    <BlogCard key={blog.cid || index} blog={blog} />
                   ))}
                 </div>
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                   {portfolioData.blogs.map((blog: DefaultBlogPost, index) => (
-                    <div key={index} className="bg-gray-50/50 rounded-lg p-3 hover:bg-gray-50/80 transition-colors h-full">
-                      <div className="flex flex-col h-full">
-                        <div className="flex-grow">
-                          <h4 className="font-medium text-base text-[#2c2c2e] truncate">{blog.title}</h4>
-                          <p className="text-xs text-gray-600 mt-1 line-clamp-2">{blog.summary}</p>
-                          <div className="flex gap-1.5 mt-3 flex-wrap">
-                            {blog.tags.map((tag, tagIndex) => (
-                              <span key={tagIndex} className="px-2 py-0.5 text-xs rounded-md bg-blue-50 text-blue-600">
-                                {tag.name}
-                              </span>
-                            ))}
-                          </div>
-                        </div>
-                        <p className="text-xs text-gray-500 mt-4 pt-3 border-t border-gray-100 w-full">{blog.date} · {blog.readTime}</p>
-                      </div>
-                    </div>
+                    <BlogCard key={index} blog={blog} />
                   ))}
                 </div>
               )}
             </div>
-          </div>
+          </Card>
         </motion.div>
       </div>
 
@@ -1312,5 +1320,5 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default memo(Home);
 
