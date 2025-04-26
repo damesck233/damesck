@@ -16,6 +16,8 @@ import {
   ArrowRightIcon,
   XMarkIcon
 } from '@heroicons/react/24/outline';
+import { Link } from 'react-router-dom';
+import { PiNotePencilBold, PiArrowRightBold } from 'react-icons/pi';
 
 // 导入旧数据用于兼容
 import portfolioData from '../data/portfolioData.json';
@@ -309,17 +311,27 @@ const Home = () => {
   // 博客文章获取函数
   const fetchBlogPosts = async () => {
     setLoading(true);
+    setApiError(null);
     try {
-      console.log("使用本地博客数据:", blogData);
+      console.log("从API获取博客数据");
 
-      // 使用本地数据
-      if (blogData && blogData.status === "success" && blogData.data && blogData.data.dataSet) {
-        const formattedBlogData: BlogPost[] = blogData.data.dataSet.map((post: any) => {
+      // 使用fetch从API获取数据
+      const response = await fetch('https://blog.damesck.net/api/posts');
+
+      if (!response.ok) {
+        throw new Error(`API请求失败: ${response.status} ${response.statusText}`);
+      }
+
+      const data = await response.json();
+
+      if (data && data.status === "success" && data.data && data.data.dataSet) {
+        const formattedBlogData: BlogPost[] = data.data.dataSet.map((post: any) => {
           // 从HTML内容中提取纯文本以显示摘要
           const stripHtml = (html: string) => {
-            const tmp = document.createElement('DIV');
-            tmp.innerHTML = html;
-            return tmp.textContent || tmp.innerText || '';
+            // 创建临时元素来解析HTML
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = html;
+            return tempDiv.textContent || tempDiv.innerText || '';
           };
 
           // 计算阅读时间
@@ -341,6 +353,9 @@ const Home = () => {
             slug: cat.slug || ''
           })) : [];
 
+          // 生成简短摘要
+          const summary = stripHtml(post.digest || '').substring(0, 200) + '...';
+
           // 返回格式化后的博客文章
           return {
             cid: post.cid || 0,
@@ -349,56 +364,58 @@ const Home = () => {
             created: post.created || 0,
             modified: post.modified || 0,
             text: post.digest || '',
-            summary: stripHtml(post.digest || '').substring(0, 200) + '...',
+            summary: summary,
             date: formatDate(post.created || 0),
-            readTime: `${readTime} min read`,
+            readTime: `${readTime} 分钟阅读`,
             categories: categories,
             tags: categories.map((cat: any) => ({
               name: cat.name,
-              color: '#' + Math.floor(Math.random() * 16777215).toString(16)
+              color: getRandomColor(cat.name)
             }))
           };
         });
 
         setBlogPosts(formattedBlogData);
       } else {
-        console.error("本地博客数据格式不正确");
-        // 如果本地数据格式不正确，回退到 portfolioData.blogs
-        const fallbackBlogs: BlogPost[] = portfolioData.blogs.map((blog: DefaultBlogPost, index: number) => ({
-          cid: index,
-          title: blog.title,
-          slug: `blog-${index}`,
-          created: Date.now(),
-          modified: Date.now(),
-          text: blog.summary,
-          summary: blog.summary,
-          date: blog.date,
-          readTime: blog.readTime,
-          categories: [],
-          tags: blog.tags
-        }));
-        setBlogPosts(fallbackBlogs);
+        console.error("API返回数据格式不正确");
+        setApiError({
+          code: 0,
+          message: "API返回数据格式不正确",
+          details: "响应格式与预期不符"
+        });
+        // 如果API数据格式不正确，回退到 portfolioData.blogs
+        fallbackToDefaultBlogs();
       }
     } catch (error) {
       console.error("加载博客数据时出错:", error);
+      setApiError({
+        code: 500,
+        message: "无法连接到博客服务器",
+        details: error instanceof Error ? error.message : String(error)
+      });
       // 发生错误时回退到 portfolioData.blogs
-      const fallbackBlogs: BlogPost[] = portfolioData.blogs.map((blog: DefaultBlogPost, index: number) => ({
-        cid: index,
-        title: blog.title,
-        slug: `blog-${index}`,
-        created: Date.now(),
-        modified: Date.now(),
-        text: blog.summary,
-        summary: blog.summary,
-        date: blog.date,
-        readTime: blog.readTime,
-        categories: [],
-        tags: blog.tags
-      }));
-      setBlogPosts(fallbackBlogs);
+      fallbackToDefaultBlogs();
     } finally {
       setLoading(false);
     }
+  };
+
+  // 回退到默认博客数据
+  const fallbackToDefaultBlogs = () => {
+    const fallbackBlogs: BlogPost[] = portfolioData.blogs.map((blog: DefaultBlogPost, index: number) => ({
+      cid: index,
+      title: blog.title,
+      slug: `blog-${index}`,
+      created: Date.now(),
+      modified: Date.now(),
+      text: blog.summary,
+      summary: blog.summary,
+      date: blog.date,
+      readTime: blog.readTime,
+      categories: [],
+      tags: blog.tags
+    }));
+    setBlogPosts(fallbackBlogs);
   };
 
   // 添加获取随机颜色的辅助函数
@@ -418,6 +435,82 @@ const Home = () => {
     console.log("Home组件已挂载，开始获取博客数据");
     fetchBlogPosts();
   }, []);
+
+  // 添加全局鼠标移动事件处理，解决卡片不收回的问题
+  useEffect(() => {
+    const handleGlobalMouseMove = (e: MouseEvent) => {
+      // 获取所有卡片元素
+      const cardsElements = document.querySelectorAll('.card-container');
+
+      // 检查鼠标是否完全离开了所有卡片区域
+      let isMouseOnAnyCard = false;
+
+      // 遍历所有卡片，检查鼠标是否在卡片内
+      cardsElements.forEach((card) => {
+        const rect = card.getBoundingClientRect();
+        const cardId = card.getAttribute('data-card-id');
+
+        if (cardId) {
+          // 检查鼠标是否在卡片区域内
+          const isInside =
+            e.clientX >= rect.left &&
+            e.clientX <= rect.right &&
+            e.clientY >= rect.top &&
+            e.clientY <= rect.bottom;
+
+          if (isInside) {
+            isMouseOnAnyCard = true;
+            // 确保卡片悬停状态为true
+            if (!hoveredCards[cardId as keyof typeof hoveredCards]) {
+              setHoveredCards(prev => ({
+                ...prev,
+                [cardId]: true
+              }));
+            }
+          } else if (hoveredCards[cardId as keyof typeof hoveredCards]) {
+            // 如果鼠标不在这个卡片上，但卡片状态是hover，重置它
+            setHoveredCards(prev => ({
+              ...prev,
+              [cardId]: false
+            }));
+          }
+        }
+      });
+
+      // 如果鼠标不在任何卡片上，重置所有卡片状态
+      if (!isMouseOnAnyCard) {
+        const hoverKeys = Object.keys(hoveredCards);
+        const anyCardHovered = hoverKeys.some(key => hoveredCards[key as keyof typeof hoveredCards]);
+
+        if (anyCardHovered) {
+          const resetState = Object.fromEntries(
+            hoverKeys.map(key => [key, false])
+          );
+          setHoveredCards(resetState as typeof hoveredCards);
+        }
+      }
+    };
+
+    // 添加鼠标移动事件监听
+    document.addEventListener('mousemove', handleGlobalMouseMove);
+
+    // 添加鼠标离开文档事件监听
+    const handleMouseLeave = () => {
+      // 鼠标离开文档时，重置所有卡片状态
+      const resetState = Object.fromEntries(
+        Object.keys(hoveredCards).map(key => [key, false])
+      );
+      setHoveredCards(resetState as typeof hoveredCards);
+    };
+
+    document.addEventListener('mouseleave', handleMouseLeave);
+
+    // 清理函数
+    return () => {
+      document.removeEventListener('mousemove', handleGlobalMouseMove);
+      document.removeEventListener('mouseleave', handleMouseLeave);
+    };
+  }, [hoveredCards]); // 依赖于hoveredCards状态
 
   // 获取社交图标
   const getSocialIcon = (iconName: string) => {
@@ -469,7 +562,8 @@ const Home = () => {
           custom={0}
           initial="hidden"
           animate="visible"
-          className="aspect-square cursor-pointer"
+          className="aspect-square cursor-pointer card-container"
+          data-card-id="personal"
           onMouseEnter={() => handleMouseEnter('personal')}
           onMouseLeave={() => handleMouseLeave('personal')}
           onClick={() => openModal('personal')}
@@ -511,7 +605,8 @@ const Home = () => {
           custom={1}
           initial="hidden"
           animate="visible"
-          className="aspect-square cursor-pointer"
+          className="aspect-square cursor-pointer card-container"
+          data-card-id="skills"
           onMouseEnter={() => handleMouseEnter('skills')}
           onMouseLeave={() => handleMouseLeave('skills')}
           onClick={() => openModal('skills')}
@@ -568,7 +663,8 @@ const Home = () => {
           custom={2}
           initial="hidden"
           animate="visible"
-          className="aspect-square cursor-pointer"
+          className="aspect-square cursor-pointer card-container"
+          data-card-id="stats"
           onMouseEnter={() => handleMouseEnter('stats')}
           onMouseLeave={() => handleMouseLeave('stats')}
           onClick={() => openModal('stats')}
@@ -625,7 +721,8 @@ const Home = () => {
           custom={3}
           initial="hidden"
           animate="visible"
-          className="md:col-span-2 cursor-pointer"
+          className="md:col-span-2 cursor-pointer card-container"
+          data-card-id="devices"
           onMouseEnter={() => handleMouseEnter('devices')}
           onMouseLeave={() => handleMouseLeave('devices')}
           onClick={() => openModal('devices')}
@@ -694,7 +791,8 @@ const Home = () => {
           custom={4}
           initial="hidden"
           animate="visible"
-          className="cursor-pointer"
+          className="cursor-pointer card-container"
+          data-card-id="countdown"
           onMouseEnter={() => handleMouseEnter('countdown')}
           onMouseLeave={() => handleMouseLeave('countdown')}
           onClick={() => openModal('countdown')}
@@ -752,7 +850,8 @@ const Home = () => {
           custom={5}
           initial="hidden"
           animate="visible"
-          className="md:col-span-3 cursor-pointer"
+          className="md:col-span-3 cursor-pointer card-container"
+          data-card-id="blogs"
           onMouseEnter={() => handleMouseEnter('blogs')}
           onMouseLeave={() => handleMouseLeave('blogs')}
           onClick={() => openModal('blogs')}
@@ -764,23 +863,21 @@ const Home = () => {
               ...(hoveredCards.blogs ? hoverStyle : {})
             }}
           >
-            <div
-              style={{
-                ...cardHeaderStyle
-              }}
-            >
-              <div className="flex items-center">
-                <div className="w-8 h-8 rounded-full flex items-center justify-center bg-blue-500 mr-3">
-                  <DocumentTextIcon className="w-5 h-5 text-white" />
+            <div style={cardHeaderStyle} className="flex flex-row justify-between items-center">
+              <div className="flex items-center gap-2">
+                <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${hoveredCards.blogs ? 'bg-white text-blue-500' : 'bg-[#f5f5f7] text-[#1d1d1f]'}`}>
+                  <PiNotePencilBold className="w-[18px] h-[18px]" />
                 </div>
-                <div>
-                  <h3 className="text-base font-semibold text-[#2c2c2e]">最新博客</h3>
-                  <p className="text-xs text-gray-500 mt-0.5">来自 blog.damesck.net</p>
+                <h3 className="font-semibold text-lg text-[#1d1d1f]">最新博客</h3>
+              </div>
+              {blogPosts.length > 4 && (
+                <div className="flex items-center text-sm text-blue-500 hover:text-blue-600 transition-colors">
+                  <Link to="/blog" className="flex items-center gap-1">
+                    <span>查看全部</span>
+                    <PiArrowRightBold className="w-3 h-3" />
+                  </Link>
                 </div>
-              </div>
-              <div className="w-6 h-6 flex items-center justify-center rounded-full bg-gray-100">
-                <span className="text-blue-500 font-semibold text-sm">{blogPosts.length || 0}</span>
-              </div>
+              )}
             </div>
             <div style={cardBodyStyle} className="h-[calc(100%-64px)] overflow-y-auto">
               {loading ? (
@@ -792,7 +889,7 @@ const Home = () => {
                 </div>
               ) : apiError ? (
                 <div className="flex flex-col items-center justify-center h-full p-4 text-center">
-                  <div className="text-red-500 mb-2 font-medium">请求失败 (错误代码: {apiError.code})</div>
+                  <div className="text-red-500 mb-2 font-medium">请求失败 {apiError.code ? `(错误代码: ${apiError.code})` : ''}</div>
                   <div className="text-sm text-gray-700 mb-3">{apiError.message}</div>
                   {apiError.details && (
                     <div className="text-xs text-gray-500 max-w-md">{apiError.details}</div>
@@ -805,15 +902,15 @@ const Home = () => {
                   </button>
                 </div>
               ) : blogPosts.length > 0 ? (
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                  {blogPosts.map((blog, index) => (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {blogPosts.slice(0, 4).map((blog, index) => (
                     <div key={index} className="bg-gray-50/50 rounded-lg p-3 hover:bg-gray-50/80 transition-colors h-full">
                       <div className="flex flex-col h-full">
                         <div className="flex-grow">
                           <h4 className="font-medium text-base text-[#2c2c2e] truncate">{blog.title}</h4>
                           <p className="text-xs text-gray-600 mt-1 line-clamp-2">{blog.summary}</p>
                           <div className="flex gap-1.5 mt-3 flex-wrap">
-                            {blog.tags.map((tag, tagIndex) => (
+                            {blog.tags.slice(0, 2).map((tag, tagIndex) => (
                               <span key={tagIndex} className="px-2 py-0.5 text-xs rounded-md bg-blue-50 text-blue-600">
                                 {tag.name}
                               </span>
@@ -826,15 +923,15 @@ const Home = () => {
                   ))}
                 </div>
               ) : (
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                  {portfolioData.blogs.map((blog: DefaultBlogPost, index) => (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {portfolioData.blogs.slice(0, 4).map((blog: DefaultBlogPost, index) => (
                     <div key={index} className="bg-gray-50/50 rounded-lg p-3 hover:bg-gray-50/80 transition-colors h-full">
                       <div className="flex flex-col h-full">
                         <div className="flex-grow">
                           <h4 className="font-medium text-base text-[#2c2c2e] truncate">{blog.title}</h4>
                           <p className="text-xs text-gray-600 mt-1 line-clamp-2">{blog.summary}</p>
                           <div className="flex gap-1.5 mt-3 flex-wrap">
-                            {blog.tags.map((tag, tagIndex) => (
+                            {blog.tags.slice(0, 2).map((tag, tagIndex) => (
                               <span key={tagIndex} className="px-2 py-0.5 text-xs rounded-md bg-blue-50 text-blue-600">
                                 {tag.name}
                               </span>
@@ -1231,7 +1328,7 @@ const Home = () => {
 
               {apiError ? (
                 <div className="flex flex-col items-center justify-center p-6 text-center">
-                  <div className="text-red-500 mb-2 font-medium">请求失败 (错误代码: {apiError.code})</div>
+                  <div className="text-red-500 mb-2 font-medium">请求失败 {apiError.code ? `(错误代码: ${apiError.code})` : ''}</div>
                   <div className="text-sm text-gray-700 mb-3">{apiError.message}</div>
                   {apiError.details && (
                     <div className="text-xs text-gray-500 max-w-md mb-4">{apiError.details}</div>
