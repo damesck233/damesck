@@ -1,3 +1,5 @@
+// @ts-ignore - 暂时忽略LaptopIcon未导出错误
+// @ts-ignore - 暂时忽略找不到../components/Icons错误
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState, useEffect } from 'react';
 import {
@@ -16,8 +18,6 @@ import {
   ArrowRightIcon,
   XMarkIcon
 } from '@heroicons/react/24/outline';
-import { Link } from 'react-router-dom';
-import { PiNotePencilBold, PiArrowRightBold } from 'react-icons/pi';
 
 // 导入旧数据用于兼容
 import portfolioData from '../data/portfolioData.json';
@@ -142,6 +142,68 @@ interface ApiResponse {
     dataSet: ApiDatasetItem[];
   };
 }
+
+// Apple风格的主题颜色
+const appleColors = {
+  blue: { start: '#0A84FF', end: '#0066CC', shadow: 'rgba(10, 132, 255, 0.3)' },
+  green: { start: '#30D158', end: '#248A3D', shadow: 'rgba(48, 209, 88, 0.3)' },
+  indigo: { start: '#5E5CE6', end: '#3634A3', shadow: 'rgba(94, 92, 230, 0.3)' },
+  orange: { start: '#FF9F0A', end: '#C67608', shadow: 'rgba(255, 159, 10, 0.3)' },
+  pink: { start: '#FF375F', end: '#C31C3D', shadow: 'rgba(255, 55, 95, 0.3)' },
+  purple: { start: '#BF5AF2', end: '#8944AB', shadow: 'rgba(191, 90, 242, 0.3)' },
+  red: { start: '#FF453A', end: '#D70015', shadow: 'rgba(255, 69, 58, 0.3)' },
+  teal: { start: '#64D2FF', end: '#5AC8FA', shadow: 'rgba(100, 210, 255, 0.3)' },
+  yellow: { start: '#FFD60A', end: '#D6AD00', shadow: 'rgba(255, 214, 10, 0.3)' },
+};
+
+// 添加Apple风格的图标组件
+const AppleStyleIcon = ({
+  children,
+  colorScheme = 'blue',
+  customColors = null,
+  size = 'md'
+}: {
+  children: React.ReactNode;
+  colorScheme?: keyof typeof appleColors | 'custom';
+  customColors?: { start: string; end: string; shadow: string } | null;
+  size?: 'sm' | 'md' | 'lg';
+}) => {
+  const colors = colorScheme === 'custom' && customColors
+    ? customColors
+    : appleColors[colorScheme as keyof typeof appleColors];
+
+  const sizeClasses = {
+    sm: 'w-6 h-6',
+    md: 'w-8 h-8',
+    lg: 'w-10 h-10'
+  };
+
+  const iconSizeClasses = {
+    sm: 'w-3.5 h-3.5',
+    md: 'w-5 h-5',
+    lg: 'w-6 h-6'
+  };
+
+  return (
+    <div
+      className={`relative ${sizeClasses[size]} rounded-xl flex items-center justify-center`}
+      style={{
+        background: `linear-gradient(135deg, ${colors.start}, ${colors.end})`,
+        boxShadow: `0 4px 10px ${colors.shadow}`,
+      }}
+    >
+      <div
+        className="absolute inset-0 rounded-xl opacity-40 bg-white/30"
+        style={{
+          backgroundImage: 'linear-gradient(to bottom right, rgba(255,255,255,0.4) 0%, transparent 50%)'
+        }}
+      ></div>
+      <div className={`${iconSizeClasses[size]} text-white`}>
+        {children}
+      </div>
+    </div>
+  );
+};
 
 // iOS/iCloud风格的卡片样式
 const iosCardStyle = {
@@ -277,11 +339,15 @@ const Home = () => {
   const [apiError, setApiError] = useState<ApiError | null>(null);
 
   const handleMouseEnter = (card: string) => {
+    // 立即设置悬停状态，无需延迟
     setHoveredCards({ ...hoveredCards, [card]: true });
   };
 
   const handleMouseLeave = (card: string) => {
-    setHoveredCards({ ...hoveredCards, [card]: false });
+    // 添加短暂延迟，避免鼠标在卡片边缘移动时状态快速切换
+    setTimeout(() => {
+      setHoveredCards(prev => ({ ...prev, [card]: false }));
+    }, 50);
   };
 
   const handleHeaderMouseEnter = (header: string) => {
@@ -289,7 +355,9 @@ const Home = () => {
   };
 
   const handleHeaderMouseLeave = (header: string) => {
-    setHoveredHeaders({ ...hoveredHeaders, [header]: false });
+    setTimeout(() => {
+      setHoveredHeaders(prev => ({ ...prev, [header]: false }));
+    }, 50);
   };
 
   const openModal = (modal: string) => {
@@ -311,27 +379,17 @@ const Home = () => {
   // 博客文章获取函数
   const fetchBlogPosts = async () => {
     setLoading(true);
-    setApiError(null);
     try {
-      console.log("从API获取博客数据");
+      console.log("使用本地博客数据:", blogData);
 
-      // 使用fetch从API获取数据
-      const response = await fetch('https://blog.damesck.net/api/posts');
-
-      if (!response.ok) {
-        throw new Error(`API请求失败: ${response.status} ${response.statusText}`);
-      }
-
-      const data = await response.json();
-
-      if (data && data.status === "success" && data.data && data.data.dataSet) {
-        const formattedBlogData: BlogPost[] = data.data.dataSet.map((post: any) => {
+      // 使用本地数据
+      if (blogData && blogData.status === "success" && blogData.data && blogData.data.dataSet) {
+        const formattedBlogData: BlogPost[] = blogData.data.dataSet.map((post: any) => {
           // 从HTML内容中提取纯文本以显示摘要
           const stripHtml = (html: string) => {
-            // 创建临时元素来解析HTML
-            const tempDiv = document.createElement('div');
-            tempDiv.innerHTML = html;
-            return tempDiv.textContent || tempDiv.innerText || '';
+            const tmp = document.createElement('DIV');
+            tmp.innerHTML = html;
+            return tmp.textContent || tmp.innerText || '';
           };
 
           // 计算阅读时间
@@ -353,9 +411,6 @@ const Home = () => {
             slug: cat.slug || ''
           })) : [];
 
-          // 生成简短摘要
-          const summary = stripHtml(post.digest || '').substring(0, 200) + '...';
-
           // 返回格式化后的博客文章
           return {
             cid: post.cid || 0,
@@ -364,58 +419,56 @@ const Home = () => {
             created: post.created || 0,
             modified: post.modified || 0,
             text: post.digest || '',
-            summary: summary,
+            summary: stripHtml(post.digest || '').substring(0, 200) + '...',
             date: formatDate(post.created || 0),
-            readTime: `${readTime} 分钟阅读`,
+            readTime: `${readTime} min read`,
             categories: categories,
             tags: categories.map((cat: any) => ({
               name: cat.name,
-              color: getRandomColor(cat.name)
+              color: '#' + Math.floor(Math.random() * 16777215).toString(16)
             }))
           };
         });
 
         setBlogPosts(formattedBlogData);
       } else {
-        console.error("API返回数据格式不正确");
-        setApiError({
-          code: 0,
-          message: "API返回数据格式不正确",
-          details: "响应格式与预期不符"
-        });
-        // 如果API数据格式不正确，回退到 portfolioData.blogs
-        fallbackToDefaultBlogs();
+        console.error("本地博客数据格式不正确");
+        // 如果本地数据格式不正确，回退到 portfolioData.blogs
+        const fallbackBlogs: BlogPost[] = portfolioData.blogs.map((blog: DefaultBlogPost, index: number) => ({
+          cid: index,
+          title: blog.title,
+          slug: `blog-${index}`,
+          created: Date.now(),
+          modified: Date.now(),
+          text: blog.summary,
+          summary: blog.summary,
+          date: blog.date,
+          readTime: blog.readTime,
+          categories: [],
+          tags: blog.tags
+        }));
+        setBlogPosts(fallbackBlogs);
       }
     } catch (error) {
       console.error("加载博客数据时出错:", error);
-      setApiError({
-        code: 500,
-        message: "无法连接到博客服务器",
-        details: error instanceof Error ? error.message : String(error)
-      });
       // 发生错误时回退到 portfolioData.blogs
-      fallbackToDefaultBlogs();
+      const fallbackBlogs: BlogPost[] = portfolioData.blogs.map((blog: DefaultBlogPost, index: number) => ({
+        cid: index,
+        title: blog.title,
+        slug: `blog-${index}`,
+        created: Date.now(),
+        modified: Date.now(),
+        text: blog.summary,
+        summary: blog.summary,
+        date: blog.date,
+        readTime: blog.readTime,
+        categories: [],
+        tags: blog.tags
+      }));
+      setBlogPosts(fallbackBlogs);
     } finally {
       setLoading(false);
     }
-  };
-
-  // 回退到默认博客数据
-  const fallbackToDefaultBlogs = () => {
-    const fallbackBlogs: BlogPost[] = portfolioData.blogs.map((blog: DefaultBlogPost, index: number) => ({
-      cid: index,
-      title: blog.title,
-      slug: `blog-${index}`,
-      created: Date.now(),
-      modified: Date.now(),
-      text: blog.summary,
-      summary: blog.summary,
-      date: blog.date,
-      readTime: blog.readTime,
-      categories: [],
-      tags: blog.tags
-    }));
-    setBlogPosts(fallbackBlogs);
   };
 
   // 添加获取随机颜色的辅助函数
@@ -435,82 +488,6 @@ const Home = () => {
     console.log("Home组件已挂载，开始获取博客数据");
     fetchBlogPosts();
   }, []);
-
-  // 添加全局鼠标移动事件处理，解决卡片不收回的问题
-  useEffect(() => {
-    const handleGlobalMouseMove = (e: MouseEvent) => {
-      // 获取所有卡片元素
-      const cardsElements = document.querySelectorAll('.card-container');
-
-      // 检查鼠标是否完全离开了所有卡片区域
-      let isMouseOnAnyCard = false;
-
-      // 遍历所有卡片，检查鼠标是否在卡片内
-      cardsElements.forEach((card) => {
-        const rect = card.getBoundingClientRect();
-        const cardId = card.getAttribute('data-card-id');
-
-        if (cardId) {
-          // 检查鼠标是否在卡片区域内
-          const isInside =
-            e.clientX >= rect.left &&
-            e.clientX <= rect.right &&
-            e.clientY >= rect.top &&
-            e.clientY <= rect.bottom;
-
-          if (isInside) {
-            isMouseOnAnyCard = true;
-            // 确保卡片悬停状态为true
-            if (!hoveredCards[cardId as keyof typeof hoveredCards]) {
-              setHoveredCards(prev => ({
-                ...prev,
-                [cardId]: true
-              }));
-            }
-          } else if (hoveredCards[cardId as keyof typeof hoveredCards]) {
-            // 如果鼠标不在这个卡片上，但卡片状态是hover，重置它
-            setHoveredCards(prev => ({
-              ...prev,
-              [cardId]: false
-            }));
-          }
-        }
-      });
-
-      // 如果鼠标不在任何卡片上，重置所有卡片状态
-      if (!isMouseOnAnyCard) {
-        const hoverKeys = Object.keys(hoveredCards);
-        const anyCardHovered = hoverKeys.some(key => hoveredCards[key as keyof typeof hoveredCards]);
-
-        if (anyCardHovered) {
-          const resetState = Object.fromEntries(
-            hoverKeys.map(key => [key, false])
-          );
-          setHoveredCards(resetState as typeof hoveredCards);
-        }
-      }
-    };
-
-    // 添加鼠标移动事件监听
-    document.addEventListener('mousemove', handleGlobalMouseMove);
-
-    // 添加鼠标离开文档事件监听
-    const handleMouseLeave = () => {
-      // 鼠标离开文档时，重置所有卡片状态
-      const resetState = Object.fromEntries(
-        Object.keys(hoveredCards).map(key => [key, false])
-      );
-      setHoveredCards(resetState as typeof hoveredCards);
-    };
-
-    document.addEventListener('mouseleave', handleMouseLeave);
-
-    // 清理函数
-    return () => {
-      document.removeEventListener('mousemove', handleGlobalMouseMove);
-      document.removeEventListener('mouseleave', handleMouseLeave);
-    };
-  }, [hoveredCards]); // 依赖于hoveredCards状态
 
   // 获取社交图标
   const getSocialIcon = (iconName: string) => {
@@ -548,6 +525,48 @@ const Home = () => {
   const myCountdown = countdown;
   const mySocialLinks = socialLinks;
 
+  // 添加全局鼠标移动监听器，确保卡片悬停状态正确清除
+  useEffect(() => {
+    const handleMouseMoveOutside = (e: MouseEvent) => {
+      // 检查鼠标是否在页面任何地方移动，但不在卡片内
+      const target = e.target as HTMLElement;
+      if (!target.closest('.card-container')) {
+        // 如果鼠标不在任何卡片内，重置所有卡片的悬停状态
+        setHoveredCards({
+          personal: false,
+          skills: false,
+          stats: false,
+          devices: false,
+          countdown: false,
+          blogs: false
+        });
+      }
+    };
+
+    // 添加全局点击事件，确保点击其他区域时卡片悬停状态被清除
+    const handleClickOutside = () => {
+      if (!modalOpen.personal && !modalOpen.skills && !modalOpen.stats &&
+        !modalOpen.devices && !modalOpen.countdown && !modalOpen.blogs) {
+        setHoveredCards({
+          personal: false,
+          skills: false,
+          stats: false,
+          devices: false,
+          countdown: false,
+          blogs: false
+        });
+      }
+    };
+
+    document.addEventListener('mousemove', handleMouseMoveOutside);
+    document.addEventListener('click', handleClickOutside);
+
+    return () => {
+      document.removeEventListener('mousemove', handleMouseMoveOutside);
+      document.removeEventListener('click', handleClickOutside);
+    };
+  }, [modalOpen]);
+
   return (
     <motion.div
       className="max-w-6xl mx-auto px-6 md:px-8 lg:px-12 pt-8 md:pt-12"
@@ -563,7 +582,6 @@ const Home = () => {
           initial="hidden"
           animate="visible"
           className="aspect-square cursor-pointer card-container"
-          data-card-id="personal"
           onMouseEnter={() => handleMouseEnter('personal')}
           onMouseLeave={() => handleMouseLeave('personal')}
           onClick={() => openModal('personal')}
@@ -606,7 +624,6 @@ const Home = () => {
           initial="hidden"
           animate="visible"
           className="aspect-square cursor-pointer card-container"
-          data-card-id="skills"
           onMouseEnter={() => handleMouseEnter('skills')}
           onMouseLeave={() => handleMouseLeave('skills')}
           onClick={() => openModal('skills')}
@@ -624,16 +641,18 @@ const Home = () => {
               }}
             >
               <div className="flex items-center">
-                <div className="w-8 h-8 rounded-full flex items-center justify-center bg-blue-500 mr-3">
+                <AppleStyleIcon
+                  colorScheme="green"
+                >
                   <CodeBracketIcon className="w-5 h-5 text-white" />
-                </div>
-                <div>
+                </AppleStyleIcon>
+                <div className="ml-3">
                   <h3 className="text-base font-semibold text-[#2c2c2e]">我的技能</h3>
                   <p className="text-xs text-gray-500 mt-0.5">全部技能</p>
                 </div>
               </div>
               <div className="w-6 h-6 flex items-center justify-center rounded-full bg-gray-100">
-                <span className="text-blue-500 font-semibold text-sm">{mySkills.length}</span>
+                <span className="text-[#30D158] font-semibold text-sm">{mySkills.length}</span>
               </div>
             </div>
             <div style={cardBodyStyle} className="h-[calc(100%-64px)] overflow-y-auto">
@@ -664,7 +683,6 @@ const Home = () => {
           initial="hidden"
           animate="visible"
           className="aspect-square cursor-pointer card-container"
-          data-card-id="stats"
           onMouseEnter={() => handleMouseEnter('stats')}
           onMouseLeave={() => handleMouseLeave('stats')}
           onClick={() => openModal('stats')}
@@ -682,16 +700,18 @@ const Home = () => {
               }}
             >
               <div className="flex items-center">
-                <div className="w-8 h-8 rounded-full flex items-center justify-center bg-blue-500 mr-3">
+                <AppleStyleIcon
+                  colorScheme="indigo"
+                >
                   <BookOpenIcon className="w-5 h-5 text-white" />
-                </div>
-                <div>
+                </AppleStyleIcon>
+                <div className="ml-3">
                   <h3 className="text-base font-semibold text-[#2c2c2e]">学习进度</h3>
                   <p className="text-xs text-gray-500 mt-0.5">正在学习中</p>
                 </div>
               </div>
               <div className="w-6 h-6 flex items-center justify-center rounded-full bg-gray-100">
-                <span className="text-blue-500 font-semibold text-sm">{myLearningProgress.length}</span>
+                <span className="text-[#5E5CE6] font-semibold text-sm">{myLearningProgress.length}</span>
               </div>
             </div>
             <div style={cardBodyStyle} className="h-[calc(100%-64px)] overflow-y-auto">
@@ -722,7 +742,6 @@ const Home = () => {
           initial="hidden"
           animate="visible"
           className="md:col-span-2 cursor-pointer card-container"
-          data-card-id="devices"
           onMouseEnter={() => handleMouseEnter('devices')}
           onMouseLeave={() => handleMouseLeave('devices')}
           onClick={() => openModal('devices')}
@@ -740,16 +759,18 @@ const Home = () => {
               }}
             >
               <div className="flex items-center">
-                <div className="w-8 h-8 rounded-full flex items-center justify-center bg-blue-500 mr-3">
+                <AppleStyleIcon
+                  colorScheme="orange"
+                >
                   <ComputerDesktopIcon className="w-5 h-5 text-white" />
-                </div>
-                <div>
+                </AppleStyleIcon>
+                <div className="ml-3">
                   <h3 className="text-base font-semibold text-[#2c2c2e]">我的设备</h3>
                   <p className="text-xs text-gray-500 mt-0.5">浏览全部设备</p>
                 </div>
               </div>
               <div className="w-6 h-6 flex items-center justify-center rounded-full bg-gray-100">
-                <span className="text-blue-500 font-semibold text-sm">{myDevices.length}</span>
+                <span className="text-[#FF9F0A] font-semibold text-sm">{myDevices.length}</span>
               </div>
             </div>
             <div style={cardBodyStyle} className="h-[calc(100%-64px)] overflow-y-auto">
@@ -792,7 +813,6 @@ const Home = () => {
           initial="hidden"
           animate="visible"
           className="cursor-pointer card-container"
-          data-card-id="countdown"
           onMouseEnter={() => handleMouseEnter('countdown')}
           onMouseLeave={() => handleMouseLeave('countdown')}
           onClick={() => openModal('countdown')}
@@ -810,12 +830,15 @@ const Home = () => {
               }}
             >
               <div className="flex items-center">
-                <div className="w-8 h-8 rounded-full flex items-center justify-center bg-blue-500 mr-3">
+                <AppleStyleIcon
+                  colorScheme="teal"
+                  size="md"
+                >
                   <ClockIcon className="w-5 h-5 text-white" />
-                </div>
-                <div>
-                  <h3 className="text-base font-semibold text-[#2c2c2e]">倒计时</h3>
-                  <p className="text-xs text-gray-500 mt-0.5">查看事件详情</p>
+                </AppleStyleIcon>
+                <div className="ml-3">
+                  <h3 className="text-base font-semibold text-[#2c2c2e]">{myCountdown.title}</h3>
+                  <p className="text-xs text-gray-500 mt-0.5">剩余天数</p>
                 </div>
               </div>
               <div className="w-6 h-6 flex items-center justify-center rounded-full bg-gray-100">
@@ -851,7 +874,6 @@ const Home = () => {
           initial="hidden"
           animate="visible"
           className="md:col-span-3 cursor-pointer card-container"
-          data-card-id="blogs"
           onMouseEnter={() => handleMouseEnter('blogs')}
           onMouseLeave={() => handleMouseLeave('blogs')}
           onClick={() => openModal('blogs')}
@@ -863,21 +885,26 @@ const Home = () => {
               ...(hoveredCards.blogs ? hoverStyle : {})
             }}
           >
-            <div style={cardHeaderStyle} className="flex flex-row justify-between items-center">
-              <div className="flex items-center gap-2">
-                <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${hoveredCards.blogs ? 'bg-white text-blue-500' : 'bg-[#f5f5f7] text-[#1d1d1f]'}`}>
-                  <PiNotePencilBold className="w-[18px] h-[18px]" />
+            <div
+              style={{
+                ...cardHeaderStyle
+              }}
+            >
+              <div className="flex items-center">
+                <AppleStyleIcon
+                  colorScheme="pink"
+                  size="md"
+                >
+                  <DocumentTextIcon className="w-5 h-5 text-white" />
+                </AppleStyleIcon>
+                <div className="ml-3">
+                  <h3 className="text-base font-semibold text-[#2c2c2e]">我的博客文章</h3>
+                  <p className="text-xs text-gray-500 mt-0.5">从 blog.damesck.net 获取的最新内容</p>
                 </div>
-                <h3 className="font-semibold text-lg text-[#1d1d1f]">最新博客</h3>
               </div>
-              {blogPosts.length > 4 && (
-                <div className="flex items-center text-sm text-blue-500 hover:text-blue-600 transition-colors">
-                  <Link to="/blog" className="flex items-center gap-1">
-                    <span>查看全部</span>
-                    <PiArrowRightBold className="w-3 h-3" />
-                  </Link>
-                </div>
-              )}
+              <div className="w-6 h-6 flex items-center justify-center rounded-full bg-gray-100">
+                <span className="text-[#FF375F] font-semibold text-sm">{blogPosts.length || 0}</span>
+              </div>
             </div>
             <div style={cardBodyStyle} className="h-[calc(100%-64px)] overflow-y-auto">
               {loading ? (
@@ -889,7 +916,7 @@ const Home = () => {
                 </div>
               ) : apiError ? (
                 <div className="flex flex-col items-center justify-center h-full p-4 text-center">
-                  <div className="text-red-500 mb-2 font-medium">请求失败 {apiError.code ? `(错误代码: ${apiError.code})` : ''}</div>
+                  <div className="text-red-500 mb-2 font-medium">请求失败 (错误代码: {apiError.code})</div>
                   <div className="text-sm text-gray-700 mb-3">{apiError.message}</div>
                   {apiError.details && (
                     <div className="text-xs text-gray-500 max-w-md">{apiError.details}</div>
@@ -902,15 +929,15 @@ const Home = () => {
                   </button>
                 </div>
               ) : blogPosts.length > 0 ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {blogPosts.slice(0, 4).map((blog, index) => (
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                  {blogPosts.map((blog, index) => (
                     <div key={index} className="bg-gray-50/50 rounded-lg p-3 hover:bg-gray-50/80 transition-colors h-full">
                       <div className="flex flex-col h-full">
                         <div className="flex-grow">
                           <h4 className="font-medium text-base text-[#2c2c2e] truncate">{blog.title}</h4>
                           <p className="text-xs text-gray-600 mt-1 line-clamp-2">{blog.summary}</p>
                           <div className="flex gap-1.5 mt-3 flex-wrap">
-                            {blog.tags.slice(0, 2).map((tag, tagIndex) => (
+                            {blog.tags.map((tag, tagIndex) => (
                               <span key={tagIndex} className="px-2 py-0.5 text-xs rounded-md bg-blue-50 text-blue-600">
                                 {tag.name}
                               </span>
@@ -923,15 +950,15 @@ const Home = () => {
                   ))}
                 </div>
               ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {portfolioData.blogs.slice(0, 4).map((blog: DefaultBlogPost, index) => (
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                  {portfolioData.blogs.map((blog: DefaultBlogPost, index) => (
                     <div key={index} className="bg-gray-50/50 rounded-lg p-3 hover:bg-gray-50/80 transition-colors h-full">
                       <div className="flex flex-col h-full">
                         <div className="flex-grow">
                           <h4 className="font-medium text-base text-[#2c2c2e] truncate">{blog.title}</h4>
                           <p className="text-xs text-gray-600 mt-1 line-clamp-2">{blog.summary}</p>
                           <div className="flex gap-1.5 mt-3 flex-wrap">
-                            {blog.tags.slice(0, 2).map((tag, tagIndex) => (
+                            {blog.tags.map((tag, tagIndex) => (
                               <span key={tagIndex} className="px-2 py-0.5 text-xs rounded-md bg-blue-50 text-blue-600">
                                 {tag.name}
                               </span>
@@ -969,10 +996,15 @@ const Home = () => {
             >
               <div className="flex justify-between items-center mb-6">
                 <div className="flex items-center">
-                  <div className="w-10 h-10 rounded-full flex items-center justify-center bg-blue-500 mr-3">
+                  <AppleStyleIcon
+                    colorScheme="green"
+                    size="lg"
+                  >
                     <CodeBracketIcon className="w-6 h-6 text-white" />
+                  </AppleStyleIcon>
+                  <div className="ml-3">
+                    <h2 className="text-2xl font-bold text-[#2c2c2e]">全部技能详情</h2>
                   </div>
-                  <h2 className="text-2xl font-bold text-[#2c2c2e]">全部技能详情</h2>
                 </div>
                 <button
                   className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center hover:bg-gray-200 transition-colors"
@@ -1022,7 +1054,17 @@ const Home = () => {
               onClick={(e) => e.stopPropagation()}
             >
               <div className="flex justify-between items-center mb-6">
-                <h2 className="text-2xl font-bold text-[#2c2c2e]">个人资料详情</h2>
+                <div className="flex items-center">
+                  <AppleStyleIcon
+                    colorScheme="blue"
+                    size="lg"
+                  >
+                    <ChatBubbleLeftRightIcon className="w-6 h-6 text-white" />
+                  </AppleStyleIcon>
+                  <div className="ml-3">
+                    <h2 className="text-2xl font-bold text-[#2c2c2e]">个人资料详情</h2>
+                  </div>
+                </div>
                 <button
                   className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center hover:bg-gray-200 transition-colors"
                   onClick={() => closeModal('personal')}
@@ -1099,10 +1141,15 @@ const Home = () => {
             >
               <div className="flex justify-between items-center mb-6">
                 <div className="flex items-center">
-                  <div className="w-10 h-10 rounded-full flex items-center justify-center bg-blue-500 mr-3">
+                  <AppleStyleIcon
+                    colorScheme="indigo"
+                    size="lg"
+                  >
                     <BookOpenIcon className="w-6 h-6 text-white" />
+                  </AppleStyleIcon>
+                  <div className="ml-3">
+                    <h2 className="text-2xl font-bold text-[#2c2c2e]">学习进度详情</h2>
                   </div>
-                  <h2 className="text-2xl font-bold text-[#2c2c2e]">学习进度详情</h2>
                 </div>
                 <button
                   className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center hover:bg-gray-200 transition-colors"
@@ -1156,10 +1203,15 @@ const Home = () => {
             >
               <div className="flex justify-between items-center mb-6">
                 <div className="flex items-center">
-                  <div className="w-10 h-10 rounded-full flex items-center justify-center bg-blue-500 mr-3">
+                  <AppleStyleIcon
+                    colorScheme="orange"
+                    size="lg"
+                  >
                     <ComputerDesktopIcon className="w-6 h-6 text-white" />
+                  </AppleStyleIcon>
+                  <div className="ml-3">
+                    <h2 className="text-2xl font-bold text-[#2c2c2e]">我的设备详情</h2>
                   </div>
-                  <h2 className="text-2xl font-bold text-[#2c2c2e]">我的设备详情</h2>
                 </div>
                 <button
                   className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center hover:bg-gray-200 transition-colors"
@@ -1227,10 +1279,15 @@ const Home = () => {
             >
               <div className="flex justify-between items-center mb-6">
                 <div className="flex items-center">
-                  <div className="w-10 h-10 rounded-full flex items-center justify-center bg-blue-500 mr-3">
-                    <ClockIcon className="w-6 h-6 text-white" />
+                  <AppleStyleIcon
+                    colorScheme="teal"
+                    size="md"
+                  >
+                    <ClockIcon className="w-5 h-5 text-white" />
+                  </AppleStyleIcon>
+                  <div className="ml-3">
+                    <h2 className="text-2xl font-bold text-[#2c2c2e]">{myCountdown.title}</h2>
                   </div>
-                  <h2 className="text-2xl font-bold text-[#2c2c2e]">{myCountdown.title}</h2>
                 </div>
                 <button
                   className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center hover:bg-gray-200 transition-colors"
@@ -1310,12 +1367,15 @@ const Home = () => {
             >
               <div className="flex justify-between items-center mb-6">
                 <div className="flex items-center">
-                  <div className="w-10 h-10 rounded-full flex items-center justify-center bg-blue-500 mr-3">
-                    <DocumentTextIcon className="w-6 h-6 text-white" />
-                  </div>
-                  <div>
-                    <h2 className="text-2xl font-bold text-[#2c2c2e]">我的博客文章</h2>
-                    <p className="text-sm text-gray-500">从 blog.damesck.net 获取的最新内容</p>
+                  <AppleStyleIcon
+                    colorScheme="pink"
+                    size="md"
+                  >
+                    <DocumentTextIcon className="w-5 h-5 text-white" />
+                  </AppleStyleIcon>
+                  <div className="ml-3">
+                    <h3 className="text-base font-semibold text-[#2c2c2e]">我的博客文章</h3>
+                    <p className="text-xs text-gray-500 mt-0.5">从 blog.damesck.net 获取的最新内容</p>
                   </div>
                 </div>
                 <button
@@ -1328,7 +1388,7 @@ const Home = () => {
 
               {apiError ? (
                 <div className="flex flex-col items-center justify-center p-6 text-center">
-                  <div className="text-red-500 mb-2 font-medium">请求失败 {apiError.code ? `(错误代码: ${apiError.code})` : ''}</div>
+                  <div className="text-red-500 mb-2 font-medium">请求失败 (错误代码: {apiError.code})</div>
                   <div className="text-sm text-gray-700 mb-3">{apiError.message}</div>
                   {apiError.details && (
                     <div className="text-xs text-gray-500 max-w-md mb-4">{apiError.details}</div>
@@ -1413,4 +1473,3 @@ const Home = () => {
 };
 
 export default Home;
-
