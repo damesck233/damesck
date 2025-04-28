@@ -3,7 +3,7 @@ version: '3.8'
 services:
   nginx:
     image: nginx:latest
-    container_name: nginx_index
+    container_name: nginx_damescknet
     ports:
       - "908:80"
     volumes:
