@@ -16,12 +16,13 @@ const Home = lazy(() => import('./pages/Home'))
 const Blog = lazy(() => import('./pages/Blog'))
 const Contact = lazy(() => import('./pages/Contact'))
 import Loading from './components/Loading'
+import WebWalker from './components/WebWalker'
 import { preloadResourcesWithMinTime } from './utils/preloader'
 
 // 将背景图片组件分离，减少重渲染
 const BackgroundImage = memo(({ bgUrl }: { bgUrl: string }) => (
   <div
-    className="fixed inset-0 w-full h-full z-[-1] animate-element"
+    className="fixed inset-0 w-full h-full z-[-1] animate-element bg-image"
     style={{
       backgroundImage: `url(${bgUrl})`,
       backgroundSize: 'cover',
@@ -261,6 +262,9 @@ function App() {
 
             {/* 分离的页面内容组件 */}
             <PageContent />
+
+            {/* Web动画管理组件 */}
+            <WebWalker />
 
             {/* 底部栏 */}
             <footer className="bg-white/10 backdrop-blur-md border-t border-white/20 p-4">

@@ -14,32 +14,31 @@ const containerVariants: Variants = {
 const Loading = () => {
   const [progress, setProgress] = useState(0);
 
-  // 优化模拟加载进度，但保留动画效果
-  useEffect(() => {
-    // 使用 requestAnimationFrame 替代 setInterval 提高性能
-    let rafId: number;
-    let startTime = performance.now();
-    const duration = 3000; // 加载动画时长
-
-    const updateProgress = (timestamp: number) => {
-      const elapsed = timestamp - startTime;
-      // 使用缓动函数计算进度，减少计算量
-      const newProgress = Math.min(100, (elapsed / duration) * 100);
-      setProgress(newProgress);
-
-      if (elapsed < duration) {
-        rafId = requestAnimationFrame(updateProgress);
-      }
-    };
-
-    rafId = requestAnimationFrame(updateProgress);
-
-    return () => {
-      if (rafId) {
-        cancelAnimationFrame(rafId);
-      }
-    };
-  }, []);
+  // 注释掉原来的动画逻辑，现在由WebWalker组件处理
+  // useEffect(() => {
+  //   let rafId: number;
+  //   let startTime = performance.now();
+  //   const duration = 3000; // 加载动画时长
+  //
+  //   const updateProgress = (timestamp: number) => {
+  //     const elapsed = timestamp - startTime;
+  //     // 使用缓动函数计算进度，减少计算量
+  //     const newProgress = Math.min(100, (elapsed / duration) * 100);
+  //     setProgress(newProgress);
+  //
+  //     if (elapsed < duration) {
+  //       rafId = requestAnimationFrame(updateProgress);
+  //     }
+  //   };
+  //
+  //   rafId = requestAnimationFrame(updateProgress);
+  //
+  //   return () => {
+  //     if (rafId) {
+  //       cancelAnimationFrame(rafId);
+  //     }
+  //   };
+  // }, []);
 
   return (
     <motion.div
@@ -54,7 +53,7 @@ const Loading = () => {
         {[...Array(3)].map((_, i) => (
           <motion.div
             key={i}
-            className="absolute rounded-full bg-white/10"
+            className="absolute rounded-full bg-white/10 floating-element"
             initial={{ opacity: 0 }}
             animate={{ opacity: 0.6 }}
             transition={{
@@ -116,22 +115,15 @@ const Loading = () => {
         {/* 加载进度条 */}
         <div className="w-60 h-1 bg-white/20 rounded-full overflow-hidden mx-auto mb-4">
           <motion.div
-            className="h-full bg-white"
+            className="h-full bg-white loading-progress-bar"
             initial={{ width: 0 }}
-            animate={{ width: `${progress}%` }}
-            transition={{ duration: 0.5 }}
+            style={{ width: `${progress}%` }}
           />
         </div>
 
         {/* 旋转加载指示器 */}
         <motion.div
-          animate={{ rotate: 360 }}
-          transition={{
-            repeat: Infinity,
-            duration: 1.5,
-            ease: "linear"
-          }}
-          className="w-6 h-6 mx-auto mb-4"
+          className="w-6 h-6 mx-auto mb-4 loading-spinner"
         >
           <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path

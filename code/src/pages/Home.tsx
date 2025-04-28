@@ -581,7 +581,7 @@ const Home = () => {
           custom={0}
           initial="hidden"
           animate="visible"
-          className="aspect-square cursor-pointer card-container"
+          className="aspect-square cursor-pointer card-container floating-element"
           onMouseEnter={() => handleMouseEnter('personal')}
           onMouseLeave={() => handleMouseLeave('personal')}
           onClick={() => openModal('personal')}
@@ -623,7 +623,7 @@ const Home = () => {
           custom={1}
           initial="hidden"
           animate="visible"
-          className="aspect-square cursor-pointer card-container"
+          className="aspect-square cursor-pointer card-container floating-element"
           onMouseEnter={() => handleMouseEnter('skills')}
           onMouseLeave={() => handleMouseLeave('skills')}
           onClick={() => openModal('skills')}
@@ -682,7 +682,7 @@ const Home = () => {
           custom={2}
           initial="hidden"
           animate="visible"
-          className="aspect-square cursor-pointer card-container"
+          className="aspect-square cursor-pointer card-container floating-element"
           onMouseEnter={() => handleMouseEnter('stats')}
           onMouseLeave={() => handleMouseLeave('stats')}
           onClick={() => openModal('stats')}
@@ -741,7 +741,7 @@ const Home = () => {
           custom={3}
           initial="hidden"
           animate="visible"
-          className="md:col-span-2 cursor-pointer card-container"
+          className="md:col-span-2 cursor-pointer card-container floating-element"
           onMouseEnter={() => handleMouseEnter('devices')}
           onMouseLeave={() => handleMouseLeave('devices')}
           onClick={() => openModal('devices')}
@@ -812,7 +812,7 @@ const Home = () => {
           custom={4}
           initial="hidden"
           animate="visible"
-          className="cursor-pointer card-container"
+          className="cursor-pointer card-container floating-element"
           onMouseEnter={() => handleMouseEnter('countdown')}
           onMouseLeave={() => handleMouseLeave('countdown')}
           onClick={() => openModal('countdown')}
@@ -873,7 +873,7 @@ const Home = () => {
           custom={5}
           initial="hidden"
           animate="visible"
-          className="md:col-span-3 cursor-pointer card-container"
+          className="md:col-span-3 cursor-pointer card-container floating-element"
           onMouseEnter={() => handleMouseEnter('blogs')}
           onMouseLeave={() => handleMouseLeave('blogs')}
           onClick={() => openModal('blogs')}
