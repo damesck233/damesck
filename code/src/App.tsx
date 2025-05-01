@@ -346,6 +346,7 @@ function App() {
           opacity: { duration: 1.2 }
         }}
         className="min-h-screen flex flex-col relative"
+        style={{ minHeight: '100vh' }}
       >
         {/* 顶部导航栏 - 使用单独的动画组件 */}
         <NavigationBar isVisible={navbarVisible} toggleMenu={toggleMenu} menuOpen={menuOpen} />
@@ -362,6 +363,7 @@ function App() {
             ease: appleEaseOut,
             delay: 0.2
           }}
+          className="flex-grow flex flex-col min-h-0"
         >
           <PageContent />
         </motion.div>
@@ -375,10 +377,18 @@ function App() {
             ease: appleEaseOut,
             delay: 0.5
           }}
-          className="dark:bg-gray-900/20 dark:border-gray-800/20 bg-white/10 backdrop-blur-md border-t border-white/20 p-4"
+          className="dark:bg-gray-900/40 dark:border-gray-800/30 bg-white/20 backdrop-blur-md border-t border-white/30 p-4 mt-auto shadow-md"
         >
           <div className="max-w-7xl mx-auto">
-            {/* 底部内容 */}
+            <div className="flex flex-wrap justify-center items-center gap-3 text-base font-medium text-gray-700 dark:text-gray-200">
+              <span className="text-gray-800 dark:text-white">©️ 2025</span>
+              <span className="mx-1 text-gray-500 dark:text-gray-400">|</span>
+              <a href="/" className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">damesck.net</a>
+              <span className="mx-1 text-gray-500 dark:text-gray-400">|</span>
+              <a href="https://github.com/damesck233/damesck" target="_blank" rel="noopener noreferrer" className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">GitHub</a>
+              {/* <span className="mx-1 text-gray-500 dark:text-gray-400">|</span>
+              <a href="https://qwq.my" target="_blank" rel="noopener noreferrer" className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">雪球qwq.my</a> */}
+            </div>
           </div>
         </motion.footer>
       </motion.div>

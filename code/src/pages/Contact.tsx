@@ -347,57 +347,41 @@ const Contact: React.FC = () => {
     setSelectedContact(null);
   };
 
-  // 为卡片定义交错动画变体
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    show: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-        delayChildren: 0.2
-      }
-    }
-  };
-
   return (
-    <div className="max-w-7xl mx-auto px-4">
+    <div className="max-w-7xl mx-auto px-4 flex flex-col min-h-[calc(100vh-200px)]">
       <motion.h1
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{
-          duration: 0.6,
-          ease: [0.22, 1, 0.36, 1]
-        }}
         className="text-4xl font-bold mb-8 text-[#2c2c2e] dark:text-white"
       >
         联系方式
       </motion.h1>
 
+      {/* 联系方式卡片网格 */}
       <motion.div
-        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-        variants={containerVariants}
+        variants={{
+          hidden: { opacity: 0 },
+          show: {
+            opacity: 1,
+            transition: {
+              staggerChildren: 0.1
+            }
+          }
+        }}
         initial="hidden"
         animate="show"
+        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12 flex-grow"
       >
-        {contactData.map((contact, index) => (
-          <motion.div
+        {contactData.map((contact) => (
+          <ContactCard
             key={contact.id}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{
-              duration: 0.5,
-              delay: index * 0.1,
-              ease: [0.22, 1, 0.36, 1]
-            }}
-          >
-            <ContactCard
-              contact={contact}
-              onViewQRCode={handleViewQRCode}
-            />
-          </motion.div>
+            contact={contact}
+            onViewQRCode={handleViewQRCode}
+          />
         ))}
       </motion.div>
 
+      {/* 二维码弹窗 */}
       <AnimatePresence>
         {selectedContact && (
           <QRCodeModal
