@@ -2,6 +2,196 @@
 @tailwind components;
 @tailwind utilities;
 
+/* 暗黑模式颜色变量 */
+:root {
+  --bg-primary: white;
+  --text-primary: #1f2937;
+  --text-secondary: #4b5563;
+  --card-bg: rgba(255, 255, 255, 0.8);
+  --card-border: rgba(255, 255, 255, 0.4);
+  --glass-bg: rgba(255, 255, 255, 0.4);
+  --glass-border: rgba(255, 255, 255, 0.4);
+  --glass-shadow: rgba(0, 0, 0, 0.05);
+  --hover-bg: rgba(243, 244, 246, 0.5);
+  --navbar-bg: rgba(255, 255, 255, 0.08);
+  --scrollbar-thumb: rgba(255, 255, 255, 0.3);
+  --scrollbar-thumb-hover: rgba(255, 255, 255, 0.4);
+}
+
+.dark {
+  --bg-primary: #121212;
+  --text-primary: rgba(255, 255, 255, 0.9);
+  --text-secondary: rgba(255, 255, 255, 0.6);
+  --card-bg: rgba(30, 41, 59, 0.8);
+  --card-border: rgba(255, 255, 255, 0.1);
+  --glass-bg: rgba(30, 41, 59, 0.4);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --glass-shadow: rgba(0, 0, 0, 0.2);
+  --hover-bg: rgba(55, 65, 81, 0.5);
+  --navbar-bg: rgba(15, 23, 42, 0.3);
+  --scrollbar-thumb: rgba(75, 85, 99, 0.5);
+  --scrollbar-thumb-hover: rgba(75, 85, 99, 0.7);
+}
+
+/* 暗黑模式过渡效果 */
+* {
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+
+/* WebWalker动画系统 - 全局动画控制 */
+.webwalker-animations-enabled .animate-element {
+  transform: translateZ(0);
+  will-change: transform, opacity;
+}
+
+/* 添加基础动画类 */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideLeft {
+  from {
+    transform: translateX(20px);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideRight {
+  from {
+    transform: translateX(-20px);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.05);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-5px);
+  }
+
+  100% {
+    transform: translateY(0);
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* 加载动画相关样式 */
+.loading-progress-bar {
+  transition: width 0.3s ease-out;
+}
+
+.loading-spinner {
+  animation: spin 2s linear infinite;
+}
+
+.floating-element {
+  animation: float 3s ease-in-out infinite;
+}
+
+/* 滚动显示动画类 */
+[data-scroll-animation="fade-in"] {
+  opacity: 0;
+  transition: opacity 0.6s ease-out;
+}
+
+[data-scroll-animation="slide-up"] {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+[data-scroll-animation="slide-left"] {
+  opacity: 0;
+  transform: translateX(20px);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+[data-scroll-animation="slide-right"] {
+  opacity: 0;
+  transform: translateX(-20px);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+/* 应用动画的样式 */
+.webwalker-animations-enabled [data-scroll-animation].fade-in {
+  opacity: 1;
+}
+
+.webwalker-animations-enabled [data-scroll-animation].slide-up,
+.webwalker-animations-enabled [data-scroll-animation].slide-left,
+.webwalker-animations-enabled [data-scroll-animation].slide-right {
+  opacity: 1;
+  transform: translate(0);
+}
+
 /* 添加CSS性能提示，但避免对所有元素使用will-change */
 * {
   -webkit-backface-visibility: hidden;
@@ -16,7 +206,8 @@
 
 @layer base {
   body {
-    @apply font-sf-pro text-gray-800;
+    @apply font-sf-pro;
+    color: var(--text-primary);
     background-attachment: fixed;
 
     /* 提供平滑滚动，但仅在桌面设备 */
@@ -27,40 +218,58 @@
 }
 
 @layer components {
+
+  /* 暗黑模式切换按钮样式 */
+  .theme-toggle-btn {
+    @apply relative flex items-center justify-center w-8 h-8 rounded-full;
+    background-color: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    transition: all 0.2s ease;
+  }
+
+  .theme-toggle-btn:hover {
+    box-shadow: 0 0 0 2px rgba(96, 165, 250, 0.3);
+    transform: translateY(-1px);
+  }
+
   .glass-card {
-    @apply bg-white/40 backdrop-blur-md rounded-xl border border-white/40 transition-all duration-150;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05),
+    background-color: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+    @apply rounded-xl transition-all duration-150;
+    box-shadow: 0 4px 12px var(--glass-shadow),
       0 1px 3px rgba(0, 0, 0, 0.1),
-      inset 0 1px 0 rgba(255, 255, 255, 0.2);
+      inset 0 1px 0 rgba(255, 255, 255, 0.1);
   }
 
   .glass-card:hover {
-    @apply bg-white/50 border-white/50;
+    border-color: var(--card-border);
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
     transform: translateY(-2px);
   }
 
   /* 优化苹果风格的卡片设计 */
   .split-card {
-    @apply overflow-hidden rounded-2xl shadow-md border border-white/40;
-    background-color: rgba(250, 251, 253, 0.85);
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06),
-      inset 0 0 0 0.5px rgba(255, 255, 255, 0.5);
+    @apply overflow-hidden rounded-2xl shadow-md;
+    background-color: var(--card-bg);
+    border: 1px solid var(--card-border);
+    box-shadow: 0 2px 10px var(--glass-shadow),
+      inset 0 0 0 0.5px rgba(255, 255, 255, 0.2);
     transition: all 0.2s ease-out;
   }
 
   .split-card:hover {
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 4px 16px var(--glass-shadow);
     transform: translateY(-2px);
   }
 
   .split-card-header {
     @apply backdrop-blur-md;
-    background-color: rgba(238, 246, 253, 0.7);
+    background-color: var(--glass-bg);
     height: 80px;
     padding: 14px;
-    border-bottom: 1px solid rgba(220, 234, 250, 0.7);
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5);
+    border-bottom: 1px solid var(--card-border);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
     position: relative;
   }
 
@@ -71,12 +280,12 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(to bottom, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.05));
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0.05), transparent);
     pointer-events: none;
   }
 
   .split-card-body {
-    background-color: rgba(255, 255, 255, 0.9);
+    background-color: var(--card-bg);
     height: calc(100% - 80px);
     padding: 18px;
     position: relative;
@@ -85,31 +294,36 @@
   /* 卡片图标容器 */
   .card-icon-container {
     @apply flex items-center justify-center rounded-full w-10 h-10;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08),
-      inset 0 1px 1px rgba(255, 255, 255, 0.3);
+    background-color: var(--glass-bg);
+    box-shadow: 0 2px 4px var(--glass-shadow),
+      inset 0 1px 1px rgba(255, 255, 255, 0.1);
   }
 
   /* 标签样式优化 */
   .tag {
     @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+    background-color: var(--glass-bg);
+    color: var(--text-secondary);
+    box-shadow: 0 1px 2px var(--glass-shadow);
   }
 
   /* 亚克力玻璃效果 - 平衡视觉效果和性能 */
   .acrylic-bg {
     position: relative;
     overflow: hidden;
-    background: rgba(255, 255, 255, 0.2);
+    background-color: var(--glass-bg);
     backdrop-filter: blur(10px);
   }
 
   .nav-link {
-    @apply px-3 py-1.5 rounded-full text-white/80 hover:text-white/95 hover:bg-white/15 transition-all duration-150;
+    @apply px-3 py-1.5 rounded-full hover:bg-white/15 transition-all duration-150;
+    color: var(--text-primary);
     backdrop-filter: blur(3px);
   }
 
   .nav-link.active {
-    @apply bg-white/20 text-white shadow-sm;
+    @apply bg-white/20 shadow-sm;
+    color: var(--text-primary);
     box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1);
   }
 
@@ -133,14 +347,20 @@
     }
 
     ::-webkit-scrollbar-thumb {
-      @apply bg-white/30 rounded-full hover:bg-white/40;
+      background-color: var(--scrollbar-thumb);
+      @apply rounded-full;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background-color: var(--scrollbar-thumb-hover);
     }
   }
 
   /* 数据可视化元素 */
   .progress-bar {
-    @apply rounded-full overflow-hidden bg-gray-100/80;
-    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.03);
+    @apply rounded-full overflow-hidden;
+    background-color: var(--glass-bg);
+    box-shadow: inset 0 1px 3px var(--glass-shadow);
   }
 
   .progress-bar-fill {
@@ -151,14 +371,14 @@
   /* 卡片内容区块 */
   .content-block {
     @apply rounded-xl p-3;
-    background-color: rgba(245, 247, 250, 0.5);
-    border: 1px solid rgba(220, 225, 235, 0.5);
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.01);
+    background-color: var(--glass-bg);
+    border: 1px solid var(--card-border);
+    box-shadow: 0 1px 2px var(--glass-shadow);
   }
 
   .content-block:hover {
-    background-color: rgba(245, 247, 250, 0.7);
-    border-color: rgba(220, 225, 235, 0.6);
+    background-color: var(--hover-bg);
+    border-color: var(--card-border);
   }
 
   /* 减少动画和过渡效果的频率与复杂度 */

@@ -14,31 +14,30 @@ const containerVariants: Variants = {
 const Loading = () => {
   const [progress, setProgress] = useState(0);
 
-  // 注释掉原来的动画逻辑，现在由WebWalker组件处理
-  // useEffect(() => {
-  //   let rafId: number;
-  //   let startTime = performance.now();
-  //   const duration = 3000; // 加载动画时长
-  //
-  //   const updateProgress = (timestamp: number) => {
-  //     const elapsed = timestamp - startTime;
-  //     // 使用缓动函数计算进度，减少计算量
-  //     const newProgress = Math.min(100, (elapsed / duration) * 100);
-  //     setProgress(newProgress);
-  //
-  //     if (elapsed < duration) {
-  //       rafId = requestAnimationFrame(updateProgress);
-  //     }
-  //   };
-  //
-  //   rafId = requestAnimationFrame(updateProgress);
-  //
-  //   return () => {
-  //     if (rafId) {
-  //       cancelAnimationFrame(rafId);
-  //     }
-  //   };
-  // }, []);
+  useEffect(() => {
+    let rafId: number;
+    let startTime = performance.now();
+    const duration = 3000; // 加载动画时长
+
+    const updateProgress = (timestamp: number) => {
+      const elapsed = timestamp - startTime;
+      // 使用缓动函数计算进度，减少计算量
+      const newProgress = Math.min(100, (elapsed / duration) * 100);
+      setProgress(newProgress);
+
+      if (elapsed < duration) {
+        rafId = requestAnimationFrame(updateProgress);
+      }
+    };
+
+    rafId = requestAnimationFrame(updateProgress);
+
+    return () => {
+      if (rafId) {
+        cancelAnimationFrame(rafId);
+      }
+    };
+  }, []);
 
   return (
     <motion.div
@@ -117,13 +116,20 @@ const Loading = () => {
           <motion.div
             className="h-full bg-white loading-progress-bar"
             initial={{ width: 0 }}
-            style={{ width: `${progress}%` }}
+            animate={{ width: `${progress}%` }}
+            transition={{ duration: 0.1 }}
           />
         </div>
 
         {/* 旋转加载指示器 */}
         <motion.div
           className="w-6 h-6 mx-auto mb-4 loading-spinner"
+          animate={{ rotate: 360 }}
+          transition={{
+            duration: 2,
+            repeat: Infinity,
+            ease: "linear"
+          }}
         >
           <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path

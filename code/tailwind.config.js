@@ -4,6 +4,7 @@ export default {
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
+  darkMode: 'class',
   theme: {
     extend: {
       colors: {
@@ -30,11 +31,24 @@ export default {
       boxShadow: {
         'icloud': '0 4px 20px rgba(0, 0, 0, 0.1)',
         'icloud-hover': '0 8px 30px rgba(0, 0, 0, 0.15)',
+        'dark-icloud': '0 4px 20px rgba(0, 0, 0, 0.3)',
+        'dark-icloud-hover': '0 8px 30px rgba(0, 0, 0, 0.4)',
       },
       animation: {
         'spin-slow': 'spin 3s linear infinite',
         'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
         'bounce-slow': 'bounce 3s infinite',
+      },
+      backgroundColor: {
+        'dark-card': 'rgba(30, 41, 59, 0.8)',
+        'dark-surface': 'rgba(15, 23, 42, 0.8)',
+      },
+      borderColor: {
+        'dark-border': 'rgba(255, 255, 255, 0.1)',
+      },
+      textColor: {
+        'dark-primary': 'rgba(255, 255, 255, 0.9)',
+        'dark-secondary': 'rgba(255, 255, 255, 0.6)',
       },
     },
   },
@@ -49,13 +63,13 @@ export default {
   },
   variants: {
     extend: {
-      backgroundColor: ['hover', 'focus'],
-      opacity: ['hover'],
+      backgroundColor: ['hover', 'focus', 'dark'],
+      opacity: ['hover', 'dark'],
       scale: ['hover', 'active'],
       translate: ['hover', 'active'],
-      boxShadow: ['hover', 'focus'],
-      textColor: ['hover', 'focus'],
-      borderColor: ['hover', 'focus'],
+      boxShadow: ['hover', 'focus', 'dark'],
+      textColor: ['hover', 'focus', 'dark'],
+      borderColor: ['hover', 'focus', 'dark'],
     },
   },
   plugins: [],

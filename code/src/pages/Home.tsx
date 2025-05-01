@@ -207,46 +207,48 @@ const AppleStyleIcon = ({
 
 // iOS/iCloud风格的卡片样式
 const iosCardStyle = {
-  backgroundColor: 'rgba(255, 255, 255, 0.75)',
+  backgroundColor: 'var(--card-bg)',
   borderRadius: '20px',
-  boxShadow: '0 4px 16px rgba(0,0,0,0.06), 0 2px 4px rgba(0,0,0,0.04)',
+  boxShadow: '0 4px 16px var(--glass-shadow), 0 2px 4px rgba(0,0,0,0.04)',
   overflow: 'hidden',
   transition: 'all 0.3s cubic-bezier(0.25, 1, 0.5, 1)',
-  border: '1px solid rgba(255, 255, 255, 0.8)'
+  border: '1px solid var(--card-border)'
 };
 
 // 毛玻璃标题区域样式
 const cardHeaderStyle = {
   backdropFilter: 'blur(10px)',
-  backgroundColor: 'rgba(255, 255, 255, 0.3)',
-  background: 'linear-gradient(135deg, rgba(255,255,255,0.3), rgba(230,240,255,0.3))',
-  borderBottom: '1px solid rgba(255, 255, 255, 0.3)',
+  backgroundColor: 'var(--glass-bg)',
+  background: 'linear-gradient(135deg, var(--glass-bg), var(--glass-bg))',
+  borderBottom: '1px solid var(--card-border)',
   padding: '14px 20px',
   position: 'relative' as const,
-  boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.6)',
+  boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.2)',
   display: 'flex',
   alignItems: 'center',
-  justifyContent: 'space-between'
+  justifyContent: 'space-between',
+  color: 'var(--text-primary)'
 };
 
 // 标题悬停效果
 const headerHoverStyle = {
-  backgroundColor: 'rgba(240, 245, 255, 0.4)',
-  boxShadow: 'inset 0 0 5px rgba(0,0,0,0.1), inset 0 0 0 1px rgba(0,0,0,0.05)',
+  backgroundColor: 'var(--hover-bg)',
+  boxShadow: 'inset 0 0 5px var(--glass-shadow), inset 0 0 0 1px rgba(0,0,0,0.05)',
   transform: 'translateY(1px)'
 };
 
 // 卡片内容区域样式
 const cardBodyStyle = {
-  backgroundColor: 'rgba(255, 255, 255, 0.8)',
+  backgroundColor: 'var(--card-bg)',
   padding: '16px 20px',
   backdropFilter: 'blur(8px)',
+  color: 'var(--text-primary)'
 };
 
 // 鼠标悬停时的放大效果
 const hoverStyle = {
   transform: 'scale(1.03)',
-  boxShadow: '0 8px 24px rgba(0,0,0,0.08), 0 4px 8px rgba(0,0,0,0.06)'
+  boxShadow: '0 8px 24px var(--glass-shadow), 0 4px 8px rgba(0,0,0,0.06)'
 };
 
 // 模态框背景
@@ -266,14 +268,14 @@ const modalOverlayStyle = {
 
 // 模态框内容
 const modalContentStyle = {
-  backgroundColor: 'rgba(255, 255, 255, 0.9)',
+  backgroundColor: 'var(--card-bg)',
   borderRadius: '20px',
-  boxShadow: '0 10px 30px rgba(0,0,0,0.1), 0 1px 8px rgba(0,0,0,0.07)',
+  boxShadow: '0 10px 30px var(--glass-shadow), 0 1px 8px rgba(0,0,0,0.07)',
   width: '90%',
   maxWidth: '800px',
   maxHeight: '80vh',
   overflow: 'auto',
-  border: '1px solid rgba(255, 255, 255, 0.8)',
+  border: '1px solid var(--card-border)',
   backdropFilter: 'blur(20px)'
 };
 
@@ -587,18 +589,18 @@ const Home = () => {
           onClick={() => openModal('personal')}
         >
           <div
-            className="h-full backdrop-blur-md bg-white/60"
+            className="h-full backdrop-blur-md dark:bg-gray-800/60 bg-white/60"
             style={{
               borderRadius: '20px',
-              boxShadow: '0 4px 16px rgba(0,0,0,0.06), 0 2px 4px rgba(0,0,0,0.04)',
+              boxShadow: '0 4px 16px var(--glass-shadow), 0 2px 4px rgba(0,0,0,0.04)',
               overflow: 'hidden',
               transition: 'all 0.3s cubic-bezier(0.25, 1, 0.5, 1)',
-              border: '1px solid rgba(255, 255, 255, 0.8)',
+              border: '1px solid var(--card-border)',
               ...(hoveredCards.personal ? hoverStyle : {})
             }}
           >
             <div className="flex flex-col items-center justify-center h-full p-8">
-              <div className="w-28 h-28 rounded-full overflow-hidden border-4 border-white shadow-lg mb-6">
+              <div className="w-28 h-28 rounded-full overflow-hidden border-4 dark:border-gray-700 border-white shadow-lg mb-6">
                 <img
                   src={personalInfo.avatar}
                   alt="个人头像"
@@ -606,11 +608,11 @@ const Home = () => {
                 />
               </div>
 
-              <h2 className="text-2xl font-bold text-[#2c2c2e] mb-2">
+              <h2 className="text-2xl font-bold dark:text-white text-[#2c2c2e] mb-2">
                 {personalInfo.name}
               </h2>
 
-              <p className="text-base text-gray-600">
+              <p className="text-base dark:text-gray-300 text-gray-600">
                 {personalInfo.email}
               </p>
             </div>
@@ -647,11 +649,11 @@ const Home = () => {
                   <CodeBracketIcon className="w-5 h-5 text-white" />
                 </AppleStyleIcon>
                 <div className="ml-3">
-                  <h3 className="text-base font-semibold text-[#2c2c2e]">我的技能</h3>
-                  <p className="text-xs text-gray-500 mt-0.5">全部技能</p>
+                  <h3 className="text-base font-semibold dark:text-gray-100 text-[#2c2c2e]">我的技能</h3>
+                  <p className="text-xs dark:text-gray-400 text-gray-500 mt-0.5">全部技能</p>
                 </div>
               </div>
-              <div className="w-6 h-6 flex items-center justify-center rounded-full bg-gray-100">
+              <div className="w-6 h-6 flex items-center justify-center rounded-full dark:bg-gray-700 bg-gray-100">
                 <span className="text-[#30D158] font-semibold text-sm">{mySkills.length}</span>
               </div>
             </div>
@@ -659,12 +661,12 @@ const Home = () => {
               <div className="grid grid-cols-1 gap-3 p-1">
                 {mySkills.map((skill, index) => (
                   <div key={index} className="mb-2">
-                    <div className={`text-sm font-medium mb-1.5 text-${skill.color}-700`}>
+                    <div className={`text-sm font-medium mb-1.5 dark:text-${skill.color}-400 text-${skill.color}-700`}>
                       {skill.category}
                     </div>
                     <div className="flex flex-wrap gap-1">
                       {skill.items.map((item, itemIndex) => (
-                        <span key={itemIndex} className={`bg-${skill.color}-50 text-${skill.color}-700 px-1.5 py-0.5 text-xs rounded-md`}>
+                        <span key={itemIndex} className={`dark:bg-${skill.color}-900/30 dark:text-${skill.color}-400 bg-${skill.color}-50 text-${skill.color}-700 px-1.5 py-0.5 text-xs rounded-md`}>
                           {item}
                         </span>
                       ))}
@@ -706,11 +708,11 @@ const Home = () => {
                   <BookOpenIcon className="w-5 h-5 text-white" />
                 </AppleStyleIcon>
                 <div className="ml-3">
-                  <h3 className="text-base font-semibold text-[#2c2c2e]">学习进度</h3>
-                  <p className="text-xs text-gray-500 mt-0.5">正在学习中</p>
+                  <h3 className="text-base font-semibold dark:text-gray-100 text-[#2c2c2e]">学习进度</h3>
+                  <p className="text-xs dark:text-gray-400 text-gray-500 mt-0.5">正在学习中</p>
                 </div>
               </div>
-              <div className="w-6 h-6 flex items-center justify-center rounded-full bg-gray-100">
+              <div className="w-6 h-6 flex items-center justify-center rounded-full dark:bg-gray-700 bg-gray-100">
                 <span className="text-[#5E5CE6] font-semibold text-sm">{myLearningProgress.length}</span>
               </div>
             </div>
@@ -719,10 +721,10 @@ const Home = () => {
                 {myLearningProgress.map((item, index) => (
                   <div key={index} className="mb-3">
                     <div className="flex justify-between mb-1">
-                      <span className="text-sm font-medium text-gray-700 truncate">{item.name}</span>
-                      <span className="text-sm font-semibold text-gray-800">{item.value}</span>
+                      <span className="text-sm font-medium dark:text-gray-300 text-gray-700 truncate">{item.name}</span>
+                      <span className="text-sm font-semibold dark:text-gray-200 text-gray-800">{item.value}</span>
                     </div>
-                    <div className="h-2 w-full bg-gray-100 rounded-full overflow-hidden">
+                    <div className="h-2 w-full dark:bg-gray-700 bg-gray-100 rounded-full overflow-hidden">
                       <div
                         className={`h-full bg-${item.color}-500 rounded-full`}
                         style={{ width: item.value }}
@@ -742,6 +744,7 @@ const Home = () => {
           initial="hidden"
           animate="visible"
           className="md:col-span-2 cursor-pointer card-container floating-element"
+          style={{ height: 'calc(100% - 0px)' }}
           onMouseEnter={() => handleMouseEnter('devices')}
           onMouseLeave={() => handleMouseLeave('devices')}
           onClick={() => openModal('devices')}
@@ -765,27 +768,27 @@ const Home = () => {
                   <ComputerDesktopIcon className="w-5 h-5 text-white" />
                 </AppleStyleIcon>
                 <div className="ml-3">
-                  <h3 className="text-base font-semibold text-[#2c2c2e]">我的设备</h3>
-                  <p className="text-xs text-gray-500 mt-0.5">浏览全部设备</p>
+                  <h3 className="text-base font-semibold dark:text-gray-100 text-[#2c2c2e]">我的设备</h3>
+                  <p className="text-xs dark:text-gray-400 text-gray-500 mt-0.5">浏览全部设备</p>
                 </div>
               </div>
-              <div className="w-6 h-6 flex items-center justify-center rounded-full bg-gray-100">
+              <div className="w-6 h-6 flex items-center justify-center rounded-full dark:bg-gray-700 bg-gray-100">
                 <span className="text-[#FF9F0A] font-semibold text-sm">{myDevices.length}</span>
               </div>
             </div>
             <div style={cardBodyStyle} className="h-[calc(100%-64px)] overflow-y-auto">
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 {myDevices.slice(0, 3).map((device, index) => (
-                  <div key={index} className="flex flex-col overflow-hidden h-full bg-white/70 rounded-xl p-3 hover:bg-white/90 transition-colors shadow-sm border border-gray-100/50">
-                    <div className="w-full h-20 bg-gray-50/50 rounded-lg mb-2 overflow-hidden flex items-center justify-center">
+                  <div key={index} className="flex flex-col overflow-hidden h-full dark:bg-gray-800/70 dark:border-gray-700/50 bg-white/70 rounded-xl p-3 hover:bg-white/90 dark:hover:bg-gray-700/90 transition-colors shadow-sm border border-gray-100/50">
+                    <div className="w-full h-20 dark:bg-gray-700/50 bg-gray-50/50 rounded-lg mb-2 overflow-hidden flex items-center justify-center">
                       <img src={device.image} alt={device.name} className="w-full h-full object-contain p-1 transition-all duration-500 hover:scale-105" />
                     </div>
                     <div className="flex-1 flex flex-col">
-                      <h4 className="font-semibold text-[#1d1d1f] truncate mb-1">{device.name}</h4>
-                      <p className="text-xs text-gray-500 flex-grow line-clamp-2 mb-2">{device.description}</p>
+                      <h4 className="font-semibold dark:text-gray-100 text-[#1d1d1f] truncate mb-1">{device.name}</h4>
+                      <p className="text-xs dark:text-gray-400 text-gray-500 flex-grow line-clamp-2 mb-2">{device.description}</p>
                       <div className="flex gap-1.5">
                         {device.tags.map((tag, tagIndex) => (
-                          <span key={tagIndex} className="px-2 py-0.5 text-2xs rounded-full bg-blue-50 text-blue-600 border border-blue-100/50">
+                          <span key={tagIndex} className="px-2 py-0.5 text-2xs rounded-full dark:bg-blue-900/30 dark:text-blue-400 bg-blue-50 text-blue-600 dark:border-blue-800/50 border border-blue-100/50">
                             {tag.name}
                           </span>
                         ))}
@@ -837,28 +840,28 @@ const Home = () => {
                   <ClockIcon className="w-5 h-5 text-white" />
                 </AppleStyleIcon>
                 <div className="ml-3">
-                  <h3 className="text-base font-semibold text-[#2c2c2e]">{myCountdown.title}</h3>
-                  <p className="text-xs text-gray-500 mt-0.5">剩余天数</p>
+                  <h3 className="text-base font-semibold dark:text-gray-100 text-[#2c2c2e]">{myCountdown.title}</h3>
+                  <p className="text-xs dark:text-gray-400 text-gray-500 mt-0.5">剩余天数</p>
                 </div>
               </div>
-              <div className="w-6 h-6 flex items-center justify-center rounded-full bg-gray-100">
+              <div className="w-6 h-6 flex items-center justify-center rounded-full dark:bg-gray-700 bg-gray-100">
                 <span className="text-blue-500 font-semibold text-sm">1</span>
               </div>
             </div>
             <div style={cardBodyStyle} className="h-[calc(100%-64px)]">
               <div className="h-full flex flex-col p-4">
-                <h4 className="font-medium text-xl mb-4 text-[#2c2c2e]">{myCountdown.title}</h4>
+                <h4 className="font-medium text-xl mb-4 dark:text-gray-100 text-[#2c2c2e]">{myCountdown.title}</h4>
 
                 <div className="flex items-end mb-4">
-                  <div className="text-6xl font-bold text-blue-600">{daysLeft}</div>
-                  <div className="text-2xl text-gray-500 ml-2 mb-2">天</div>
+                  <div className="text-6xl font-bold dark:text-blue-400 text-blue-600">{daysLeft}</div>
+                  <div className="text-2xl dark:text-gray-400 text-gray-500 ml-2 mb-2">天</div>
                 </div>
 
-                <p className="text-gray-500 mb-3 text-sm">距离 {myCountdown.targetDate.replace(/-/g, '年') + '日'}</p>
+                <p className="dark:text-gray-400 text-gray-500 mb-3 text-sm">距离 {myCountdown.targetDate.replace(/-/g, '年') + '日'}</p>
 
-                <div className="h-2.5 w-full bg-gray-100 rounded-full overflow-hidden mt-auto">
+                <div className="h-2.5 w-full dark:bg-gray-700 bg-gray-100 rounded-full overflow-hidden mt-auto">
                   <div
-                    className="h-full bg-blue-500 rounded-full transition-all duration-1000"
+                    className="h-full dark:bg-blue-500 bg-blue-500 rounded-full transition-all duration-1000"
                     style={{ width: `${(1 - daysLeft / myCountdown.totalDays) * 100}%` }}
                   ></div>
                 </div>
@@ -874,6 +877,7 @@ const Home = () => {
           initial="hidden"
           animate="visible"
           className="md:col-span-3 cursor-pointer card-container floating-element"
+          style={{ height: '320px' }}
           onMouseEnter={() => handleMouseEnter('blogs')}
           onMouseLeave={() => handleMouseLeave('blogs')}
           onClick={() => openModal('blogs')}
@@ -898,11 +902,11 @@ const Home = () => {
                   <DocumentTextIcon className="w-5 h-5 text-white" />
                 </AppleStyleIcon>
                 <div className="ml-3">
-                  <h3 className="text-base font-semibold text-[#2c2c2e]">我的博客文章</h3>
-                  <p className="text-xs text-gray-500 mt-0.5">从 blog.damesck.net 获取的最新内容</p>
+                  <h3 className="text-base font-semibold dark:text-gray-100 text-[#2c2c2e]">我的博客文章</h3>
+                  <p className="text-xs dark:text-gray-400 text-gray-500 mt-0.5">从 blog.damesck.net 获取的最新内容</p>
                 </div>
               </div>
-              <div className="w-6 h-6 flex items-center justify-center rounded-full bg-gray-100">
+              <div className="w-6 h-6 flex items-center justify-center rounded-full dark:bg-gray-700 bg-gray-100">
                 <span className="text-[#FF375F] font-semibold text-sm">{blogPosts.length || 0}</span>
               </div>
             </div>
@@ -910,62 +914,58 @@ const Home = () => {
               {loading ? (
                 <div className="flex items-center justify-center h-full">
                   <div className="animate-pulse flex flex-col items-center">
-                    <div className="h-2 w-20 bg-gray-200 rounded mb-2"></div>
-                    <div className="h-2 w-16 bg-gray-200 rounded"></div>
+                    <div className="h-2 w-20 dark:bg-gray-700 bg-gray-200 rounded mb-2"></div>
+                    <div className="h-2 w-16 dark:bg-gray-700 bg-gray-200 rounded"></div>
                   </div>
                 </div>
               ) : apiError ? (
                 <div className="flex flex-col items-center justify-center h-full p-4 text-center">
                   <div className="text-red-500 mb-2 font-medium">请求失败 (错误代码: {apiError.code})</div>
-                  <div className="text-sm text-gray-700 mb-3">{apiError.message}</div>
+                  <div className="text-sm dark:text-gray-300 text-gray-700 mb-3">{apiError.message}</div>
                   {apiError.details && (
-                    <div className="text-xs text-gray-500 max-w-md">{apiError.details}</div>
+                    <div className="text-xs dark:text-gray-400 text-gray-500 max-w-md">{apiError.details}</div>
                   )}
                   <button
                     onClick={fetchBlogPosts}
-                    className="mt-4 px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-xs hover:bg-blue-200 transition-colors"
+                    className="mt-4 px-3 py-1 dark:bg-blue-900/50 dark:text-blue-300 bg-blue-100 text-blue-700 rounded-full text-xs dark:hover:bg-blue-800/70 hover:bg-blue-200 transition-colors"
                   >
                     重试
                   </button>
                 </div>
               ) : blogPosts.length > 0 ? (
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                  {blogPosts.map((blog, index) => (
-                    <div key={index} className="bg-gray-50/50 rounded-lg p-3 hover:bg-gray-50/80 transition-colors h-full">
-                      <div className="flex flex-col h-full">
-                        <div className="flex-grow">
-                          <h4 className="font-medium text-base text-[#2c2c2e] truncate">{blog.title}</h4>
-                          <p className="text-xs text-gray-600 mt-1 line-clamp-2">{blog.summary}</p>
-                          <div className="flex gap-1.5 mt-3 flex-wrap">
-                            {blog.tags.map((tag, tagIndex) => (
-                              <span key={tagIndex} className="px-2 py-0.5 text-xs rounded-md bg-blue-50 text-blue-600">
-                                {tag.name}
-                              </span>
-                            ))}
-                          </div>
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-2 px-3 py-2 h-full">
+                  {blogPosts.slice(0, 4).map((blog, index) => (
+                    <div key={index} className="dark:bg-gray-800/50 dark:hover:bg-gray-700/80 bg-gray-50/50 rounded-lg p-3 hover:bg-gray-50/80 transition-colors h-full flex flex-col">
+                      <h4 className="font-medium text-sm dark:text-gray-100 text-[#2c2c2e] truncate mb-2">{blog.title}</h4>
+                      <p className="text-xs dark:text-gray-400 text-gray-600 line-clamp-3 mb-auto">{blog.summary}</p>
+                      <div className="mt-3">
+                        <div className="flex gap-1 flex-wrap mb-2">
+                          {blog.tags.slice(0, 1).map((tag, tagIndex) => (
+                            <span key={tagIndex} className="px-1.5 py-0.5 text-xs rounded-md dark:bg-blue-900/30 dark:text-blue-400 bg-blue-50 text-blue-600">
+                              {tag.name}
+                            </span>
+                          ))}
                         </div>
-                        <p className="text-xs text-gray-500 mt-4 pt-3 border-t border-gray-100 w-full">{blog.date} · {blog.readTime}</p>
+                        <p className="text-xs dark:text-gray-500 text-gray-500 pt-2 dark:border-gray-700/50 border-t border-gray-100/50 w-full">{blog.date} · {blog.readTime}</p>
                       </div>
                     </div>
                   ))}
                 </div>
               ) : (
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                  {portfolioData.blogs.map((blog: DefaultBlogPost, index) => (
-                    <div key={index} className="bg-gray-50/50 rounded-lg p-3 hover:bg-gray-50/80 transition-colors h-full">
-                      <div className="flex flex-col h-full">
-                        <div className="flex-grow">
-                          <h4 className="font-medium text-base text-[#2c2c2e] truncate">{blog.title}</h4>
-                          <p className="text-xs text-gray-600 mt-1 line-clamp-2">{blog.summary}</p>
-                          <div className="flex gap-1.5 mt-3 flex-wrap">
-                            {blog.tags.map((tag, tagIndex) => (
-                              <span key={tagIndex} className="px-2 py-0.5 text-xs rounded-md bg-blue-50 text-blue-600">
-                                {tag.name}
-                              </span>
-                            ))}
-                          </div>
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-2 px-3 py-2 h-full">
+                  {portfolioData.blogs.slice(0, 4).map((blog: DefaultBlogPost, index) => (
+                    <div key={index} className="dark:bg-gray-800/50 dark:hover:bg-gray-700/80 bg-gray-50/50 rounded-lg p-3 hover:bg-gray-50/80 transition-colors h-full flex flex-col">
+                      <h4 className="font-medium text-sm dark:text-gray-100 text-[#2c2c2e] truncate mb-2">{blog.title}</h4>
+                      <p className="text-xs dark:text-gray-400 text-gray-600 line-clamp-3 mb-auto">{blog.summary}</p>
+                      <div className="mt-3">
+                        <div className="flex gap-1 flex-wrap mb-2">
+                          {blog.tags.slice(0, 1).map((tag, tagIndex) => (
+                            <span key={tagIndex} className="px-1.5 py-0.5 text-xs rounded-md dark:bg-blue-900/30 dark:text-blue-400 bg-blue-50 text-blue-600">
+                              {tag.name}
+                            </span>
+                          ))}
                         </div>
-                        <p className="text-xs text-gray-500 mt-4 pt-3 border-t border-gray-100 w-full">{blog.date} · {blog.readTime}</p>
+                        <p className="text-xs dark:text-gray-500 text-gray-500 pt-2 dark:border-gray-700/50 border-t border-gray-100/50 w-full">{blog.date} · {blog.readTime}</p>
                       </div>
                     </div>
                   ))}
@@ -1003,26 +1003,26 @@ const Home = () => {
                     <CodeBracketIcon className="w-6 h-6 text-white" />
                   </AppleStyleIcon>
                   <div className="ml-3">
-                    <h2 className="text-2xl font-bold text-[#2c2c2e]">全部技能详情</h2>
+                    <h2 className="text-2xl font-bold dark:text-gray-100 text-[#2c2c2e]">全部技能详情</h2>
                   </div>
                 </div>
                 <button
-                  className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center hover:bg-gray-200 transition-colors"
+                  className="w-8 h-8 rounded-full dark:bg-gray-700 dark:hover:bg-gray-600 bg-gray-100 flex items-center justify-center hover:bg-gray-200 transition-colors"
                   onClick={() => closeModal('skills')}
                 >
-                  <XMarkIcon className="w-5 h-5 text-gray-600" />
+                  <XMarkIcon className="w-5 h-5 dark:text-gray-300 text-gray-600" />
                 </button>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {mySkills.map((skill, index) => (
-                  <div key={index} className="bg-white rounded-xl p-4 shadow-sm">
-                    <h3 className={`text-lg font-semibold mb-3 text-${skill.color}-700`}>
+                  <div key={index} className="dark:bg-gray-800 bg-white rounded-xl p-4 shadow-sm">
+                    <h3 className={`text-lg font-semibold mb-3 dark:text-${skill.color}-400 text-${skill.color}-700`}>
                       {skill.category}
                     </h3>
                     <div className="flex flex-wrap gap-2">
                       {skill.items.map((item, itemIndex) => (
-                        <span key={itemIndex} className={`px-3 py-1 rounded-md text-sm bg-${skill.color}-50 text-${skill.color}-700`}>
+                        <span key={itemIndex} className={`px-3 py-1 rounded-md text-sm dark:bg-${skill.color}-900/30 dark:text-${skill.color}-400 bg-${skill.color}-50 text-${skill.color}-700`}>
                           {item}
                         </span>
                       ))}
@@ -1062,56 +1062,56 @@ const Home = () => {
                     <ChatBubbleLeftRightIcon className="w-6 h-6 text-white" />
                   </AppleStyleIcon>
                   <div className="ml-3">
-                    <h2 className="text-2xl font-bold text-[#2c2c2e]">个人资料详情</h2>
+                    <h2 className="text-2xl font-bold dark:text-gray-100 text-[#2c2c2e]">个人资料详情</h2>
                   </div>
                 </div>
                 <button
-                  className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center hover:bg-gray-200 transition-colors"
+                  className="w-8 h-8 rounded-full dark:bg-gray-700 dark:hover:bg-gray-600 bg-gray-100 flex items-center justify-center hover:bg-gray-200 transition-colors"
                   onClick={() => closeModal('personal')}
                 >
-                  <XMarkIcon className="w-5 h-5 text-gray-600" />
+                  <XMarkIcon className="w-5 h-5 dark:text-gray-300 text-gray-600" />
                 </button>
               </div>
 
               <div className="flex flex-col md:flex-row gap-6">
                 <div className="md:w-1/3 flex flex-col items-center">
-                  <div className="w-40 h-40 rounded-full overflow-hidden border-4 border-white shadow-lg mb-4">
+                  <div className="w-40 h-40 rounded-full overflow-hidden border-4 dark:border-gray-700 border-white shadow-lg mb-4">
                     <img
                       src={personalInfo.avatar}
                       alt="个人头像"
                       className="w-full h-full object-cover"
                     />
                   </div>
-                  <h3 className="text-xl font-bold text-[#2c2c2e] mb-1">
+                  <h3 className="text-xl font-bold dark:text-gray-100 text-[#2c2c2e] mb-1">
                     {personalInfo.name}
                   </h3>
-                  <p className="text-gray-600">
+                  <p className="dark:text-gray-300 text-gray-600">
                     {personalInfo.email}
                   </p>
-                  <div className="mt-4 py-2 px-4 bg-blue-500 rounded-full text-white text-sm font-medium">
+                  <div className="mt-4 py-2 px-4 bg-blue-500 dark:bg-blue-600 rounded-full text-white text-sm font-medium">
                     damesck.net
                   </div>
                 </div>
 
                 <div className="md:w-2/3">
-                  <h4 className="text-lg font-medium mb-3 text-[#2c2c2e]">社交链接</h4>
+                  <h4 className="text-lg font-medium mb-3 dark:text-gray-200 text-[#2c2c2e]">社交链接</h4>
                   <div className="grid grid-cols-2 gap-3 mb-6">
                     {mySocialLinks.map((link, index) => (
                       <a
                         key={index}
                         href={link.url}
-                        className="flex items-center p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+                        className="flex items-center p-3 dark:bg-gray-800 dark:hover:bg-gray-700 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
                         target="_blank"
                         rel="noopener noreferrer"
                       >
                         {getSocialIcon(link.icon)}
-                        <span className="ml-2 text-gray-700">{link.name}</span>
+                        <span className="ml-2 dark:text-gray-300 text-gray-700">{link.name}</span>
                       </a>
                     ))}
                   </div>
 
-                  <h4 className="text-lg font-medium mb-3 text-[#2c2c2e]">个人简介</h4>
-                  <p className="text-gray-600 mb-4">
+                  <h4 className="text-lg font-medium mb-3 dark:text-gray-200 text-[#2c2c2e]">个人简介</h4>
+                  <p className="dark:text-gray-300 text-gray-600 mb-4">
                     致不完美的明天_
                   </p>
                 </div>
@@ -1148,31 +1148,31 @@ const Home = () => {
                     <BookOpenIcon className="w-6 h-6 text-white" />
                   </AppleStyleIcon>
                   <div className="ml-3">
-                    <h2 className="text-2xl font-bold text-[#2c2c2e]">学习进度详情</h2>
+                    <h2 className="text-2xl font-bold dark:text-gray-100 text-[#2c2c2e]">学习进度详情</h2>
                   </div>
                 </div>
                 <button
-                  className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center hover:bg-gray-200 transition-colors"
+                  className="w-8 h-8 rounded-full dark:bg-gray-700 dark:hover:bg-gray-600 bg-gray-100 flex items-center justify-center hover:bg-gray-200 transition-colors"
                   onClick={() => closeModal('stats')}
                 >
-                  <XMarkIcon className="w-5 h-5 text-gray-600" />
+                  <XMarkIcon className="w-5 h-5 dark:text-gray-300 text-gray-600" />
                 </button>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {myLearningProgress.map((item, index) => (
-                  <div key={index} className="bg-white rounded-xl p-4 shadow-sm">
+                  <div key={index} className="dark:bg-gray-800 bg-white rounded-xl p-4 shadow-sm">
                     <div className="flex justify-between mb-2">
-                      <h3 className="text-lg font-semibold text-gray-700">{item.name}</h3>
-                      <span className="text-lg font-bold text-blue-600">{item.value}</span>
+                      <h3 className="text-lg font-semibold dark:text-gray-100 text-gray-700">{item.name}</h3>
+                      <span className="text-lg font-bold dark:text-blue-400 text-blue-600">{item.value}</span>
                     </div>
-                    <div className="h-3 w-full bg-gray-100 rounded-full overflow-hidden">
+                    <div className="h-3 w-full dark:bg-gray-700 bg-gray-100 rounded-full overflow-hidden">
                       <div
                         className={`h-full bg-${item.color}-500 rounded-full`}
                         style={{ width: item.value }}
                       ></div>
                     </div>
-                    <p className="mt-2 text-sm text-gray-500">
+                    <p className="mt-2 text-sm dark:text-gray-400 text-gray-500">
                       {item.description}
                     </p>
                   </div>
@@ -1210,39 +1210,39 @@ const Home = () => {
                     <ComputerDesktopIcon className="w-6 h-6 text-white" />
                   </AppleStyleIcon>
                   <div className="ml-3">
-                    <h2 className="text-2xl font-bold text-[#2c2c2e]">我的设备详情</h2>
+                    <h2 className="text-2xl font-bold dark:text-gray-100 text-[#2c2c2e]">我的设备详情</h2>
                   </div>
                 </div>
                 <button
-                  className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center hover:bg-gray-200 transition-colors"
+                  className="w-8 h-8 rounded-full dark:bg-gray-700 dark:hover:bg-gray-600 bg-gray-100 flex items-center justify-center hover:bg-gray-200 transition-colors"
                   onClick={() => closeModal('devices')}
                 >
-                  <XMarkIcon className="w-5 h-5 text-gray-600" />
+                  <XMarkIcon className="w-5 h-5 dark:text-gray-300 text-gray-600" />
                 </button>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {myDevices.map((device, index) => (
-                  <div key={index} className="bg-white rounded-xl p-5 shadow-sm">
+                  <div key={index} className="dark:bg-gray-800 bg-white rounded-xl p-5 shadow-sm">
                     <div className="flex items-start">
-                      <div className="w-24 h-24 bg-gray-50 rounded-xl overflow-hidden p-2 mr-4">
+                      <div className="w-24 h-24 dark:bg-gray-700 bg-gray-50 rounded-xl overflow-hidden p-2 mr-4">
                         <img src={device.image} alt={device.name} className="w-full h-full object-contain" />
                       </div>
                       <div className="flex-grow">
-                        <h3 className="text-lg font-semibold mb-1 text-[#2c2c2e]">{device.name}</h3>
-                        <p className="text-sm text-gray-600 mb-3">{device.description}</p>
+                        <h3 className="text-lg font-semibold mb-1 dark:text-gray-100 text-[#2c2c2e]">{device.name}</h3>
+                        <p className="text-sm dark:text-gray-400 text-gray-600 mb-3">{device.description}</p>
                         <div className="flex flex-wrap gap-2">
                           {device.tags.map((tag, tagIndex) => (
-                            <span key={tagIndex} className="px-3 py-1 rounded-md text-sm bg-blue-50 text-blue-600">
+                            <span key={tagIndex} className="px-3 py-1 rounded-md text-sm dark:bg-blue-900/30 dark:text-blue-400 bg-blue-50 text-blue-600">
                               {tag.name}
                             </span>
                           ))}
                         </div>
                       </div>
                     </div>
-                    <div className="mt-4 pt-4 border-t border-gray-100">
-                      <h4 className="text-sm font-medium mb-2 text-[#2c2c2e]">设备规格</h4>
-                      <ul className="text-sm text-gray-600 space-y-1">
+                    <div className="mt-4 pt-4 dark:border-gray-700 border-t border-gray-100">
+                      <h4 className="text-sm font-medium mb-2 dark:text-gray-100 text-[#2c2c2e]">设备规格</h4>
+                      <ul className="text-sm dark:text-gray-400 text-gray-600 space-y-1">
                         <li>• 购买日期: {device.specs.purchaseDate}</li>
                         <li>• 保修状态: {device.specs.warranty}</li>
                         <li>• 使用状态: {device.specs.condition}</li>
@@ -1286,58 +1286,58 @@ const Home = () => {
                     <ClockIcon className="w-5 h-5 text-white" />
                   </AppleStyleIcon>
                   <div className="ml-3">
-                    <h2 className="text-2xl font-bold text-[#2c2c2e]">{myCountdown.title}</h2>
+                    <h2 className="text-2xl font-bold dark:text-gray-100 text-[#2c2c2e]">{myCountdown.title}</h2>
                   </div>
                 </div>
                 <button
-                  className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center hover:bg-gray-200 transition-colors"
+                  className="w-8 h-8 rounded-full dark:bg-gray-700 dark:hover:bg-gray-600 bg-gray-100 flex items-center justify-center hover:bg-gray-200 transition-colors"
                   onClick={() => closeModal('countdown')}
                 >
-                  <XMarkIcon className="w-5 h-5 text-gray-600" />
+                  <XMarkIcon className="w-5 h-5 dark:text-gray-300 text-gray-600" />
                 </button>
               </div>
 
-              <div className="bg-white rounded-xl p-6 shadow-sm">
+              <div className="dark:bg-gray-800 bg-white rounded-xl p-6 shadow-sm">
                 <div className="flex flex-col md:flex-row gap-6 items-center mb-6">
                   <div className="text-center">
-                    <div className="text-8xl font-bold text-blue-600">{daysLeft}</div>
-                    <div className="text-2xl text-gray-500 mt-2">天</div>
+                    <div className="text-8xl font-bold dark:text-blue-400 text-blue-600">{daysLeft}</div>
+                    <div className="text-2xl dark:text-gray-400 text-gray-500 mt-2">天</div>
                   </div>
 
                   <div className="flex-grow">
-                    <div className="h-4 w-full bg-gray-100 rounded-full overflow-hidden mb-2">
+                    <div className="h-4 w-full dark:bg-gray-700 bg-gray-100 rounded-full overflow-hidden mb-2">
                       <div
                         className="h-full bg-blue-500 rounded-full transition-all duration-1000"
                         style={{ width: `${(1 - daysLeft / myCountdown.totalDays) * 100}%` }}
                       ></div>
                     </div>
-                    <div className="flex justify-between text-sm text-gray-500">
+                    <div className="flex justify-between text-sm dark:text-gray-400 text-gray-500">
                       <span>开始日期</span>
                       <span>目标日期: {myCountdown.targetDate}</span>
                     </div>
                   </div>
                 </div>
 
-                <div className="mt-6 pt-6 border-t border-gray-100">
-                  <h3 className="text-lg font-medium mb-4 text-[#2c2c2e]">事件详情</h3>
-                  <p className="text-gray-600 mb-4">
+                <div className="mt-6 pt-6 dark:border-gray-700 border-t border-gray-100">
+                  <h3 className="text-lg font-medium mb-4 dark:text-gray-100 text-[#2c2c2e]">事件详情</h3>
+                  <p className="dark:text-gray-400 text-gray-600 mb-4">
                     这个重要日期标志着一个重要里程碑。在这段时间里，我们将努力实现设定的目标和计划。
                     倒计时提醒着我们时间的宝贵和任务的紧迫性。
                   </p>
 
-                  <h4 className="font-medium mt-5 mb-2 text-[#2c2c2e]">相关任务</h4>
+                  <h4 className="font-medium mt-5 mb-2 dark:text-gray-100 text-[#2c2c2e]">相关任务</h4>
                   <div className="space-y-2">
                     <div className="flex items-center">
                       <div className="w-4 h-4 rounded-full bg-green-500 mr-2"></div>
-                      <span className="text-sm">已完成的准备工作</span>
+                      <span className="text-sm dark:text-gray-300 text-gray-700">已完成的准备工作</span>
                     </div>
                     <div className="flex items-center">
                       <div className="w-4 h-4 rounded-full bg-yellow-500 mr-2"></div>
-                      <span className="text-sm">进行中的重要任务</span>
+                      <span className="text-sm dark:text-gray-300 text-gray-700">进行中的重要任务</span>
                     </div>
                     <div className="flex items-center">
                       <div className="w-4 h-4 rounded-full bg-red-500 mr-2"></div>
-                      <span className="text-sm">尚未开始的紧急事项</span>
+                      <span className="text-sm dark:text-gray-300 text-gray-700">尚未开始的紧急事项</span>
                     </div>
                   </div>
                 </div>
@@ -1374,91 +1374,65 @@ const Home = () => {
                     <DocumentTextIcon className="w-5 h-5 text-white" />
                   </AppleStyleIcon>
                   <div className="ml-3">
-                    <h3 className="text-base font-semibold text-[#2c2c2e]">我的博客文章</h3>
-                    <p className="text-xs text-gray-500 mt-0.5">从 blog.damesck.net 获取的最新内容</p>
+                    <h3 className="text-base font-semibold dark:text-gray-100 text-[#2c2c2e]">我的博客文章</h3>
+                    <p className="text-xs dark:text-gray-400 text-gray-500 mt-0.5">从 blog.damesck.net 获取的最新内容</p>
                   </div>
                 </div>
                 <button
-                  className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center hover:bg-gray-200 transition-colors"
+                  className="w-8 h-8 rounded-full dark:bg-gray-700 dark:hover:bg-gray-600 bg-gray-100 flex items-center justify-center hover:bg-gray-200 transition-colors"
                   onClick={() => closeModal('blogs')}
                 >
-                  <XMarkIcon className="w-5 h-5 text-gray-600" />
+                  <XMarkIcon className="w-5 h-5 dark:text-gray-300 text-gray-600" />
                 </button>
               </div>
 
               {apiError ? (
                 <div className="flex flex-col items-center justify-center p-6 text-center">
                   <div className="text-red-500 mb-2 font-medium">请求失败 (错误代码: {apiError.code})</div>
-                  <div className="text-sm text-gray-700 mb-3">{apiError.message}</div>
+                  <div className="text-sm dark:text-gray-300 text-gray-700 mb-3">{apiError.message}</div>
                   {apiError.details && (
-                    <div className="text-xs text-gray-500 max-w-md mb-4">{apiError.details}</div>
+                    <div className="text-xs dark:text-gray-400 text-gray-500 max-w-md mb-4">{apiError.details}</div>
                   )}
                   <button
                     onClick={fetchBlogPosts}
-                    className="mt-2 px-4 py-2 bg-blue-500 text-white rounded-lg text-sm hover:bg-blue-600 transition-colors"
+                    className="mt-2 px-4 py-2 dark:bg-blue-700 dark:hover:bg-blue-600 bg-blue-500 text-white rounded-lg text-sm hover:bg-blue-600 transition-colors"
                   >
                     重新获取
                   </button>
                 </div>
               ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-2 px-3 py-2 h-full">
                   {blogPosts.length > 0 ?
-                    blogPosts.map((blog, index) => (
-                      <div key={index} className="bg-white rounded-xl p-5 shadow-sm">
-                        <h3 className="text-lg font-semibold mb-2 text-[#2c2c2e]">{blog.title}</h3>
-                        <p className="text-sm text-gray-600 mb-4 line-clamp-3">{blog.summary}</p>
-
-                        <div className="flex flex-wrap gap-2 mb-4">
-                          {blog.tags.map((tag, tagIndex) => (
-                            <span key={tagIndex} className="px-3 py-1 rounded-md text-sm bg-blue-50 text-blue-600">
-                              {tag.name}
-                            </span>
-                          ))}
+                    blogPosts.slice(0, 4).map((blog, index) => (
+                      <div key={index} className="dark:bg-gray-800/50 dark:hover:bg-gray-700/80 bg-gray-50/50 rounded-lg p-3 hover:bg-gray-50/80 transition-colors h-full flex flex-col">
+                        <h4 className="font-medium text-sm dark:text-gray-100 text-[#2c2c2e] truncate mb-2">{blog.title}</h4>
+                        <p className="text-xs dark:text-gray-400 text-gray-600 line-clamp-3 mb-auto">{blog.summary}</p>
+                        <div className="mt-3">
+                          <div className="flex gap-1 flex-wrap mb-2">
+                            {blog.tags.slice(0, 1).map((tag, tagIndex) => (
+                              <span key={tagIndex} className="px-1.5 py-0.5 text-xs rounded-md dark:bg-blue-900/30 dark:text-blue-400 bg-blue-50 text-blue-600">
+                                {tag.name}
+                              </span>
+                            ))}
+                          </div>
+                          <p className="text-xs dark:text-gray-500 text-gray-500 pt-2 dark:border-gray-700/50 border-t border-gray-100/50 w-full">{blog.date} · {blog.readTime}</p>
                         </div>
-
-                        <div className="flex justify-between items-center mt-auto pt-3 border-t border-gray-100">
-                          <span className="text-sm text-gray-500">{blog.date}</span>
-                          <span className="text-sm text-gray-500">{blog.readTime}</span>
-                        </div>
-
-                        <a
-                          href={`https://blog.damesck.net/${blog.slug}.html`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="mt-4 inline-flex items-center text-sm font-medium text-blue-600 hover:text-blue-800"
-                        >
-                          阅读全文
-                          <ArrowRightIcon className="w-4 h-4 ml-1" />
-                        </a>
                       </div>
                     )) :
-                    portfolioData.blogs.map((blog: DefaultBlogPost, index) => (
-                      <div key={index} className="bg-white rounded-xl p-5 shadow-sm">
-                        <h3 className="text-lg font-semibold mb-2 text-[#2c2c2e]">{blog.title}</h3>
-                        <p className="text-sm text-gray-600 mb-4 line-clamp-3">{blog.summary}</p>
-
-                        <div className="flex flex-wrap gap-2 mb-4">
-                          {blog.tags.map((tag, tagIndex) => (
-                            <span key={tagIndex} className="px-3 py-1 rounded-md text-sm bg-blue-50 text-blue-600">
-                              {tag.name}
-                            </span>
-                          ))}
+                    portfolioData.blogs.slice(0, 4).map((blog: DefaultBlogPost, index) => (
+                      <div key={index} className="dark:bg-gray-800/50 dark:hover:bg-gray-700/80 bg-gray-50/50 rounded-lg p-3 hover:bg-gray-50/80 transition-colors h-full flex flex-col">
+                        <h4 className="font-medium text-sm dark:text-gray-100 text-[#2c2c2e] truncate mb-2">{blog.title}</h4>
+                        <p className="text-xs dark:text-gray-400 text-gray-600 line-clamp-3 mb-auto">{blog.summary}</p>
+                        <div className="mt-3">
+                          <div className="flex gap-1 flex-wrap mb-2">
+                            {blog.tags.slice(0, 1).map((tag, tagIndex) => (
+                              <span key={tagIndex} className="px-1.5 py-0.5 text-xs rounded-md dark:bg-blue-900/30 dark:text-blue-400 bg-blue-50 text-blue-600">
+                                {tag.name}
+                              </span>
+                            ))}
+                          </div>
+                          <p className="text-xs dark:text-gray-500 text-gray-500 pt-2 dark:border-gray-700/50 border-t border-gray-100/50 w-full">{blog.date} · {blog.readTime}</p>
                         </div>
-
-                        <div className="flex justify-between items-center mt-auto pt-3 border-t border-gray-100">
-                          <span className="text-sm text-gray-500">{blog.date}</span>
-                          <span className="text-sm text-gray-500">{blog.readTime}</span>
-                        </div>
-
-                        <a
-                          href="https://blog.damesck.net"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="mt-4 inline-flex items-center text-sm font-medium text-blue-600 hover:text-blue-800"
-                        >
-                          访问博客
-                          <ArrowRightIcon className="w-4 h-4 ml-1" />
-                        </a>
                       </div>
                     ))
                   }
