@@ -72,7 +72,7 @@ const Menu = memo(({ isOpen, onClose }: { isOpen: boolean, onClose: () => void }
 
           {/* 功能区 */}
           <div className="mt-3 pt-3 border-t dark:border-gray-700/30 border-gray-200/30">
-            <h3 className="px-3 py-1 text-xs font-semibold text-gray-500 dark:text-gray-400">其他链接</h3>
+            <h3 className="px-3 py-1 text-xs font-semibold text-gray-500 dark:text-gray-400">更多</h3>
             <div className="mt-1 space-y-1">
               <a href="#" className="flex items-center px-3 py-2 rounded-lg text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100/50 dark:hover:bg-gray-800/50">
                 <svg className="w-4 h-4 mr-2 text-blue-600 dark:text-blue-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
