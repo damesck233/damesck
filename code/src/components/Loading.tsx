@@ -1,16 +1,27 @@
 import { motion, Variants, AnimatePresence } from 'framer-motion';
 import { useEffect, useState } from 'react';
 
+// Apple风格的缓动函数
+const appleEaseOut = [0.22, 1, 0.36, 1]; // 更精细的Apple风格缓出效果
+const appleEaseIn = [0.64, 0, 0.78, 0]; // Apple风格缓入效果
+const appleEaseInOut = [0.4, 0, 0.2, 1]; // Apple风格曲线
+
 const containerVariants: Variants = {
   initial: { opacity: 0 },
-  animate: { opacity: 1, transition: { duration: 0.3 } },
+  animate: {
+    opacity: 1,
+    transition: {
+      duration: 0.8,
+      ease: appleEaseOut
+    }
+  },
   exit: {
     opacity: 0,
-    filter: "blur(5px)",
+    filter: "blur(8px)",
     transition: {
-      duration: 0.5,  // 减少退出动画时间
-      ease: [0.19, 1, 0.22, 1],
-      opacity: { duration: 0.4 } // 确保透明度动画足够快
+      duration: 1.2,  // 确保足够的退出时间
+      ease: appleEaseIn,
+      opacity: { duration: 1 } // 确保透明度动画平滑
     }
   }
 };
@@ -27,21 +38,22 @@ const particleVariants: Variants = {
     scale: [0, 1, 0.8],
     y: [20, -10, -30],
     transition: {
-      duration: 2,
+      duration: 3, // 延长动画时间
       repeat: Infinity,
       repeatType: "loop",
-      delay: i * 0.05, // 减少延迟
+      delay: i * 0.15, // 增加错开效果
       times: [0, 0.4, 1],
-      ease: "easeOut"
+      ease: "easeInOut" // 更平滑的动画
     }
   }),
   exit: (i: number) => ({
     opacity: 0,
     scale: 0.8,
-    filter: "blur(8px)",
+    filter: "blur(10px)",
     transition: {
-      duration: 0.3,
-      delay: i * 0.02  // 交错退出时间缩短
+      duration: 0.8,
+      delay: i * 0.04,  // 错开效果
+      ease: appleEaseIn
     }
   })
 };
@@ -49,9 +61,9 @@ const particleVariants: Variants = {
 const logoVariants: Variants = {
   initial: {
     opacity: 0,
-    scale: 0.7,
-    y: 20,
-    rotateY: -30
+    scale: 0.8,
+    y: 15,
+    rotateY: -15
   },
   animate: {
     opacity: 1,
@@ -59,18 +71,25 @@ const logoVariants: Variants = {
     y: 0,
     rotateY: 0,
     transition: {
-      duration: 0.8, // 缩短时间
-      ease: [0.19, 1, 0.22, 1],
-      delay: 0.1 // 缩短延迟
+      duration: 1.2, // 延长时间
+      ease: [0.34, 1.56, 0.64, 1], // 弹性效果
+      scale: {
+        duration: 1.2,
+        ease: [0.34, 1.56, 0.64, 1], // 弹性效果
+        type: "spring",
+        stiffness: 100,
+        damping: 15
+      },
+      delay: 0.3
     }
   },
   exit: {
     opacity: 0,
-    scale: 0.8,
+    scale: 0.9,
     y: -10,
     transition: {
-      duration: 0.3, // 缩短退出时间
-      ease: "easeInOut"
+      duration: 0.8,
+      ease: appleEaseIn
     }
   }
 };
@@ -81,38 +100,43 @@ const textVariants: Variants = {
     opacity: 1,
     y: 0,
     transition: {
-      duration: 0.5, // 缩短时间
-      ease: "easeOut",
-      delay: 0.3 // 缩短延迟
+      duration: 0.9,
+      ease: appleEaseOut,
+      delay: 0.6
     }
   },
   exit: {
     opacity: 0,
     y: -5,
     transition: {
-      duration: 0.2 // 缩短退出时间
+      duration: 0.7,
+      ease: appleEaseIn
     }
   }
 };
 
-// 新增字母弹跳动画变体
+// 新增字母弹跳动画变体 - Apple风格
 const letterVariants: Variants = {
   initial: { opacity: 0, y: 20 },
   animate: (i: number) => ({
     opacity: 1,
     y: 0,
     transition: {
-      duration: 0.4, // 缩短时间
-      delay: 0.3 + i * 0.05, // 缩短延迟，但保留交错效果
-      ease: [0.33, 1, 0.68, 1]
+      duration: 0.8,
+      delay: 0.8 + i * 0.06, // 增加错开时间
+      type: "spring",
+      stiffness: 100,
+      damping: 12, // 增加弹性
+      ease: [0.34, 1.56, 0.64, 1] // 弹性曲线
     }
   }),
   exit: (i: number) => ({
     opacity: 0,
     y: -10,
     transition: {
-      duration: 0.2, // 缩短退出时间
-      delay: i * 0.02  // 缩短交错退出时间
+      duration: 0.5,
+      delay: i * 0.03,
+      ease: appleEaseIn
     }
   })
 };
@@ -124,13 +148,16 @@ const bgVariants: Variants = {
   },
   animate: {
     opacity: 1,
-    transition: { duration: 0.3 }
+    transition: {
+      duration: 0.8,
+      ease: appleEaseOut
+    }
   },
   exit: {
     opacity: 0,
     transition: {
-      duration: 0.5, // 减少退出时间
-      ease: [0.19, 1, 0.22, 1]
+      duration: 1.5,
+      ease: appleEaseIn
     }
   }
 };
@@ -141,16 +168,16 @@ const Loading = () => {
   const brandName = "damesck";
 
   useEffect(() => {
-    // 加载完成定时器 - 减少时间
+    // 加载完成定时器
     const timer = setTimeout(() => {
       setIsReady(true);
-    }, 2000); // 从3000减少到2000
+    }, 3000); // 恢复为3秒，确保体验充分展现
 
     // 预加载主内容的定时器
     const exitTimer = setTimeout(() => {
       // 开始退出前的准备动画
       setStartExit(true);
-    }, 1800);  // 比加载完成提前一点，创建平滑过渡
+    }, 2800);  // 比加载完成提前一点，创建平滑过渡
 
     return () => {
       clearTimeout(timer);
@@ -158,15 +185,15 @@ const Loading = () => {
     }
   }, []);
 
-  // 创建随机粒子位置 - 减少粒子数量以提高性能
-  const particles = Array.from({ length: 10 }, (_, i) => ({
+  // 创建随机粒子位置 - 保持粒子数量增加美感
+  const particles = Array.from({ length: 15 }, (_, i) => ({
     id: i,
-    size: Math.random() * 30 + 10, // 稍微减小粒子尺寸
+    size: Math.random() * 40 + 10, // 恢复粒子尺寸多样性
     x: Math.random() * 100,
     y: Math.random() * 100,
-    delay: Math.random() * 1, // 减少最大延迟
-    duration: 1.5 + Math.random() * 1.5, // 减少动画时长
-    color: `rgba(255, 255, 255, ${Math.random() * 0.2 + 0.05})`
+    delay: Math.random() * 2, // 增加随机延迟
+    duration: 2 + Math.random() * 2, // 增加动画时长多样性
+    color: `rgba(255, 255, 255, ${Math.random() * 0.25 + 0.05})` // 增加一些亮度变化
   }));
 
   return (
@@ -204,7 +231,7 @@ const Loading = () => {
                 left: `${particle.x}%`,
                 top: `${particle.y}%`,
                 background: particle.color,
-                filter: 'blur(6px)' // 稍微减少模糊以提高性能
+                filter: 'blur(8px)'
               }}
             />
           ))}
@@ -226,9 +253,9 @@ const Loading = () => {
                 scale: [1, 1.2, 1],
                 opacity: [0.5, 0.8, 0.5]
               }}
-              exit={{ opacity: 0, scale: 1.5, transition: { duration: 0.3 } }}
+              exit={{ opacity: 0, scale: 1.5, transition: { duration: 0.8, ease: appleEaseIn } }}
               transition={{
-                duration: 2.5, // 缩短动画时间
+                duration: 3.5, // 延长动画时间
                 repeat: Infinity,
                 repeatType: "loop",
                 ease: "easeInOut"
@@ -271,7 +298,7 @@ const Loading = () => {
             <motion.div
               className="flex items-center gap-2"
               animate={isReady || startExit ? { opacity: 0, y: -20 } : { opacity: 1, y: 0 }}
-              transition={{ duration: 0.3 }} // 缩短过渡时间
+              transition={{ duration: 0.7, ease: appleEaseInOut }}
             >
               <span className="text-white/90 text-sm">加载中</span>
               <div className="flex space-x-1">
@@ -284,10 +311,10 @@ const Loading = () => {
                       opacity: [0.5, 1, 0.5]
                     }}
                     transition={{
-                      duration: 0.5, // 缩短动画时间
+                      duration: 0.8,
                       repeat: Infinity,
                       repeatType: "loop",
-                      delay: i * 0.08, // 缩短延迟
+                      delay: i * 0.12, // 增加错开
                       ease: "easeInOut"
                     }}
                   />
@@ -299,8 +326,8 @@ const Loading = () => {
               className="absolute top-0 left-0 right-0"
               initial={{ opacity: 0, y: 20 }}
               animate={isReady || startExit ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-              exit={{ opacity: 0, y: -10, transition: { duration: 0.2 } }}
-              transition={{ duration: 0.3 }} // 缩短过渡时间
+              exit={{ opacity: 0, y: -10, transition: { duration: 0.7, ease: appleEaseIn } }}
+              transition={{ duration: 0.8, ease: appleEaseOut }}
             >
               <span className="text-white/90 text-sm">准备就绪</span>
             </motion.div>
