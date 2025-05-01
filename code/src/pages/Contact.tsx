@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, stagger } from 'framer-motion';
 
 // 定义联系方式数据类型
 interface ContactItem {
@@ -28,7 +28,7 @@ const contactData: ContactItem[] = [
     ),
     info: 'damesck',
     description: '扫一扫添加微信好友',
-    color: 'bg-[#07C160]/10',
+    color: 'bg-[#07C160]/10 dark:bg-[#07C160]/20',
     qrCode: true,
     qrCodeImage: 'https://data.klpbbs.com/file/tc/img/2025/04/25/680b7051c3431.jpg',
   },
@@ -42,7 +42,7 @@ const contactData: ContactItem[] = [
     ),
     info: '2449813874',
     description: '通过QQ添加我',
-    color: 'bg-[#12B7F5]/10',
+    color: 'bg-[#12B7F5]/10 dark:bg-[#12B7F5]/20',
     qrCode: true,
     qrCodeImage: 'https://data.klpbbs.com/file/tc/img/2025/04/25/680b70bc687ab.jpg',
   },
@@ -56,20 +56,20 @@ const contactData: ContactItem[] = [
     ),
     info: 'damesck@outlook.com',
     description: '发送邮件联系我',
-    color: 'bg-[#EA4335]/10',
+    color: 'bg-[#EA4335]/10 dark:bg-[#EA4335]/20',
     isEmail: true,
   },
   {
     id: 'github',
     title: 'GitHub',
     icon: (
-      <svg className="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
+      <svg className="w-6 h-6 dark:text-white" viewBox="0 0 24 24" fill="currentColor">
         <path d="M12 2C6.475 2 2 6.475 2 12c0 4.425 2.862 8.162 6.838 9.488.5.088.687-.212.687-.475 0-.237-.012-1.025-.012-1.862-2.513.462-3.175-.613-3.375-1.175-.113-.288-.6-1.175-1.025-1.413-.35-.187-.85-.65-.013-.662.788-.013 1.35.725 1.538 1.025.9 1.512 2.337 1.087 2.912.825.088-.65.35-1.087.638-1.337-2.225-.25-4.55-1.113-4.55-4.938 0-1.088.387-1.987 1.025-2.688-.1-.25-.45-1.275.1-2.65 0 0 .837-.262 2.75 1.025a9.28 9.28 0 0 1 2.5-.338c.85 0 1.7.113 2.5.338 1.912-1.3 2.75-1.025 2.75-1.025.55 1.375.2 2.4.1 2.65.637.7 1.025 1.587 1.025 2.687 0 3.838-2.337 4.688-4.562 4.938.362.312.675.912.675 1.85 0 1.337-.013 2.412-.013 2.75 0 .262.188.575.688.475C19.137 20.163 22 16.425 22 12c0-5.525-4.475-10-10-10Z" />
       </svg>
     ),
     info: 'github.com/damesck233',
     description: '访问我的GitHub项目',
-    color: 'bg-gray-100',
+    color: 'bg-gray-100 dark:bg-gray-700/30',
     isLink: true,
     link: 'https://github.com/damesck233',
   },
@@ -83,7 +83,7 @@ const contactData: ContactItem[] = [
     ),
     info: 'space.bilibili.com/1165771933',
     description: '关注我的哔哩哔哩空间',
-    color: 'bg-[#00AEEC]/10',
+    color: 'bg-[#00AEEC]/10 dark:bg-[#00AEEC]/20',
     isLink: true,
     link: 'https://space.bilibili.com/1165771933',
   },
@@ -97,7 +97,7 @@ const contactData: ContactItem[] = [
     ),
     info: '飞书账号: damesck',
     description: '通过飞书联系我',
-    color: 'bg-[#00D6B9]/10',
+    color: 'bg-[#00D6B9]/10 dark:bg-[#00D6B9]/20',
     qrCode: true,
     qrCodeImage: 'https://data.klpbbs.com/file/tc/img/2025/04/25/680b70e38674c.jpg',
   },
@@ -113,28 +113,35 @@ interface ContactCardProps {
 const ContactCard: React.FC<ContactCardProps> = ({ contact, onViewQRCode }) => {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3 }}
-      whileHover={{ scale: 1.03, boxShadow: '0 12px 28px rgba(0, 0, 0, 0.1), 0 4px 12px rgba(0, 0, 0, 0.08)' }}
-      className={`split-card bg-white/70 backdrop-blur-md relative overflow-hidden animate-element ${contact.color} h-full`}
+      transition={{
+        duration: 0.5,
+        ease: [0.22, 1, 0.36, 1],
+      }}
+      whileHover={{
+        scale: 1.03,
+        boxShadow: '0 12px 28px rgba(0, 0, 0, 0.1), 0 4px 12px rgba(0, 0, 0, 0.08)',
+        transition: { duration: 0.2 }
+      }}
+      className={`split-card bg-white/70 dark:bg-gray-800/70 backdrop-blur-md relative overflow-hidden animate-element ${contact.color} h-full`}
     >
       <div className="p-6">
         <div className="flex items-center mb-4">
-          <div className="p-3 rounded-full bg-white/80 shadow-sm mr-4">
+          <div className="p-3 rounded-full bg-white/80 dark:bg-gray-700/80 shadow-sm mr-4">
             {contact.icon}
           </div>
-          <h2 className="text-xl font-bold text-[#2c2c2e]">{contact.title}</h2>
+          <h2 className="text-xl font-bold text-[#2c2c2e] dark:text-white">{contact.title}</h2>
         </div>
 
         <div className="space-y-2">
-          <p className="text-lg font-medium text-[#3c3c3e]">{contact.info}</p>
-          <p className="text-sm text-[#6c6c6e]">{contact.description}</p>
+          <p className="text-lg font-medium text-[#3c3c3e] dark:text-gray-200">{contact.info}</p>
+          <p className="text-sm text-[#6c6c6e] dark:text-gray-400">{contact.description}</p>
 
           {contact.qrCode && (
             <button
               onClick={() => onViewQRCode(contact)}
-              className="mt-4 inline-flex items-center px-4 py-2 rounded-full bg-[#007AFF] text-white font-medium text-sm transition-all hover:bg-[#0063CC]"
+              className="mt-4 inline-flex items-center px-4 py-2 rounded-full bg-[#007AFF] dark:bg-[#0063CC] text-white font-medium text-sm transition-all hover:bg-[#0063CC]"
             >
               查看二维码
               <svg className="ml-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -146,7 +153,7 @@ const ContactCard: React.FC<ContactCardProps> = ({ contact, onViewQRCode }) => {
           {contact.isEmail && (
             <a
               href={`mailto:${contact.info}`}
-              className="mt-4 inline-flex items-center px-4 py-2 rounded-full bg-[#007AFF] text-white font-medium text-sm transition-all hover:bg-[#0063CC]"
+              className="mt-4 inline-flex items-center px-4 py-2 rounded-full bg-[#007AFF] dark:bg-[#0063CC] text-white font-medium text-sm transition-all hover:bg-[#0063CC]"
             >
               发送邮件
               <svg className="ml-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -160,7 +167,7 @@ const ContactCard: React.FC<ContactCardProps> = ({ contact, onViewQRCode }) => {
               href={contact.link}
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-4 inline-flex items-center px-4 py-2 rounded-full bg-[#007AFF] text-white font-medium text-sm transition-all hover:bg-[#0063CC]"
+              className="mt-4 inline-flex items-center px-4 py-2 rounded-full bg-[#007AFF] dark:bg-[#0063CC] text-white font-medium text-sm transition-all hover:bg-[#0063CC]"
             >
               访问链接
               <svg className="ml-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -175,7 +182,7 @@ const ContactCard: React.FC<ContactCardProps> = ({ contact, onViewQRCode }) => {
                 href={contact.link}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center px-4 py-2 rounded-full bg-[#007AFF] text-white font-medium text-sm transition-all hover:bg-[#0063CC]"
+                className="inline-flex items-center px-4 py-2 rounded-full bg-[#007AFF] dark:bg-[#0063CC] text-white font-medium text-sm transition-all hover:bg-[#0063CC]"
               >
                 访问链接
                 <svg className="ml-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -185,7 +192,7 @@ const ContactCard: React.FC<ContactCardProps> = ({ contact, onViewQRCode }) => {
 
               <button
                 onClick={() => onViewQRCode(contact)}
-                className="inline-flex items-center px-4 py-2 rounded-full bg-gray-600/80 text-white font-medium text-sm transition-all hover:bg-gray-700"
+                className="inline-flex items-center px-4 py-2 rounded-full bg-gray-600/80 dark:bg-gray-700/80 text-white font-medium text-sm transition-all hover:bg-gray-700"
               >
                 查看二维码
                 <svg className="ml-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -236,15 +243,21 @@ const QRCodeModal: React.FC<QRCodeModalProps> = ({ contact, onClose }) => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
+      transition={{ duration: 0.3 }}
       className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50"
       onClick={onClose}
     >
       <motion.div
-        initial={{ scale: 0.9, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        exit={{ scale: 0.9, opacity: 0 }}
-        transition={{ type: 'spring', damping: 20 }}
-        className="bg-white/90 backdrop-blur-md rounded-2xl p-6 max-w-sm w-full mx-4 shadow-2xl"
+        initial={{ scale: 0.9, opacity: 0, y: 20 }}
+        animate={{ scale: 1, opacity: 1, y: 0 }}
+        exit={{ scale: 0.95, opacity: 0, y: 10 }}
+        transition={{
+          type: "spring",
+          damping: 25,
+          stiffness: 300,
+          duration: 0.4
+        }}
+        className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-md rounded-2xl p-6 max-w-sm w-full mx-4 shadow-2xl"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between mb-4">
@@ -252,13 +265,13 @@ const QRCodeModal: React.FC<QRCodeModalProps> = ({ contact, onClose }) => {
             <div className={`p-2 rounded-full ${contact.color} mr-3`}>
               {contact.icon}
             </div>
-            <h3 className="text-xl font-bold text-[#2c2c2e]">{getTitle()}</h3>
+            <h3 className="text-xl font-bold text-[#2c2c2e] dark:text-white">{getTitle()}</h3>
           </div>
           <button
             onClick={onClose}
-            className="w-8 h-8 rounded-full bg-gray-200/80 flex items-center justify-center"
+            className="w-8 h-8 rounded-full bg-gray-200/80 dark:bg-gray-600/80 flex items-center justify-center"
           >
-            <svg className="w-5 h-5 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <svg className="w-5 h-5 text-gray-500 dark:text-gray-300" viewBox="0 0 24 24" fill="none" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
@@ -266,7 +279,7 @@ const QRCodeModal: React.FC<QRCodeModalProps> = ({ contact, onClose }) => {
 
         <div className="flex flex-col items-center justify-center py-4">
           {contact.qrCodeImage ? (
-            <div className="w-48 h-48 bg-white p-3 rounded-xl shadow-sm mb-3 relative overflow-hidden">
+            <div className="w-48 h-48 bg-white dark:bg-gray-700 p-3 rounded-xl shadow-sm mb-3 relative overflow-hidden">
               <img
                 src={contact.qrCodeImage}
                 alt={`${contact.title}二维码`}
@@ -274,8 +287,8 @@ const QRCodeModal: React.FC<QRCodeModalProps> = ({ contact, onClose }) => {
               />
             </div>
           ) : (
-            <div className="w-48 h-48 bg-white p-3 rounded-xl shadow-sm mb-3 relative overflow-hidden">
-              <div className="absolute inset-0 flex items-center justify-center text-gray-300">
+            <div className="w-48 h-48 bg-white dark:bg-gray-700 p-3 rounded-xl shadow-sm mb-3 relative overflow-hidden">
+              <div className="absolute inset-0 flex items-center justify-center text-gray-300 dark:text-gray-500">
                 <span className="text-sm">二维码占位</span>
               </div>
               <div className="grid grid-cols-10 grid-rows-10 gap-1 w-full h-full relative z-10">
@@ -288,8 +301,8 @@ const QRCodeModal: React.FC<QRCodeModalProps> = ({ contact, onClose }) => {
               </div>
             </div>
           )}
-          <p className="text-center text-[#2c2c2e] font-medium">{contact.info}</p>
-          <p className="text-center text-[#6c6c6e] text-sm mt-1">{getMessage()}</p>
+          <p className="text-center text-[#2c2c2e] dark:text-white font-medium">{contact.info}</p>
+          <p className="text-center text-[#6c6c6e] dark:text-gray-400 text-sm mt-1">{getMessage()}</p>
 
           {/* 添加适合该联系方式的操作按钮 */}
           {contact.isLink && (
@@ -297,7 +310,7 @@ const QRCodeModal: React.FC<QRCodeModalProps> = ({ contact, onClose }) => {
               href={contact.link}
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-4 inline-flex items-center px-4 py-2 rounded-full bg-[#007AFF] text-white font-medium text-sm transition-all hover:bg-[#0063CC]"
+              className="mt-4 inline-flex items-center px-4 py-2 rounded-full bg-[#007AFF] dark:bg-[#0063CC] text-white font-medium text-sm transition-all hover:bg-[#0063CC]"
             >
               立即访问
               <svg className="ml-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -309,7 +322,7 @@ const QRCodeModal: React.FC<QRCodeModalProps> = ({ contact, onClose }) => {
           {contact.id === 'qq' && (
             <a
               href={`tencent://message/?uin=${contact.info}`}
-              className="mt-4 inline-flex items-center px-4 py-2 rounded-full bg-[#12B7F5] text-white font-medium text-sm transition-all hover:bg-[#0095D3]"
+              className="mt-4 inline-flex items-center px-4 py-2 rounded-full bg-[#12B7F5] dark:bg-[#0095D3] text-white font-medium text-sm transition-all hover:bg-[#0095D3]"
             >
               打开QQ
               <svg className="ml-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -334,25 +347,56 @@ const Contact: React.FC = () => {
     setSelectedContact(null);
   };
 
+  // 为卡片定义交错动画变体
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    show: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+        delayChildren: 0.2
+      }
+    }
+  };
+
   return (
     <div className="max-w-7xl mx-auto px-4">
       <motion.h1
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="text-4xl font-bold mb-8 text-[#2c2c2e]"
+        transition={{
+          duration: 0.6,
+          ease: [0.22, 1, 0.36, 1]
+        }}
+        className="text-4xl font-bold mb-8 text-[#2c2c2e] dark:text-white"
       >
         联系方式
       </motion.h1>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {contactData.map((contact) => (
-          <ContactCard
+      <motion.div
+        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+        variants={containerVariants}
+        initial="hidden"
+        animate="show"
+      >
+        {contactData.map((contact, index) => (
+          <motion.div
             key={contact.id}
-            contact={contact}
-            onViewQRCode={handleViewQRCode}
-          />
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{
+              duration: 0.5,
+              delay: index * 0.1,
+              ease: [0.22, 1, 0.36, 1]
+            }}
+          >
+            <ContactCard
+              contact={contact}
+              onViewQRCode={handleViewQRCode}
+            />
+          </motion.div>
         ))}
-      </div>
+      </motion.div>
 
       <AnimatePresence>
         {selectedContact && (

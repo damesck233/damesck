@@ -1,158 +1,313 @@
-import { motion, Variants } from 'framer-motion';
+import { motion, Variants, AnimatePresence } from 'framer-motion';
 import { useEffect, useState } from 'react';
 
 const containerVariants: Variants = {
   initial: { opacity: 0 },
-  animate: { opacity: 1, transition: { duration: 0.5 } },
+  animate: { opacity: 1, transition: { duration: 0.3 } },
   exit: {
     opacity: 0,
-    filter: "blur(4px)",
-    transition: { duration: 0.4, ease: "easeInOut" }
+    filter: "blur(5px)",
+    transition: {
+      duration: 0.5,  // 减少退出动画时间
+      ease: [0.19, 1, 0.22, 1],
+      opacity: { duration: 0.4 } // 确保透明度动画足够快
+    }
+  }
+};
+
+// 粒子动画变体
+const particleVariants: Variants = {
+  initial: {
+    opacity: 0,
+    scale: 0,
+    y: 20
+  },
+  animate: (i: number) => ({
+    opacity: [0, 0.8, 0.4],
+    scale: [0, 1, 0.8],
+    y: [20, -10, -30],
+    transition: {
+      duration: 2,
+      repeat: Infinity,
+      repeatType: "loop",
+      delay: i * 0.05, // 减少延迟
+      times: [0, 0.4, 1],
+      ease: "easeOut"
+    }
+  }),
+  exit: (i: number) => ({
+    opacity: 0,
+    scale: 0.8,
+    filter: "blur(8px)",
+    transition: {
+      duration: 0.3,
+      delay: i * 0.02  // 交错退出时间缩短
+    }
+  })
+};
+
+const logoVariants: Variants = {
+  initial: {
+    opacity: 0,
+    scale: 0.7,
+    y: 20,
+    rotateY: -30
+  },
+  animate: {
+    opacity: 1,
+    scale: 1,
+    y: 0,
+    rotateY: 0,
+    transition: {
+      duration: 0.8, // 缩短时间
+      ease: [0.19, 1, 0.22, 1],
+      delay: 0.1 // 缩短延迟
+    }
+  },
+  exit: {
+    opacity: 0,
+    scale: 0.8,
+    y: -10,
+    transition: {
+      duration: 0.3, // 缩短退出时间
+      ease: "easeInOut"
+    }
+  }
+};
+
+const textVariants: Variants = {
+  initial: { opacity: 0, y: 20 },
+  animate: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.5, // 缩短时间
+      ease: "easeOut",
+      delay: 0.3 // 缩短延迟
+    }
+  },
+  exit: {
+    opacity: 0,
+    y: -5,
+    transition: {
+      duration: 0.2 // 缩短退出时间
+    }
+  }
+};
+
+// 新增字母弹跳动画变体
+const letterVariants: Variants = {
+  initial: { opacity: 0, y: 20 },
+  animate: (i: number) => ({
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.4, // 缩短时间
+      delay: 0.3 + i * 0.05, // 缩短延迟，但保留交错效果
+      ease: [0.33, 1, 0.68, 1]
+    }
+  }),
+  exit: (i: number) => ({
+    opacity: 0,
+    y: -10,
+    transition: {
+      duration: 0.2, // 缩短退出时间
+      delay: i * 0.02  // 缩短交错退出时间
+    }
+  })
+};
+
+// 为背景添加额外的变体
+const bgVariants: Variants = {
+  initial: {
+    opacity: 0
+  },
+  animate: {
+    opacity: 1,
+    transition: { duration: 0.3 }
+  },
+  exit: {
+    opacity: 0,
+    transition: {
+      duration: 0.5, // 减少退出时间
+      ease: [0.19, 1, 0.22, 1]
+    }
   }
 };
 
 const Loading = () => {
-  const [progress, setProgress] = useState(0);
+  const [isReady, setIsReady] = useState(false);
+  const [startExit, setStartExit] = useState(false);
+  const brandName = "damesck";
 
   useEffect(() => {
-    let rafId: number;
-    let startTime = performance.now();
-    const duration = 3000; // 加载动画时长
+    // 加载完成定时器 - 减少时间
+    const timer = setTimeout(() => {
+      setIsReady(true);
+    }, 2000); // 从3000减少到2000
 
-    const updateProgress = (timestamp: number) => {
-      const elapsed = timestamp - startTime;
-      // 使用缓动函数计算进度，减少计算量
-      const newProgress = Math.min(100, (elapsed / duration) * 100);
-      setProgress(newProgress);
-
-      if (elapsed < duration) {
-        rafId = requestAnimationFrame(updateProgress);
-      }
-    };
-
-    rafId = requestAnimationFrame(updateProgress);
+    // 预加载主内容的定时器
+    const exitTimer = setTimeout(() => {
+      // 开始退出前的准备动画
+      setStartExit(true);
+    }, 1800);  // 比加载完成提前一点，创建平滑过渡
 
     return () => {
-      if (rafId) {
-        cancelAnimationFrame(rafId);
-      }
-    };
+      clearTimeout(timer);
+      clearTimeout(exitTimer);
+    }
   }, []);
 
+  // 创建随机粒子位置 - 减少粒子数量以提高性能
+  const particles = Array.from({ length: 10 }, (_, i) => ({
+    id: i,
+    size: Math.random() * 30 + 10, // 稍微减小粒子尺寸
+    x: Math.random() * 100,
+    y: Math.random() * 100,
+    delay: Math.random() * 1, // 减少最大延迟
+    duration: 1.5 + Math.random() * 1.5, // 减少动画时长
+    color: `rgba(255, 255, 255, ${Math.random() * 0.2 + 0.05})`
+  }));
+
   return (
-    <motion.div
-      className="fixed inset-0 flex items-center justify-center z-50 bg-gradient-to-br from-blue-400/60 to-blue-600/60 backdrop-blur-lg"
-      variants={containerVariants}
-      initial="initial"
-      animate="animate"
-      exit="exit"
-    >
-      {/* 简化的背景，但保留一些动画元素 */}
-      <div className="absolute inset-0 overflow-hidden">
-        {[...Array(3)].map((_, i) => (
-          <motion.div
-            key={i}
-            className="absolute rounded-full bg-white/10 floating-element"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 0.6 }}
-            transition={{
-              duration: 2,
-              repeat: Infinity,
-              repeatType: "reverse"
-            }}
-            style={{
-              width: '100px',
-              height: '100px',
-              top: `${20 + i * 20}%`,
-              left: `${10 + i * 30}%`,
-            }}
-          />
-        ))}
-      </div>
+    <>
+      {/* 背景层 - 单独控制，确保平滑过渡 */}
+      <motion.div
+        className="fixed inset-0 z-40 bg-gradient-to-br dark:from-blue-900/80 dark:to-indigo-900/80 from-blue-400/60 to-indigo-500/60 backdrop-blur-lg"
+        variants={bgVariants}
+        initial="initial"
+        animate="animate"
+        exit="exit"
+      />
 
-      <div className="text-center relative z-10">
-        {/* Logo动画 */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{
-            duration: 0.8,
-            ease: "easeOut"
-          }}
-          className="mb-8 relative"
-        >
-          {/* 光效 */}
-          <motion.div
-            className="absolute inset-0 rounded-full bg-white/30 blur-xl"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 0.8 }}
-            transition={{ duration: 1.5 }}
-          />
-          <img src="/logo.svg" alt="Logo" className="w-24 h-24 mx-auto relative z-10" />
-        </motion.div>
-
-        {/* 品牌名称 */}
-        <motion.h1
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4, duration: 0.6 }}
-          className="text-3xl font-bold text-white mb-8"
-        >
-          damesck
-        </motion.h1>
-
-        {/* 加载文字 */}
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 0.8 }}
-          transition={{ delay: 0.8, duration: 0.5 }}
-          className="text-white/80 text-sm mb-6"
-        >
-          {progress < 100 ? '正在加载资源...' : '准备就绪'}
-        </motion.p>
-
-        {/* 加载进度条 */}
-        <div className="w-60 h-1 bg-white/20 rounded-full overflow-hidden mx-auto mb-4">
-          <motion.div
-            className="h-full bg-white loading-progress-bar"
-            initial={{ width: 0 }}
-            animate={{ width: `${progress}%` }}
-            transition={{ duration: 0.1 }}
-          />
+      <motion.div
+        className="fixed inset-0 flex flex-col items-center justify-center z-50 overflow-hidden"
+        variants={containerVariants}
+        initial="initial"
+        animate="animate"
+        exit="exit"
+      >
+        {/* 漂浮粒子背景 */}
+        <div className="absolute inset-0 overflow-hidden">
+          {particles.map((particle) => (
+            <motion.div
+              key={particle.id}
+              custom={particle.id}
+              variants={particleVariants}
+              initial="initial"
+              animate="animate"
+              exit="exit"
+              className="absolute rounded-full"
+              style={{
+                width: `${particle.size}px`,
+                height: `${particle.size}px`,
+                left: `${particle.x}%`,
+                top: `${particle.y}%`,
+                background: particle.color,
+                filter: 'blur(6px)' // 稍微减少模糊以提高性能
+              }}
+            />
+          ))}
         </div>
 
-        {/* 旋转加载指示器 */}
-        <motion.div
-          className="w-6 h-6 mx-auto mb-4 loading-spinner"
-          animate={{ rotate: 360 }}
-          transition={{
-            duration: 2,
-            repeat: Infinity,
-            ease: "linear"
-          }}
-        >
-          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path
-              d="M12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2Z"
-              stroke="white"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeDasharray="60"
-              strokeDashoffset="10"
-              opacity="0.3"
+        <div className="text-center relative z-10 flex flex-col items-center">
+          {/* Logo动画 */}
+          <motion.div
+            variants={logoVariants}
+            initial="initial"
+            animate="animate"
+            exit="exit"
+            className="mb-6 relative perspective-800"
+          >
+            {/* 光晕效果 */}
+            <motion.div
+              className="absolute inset-0 rounded-full bg-white/40 blur-xl"
+              animate={{
+                scale: [1, 1.2, 1],
+                opacity: [0.5, 0.8, 0.5]
+              }}
+              exit={{ opacity: 0, scale: 1.5, transition: { duration: 0.3 } }}
+              transition={{
+                duration: 2.5, // 缩短动画时间
+                repeat: Infinity,
+                repeatType: "loop",
+                ease: "easeInOut"
+              }}
+              style={{
+                width: '120px',
+                height: '120px',
+                left: '-10px',
+                top: '-10px'
+              }}
             />
-            <path
-              d="M12 2C6.47715 2 2 6.47715 2 12"
-              stroke="white"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
-        </motion.div>
-      </div>
-    </motion.div>
+            <img src="/logo.svg" alt="Logo" className="w-24 h-24 mx-auto relative z-10 drop-shadow-xl" />
+          </motion.div>
+
+          {/* 品牌名称 - 字母逐个弹跳动画 */}
+          <div className="flex justify-center items-center mb-8 h-10">
+            {brandName.split('').map((letter, index) => (
+              <motion.span
+                key={index}
+                custom={index}
+                variants={letterVariants}
+                initial="initial"
+                animate="animate"
+                exit="exit"
+                className="text-3xl font-bold text-white inline-block"
+              >
+                {letter}
+              </motion.span>
+            ))}
+          </div>
+
+          {/* 加载状态文字 */}
+          <motion.div
+            variants={textVariants}
+            initial="initial"
+            animate="animate"
+            exit="exit"
+            className="relative"
+          >
+            <motion.div
+              className="flex items-center gap-2"
+              animate={isReady || startExit ? { opacity: 0, y: -20 } : { opacity: 1, y: 0 }}
+              transition={{ duration: 0.3 }} // 缩短过渡时间
+            >
+              <span className="text-white/90 text-sm">加载中</span>
+              <div className="flex space-x-1">
+                {[0, 1, 2].map((i) => (
+                  <motion.div
+                    key={i}
+                    className="w-1.5 h-1.5 rounded-full bg-white/80"
+                    animate={{
+                      y: [0, -5, 0],
+                      opacity: [0.5, 1, 0.5]
+                    }}
+                    transition={{
+                      duration: 0.5, // 缩短动画时间
+                      repeat: Infinity,
+                      repeatType: "loop",
+                      delay: i * 0.08, // 缩短延迟
+                      ease: "easeInOut"
+                    }}
+                  />
+                ))}
+              </div>
+            </motion.div>
+
+            <motion.div
+              className="absolute top-0 left-0 right-0"
+              initial={{ opacity: 0, y: 20 }}
+              animate={isReady || startExit ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+              exit={{ opacity: 0, y: -10, transition: { duration: 0.2 } }}
+              transition={{ duration: 0.3 }} // 缩短过渡时间
+            >
+              <span className="text-white/90 text-sm">准备就绪</span>
+            </motion.div>
+          </motion.div>
+        </div>
+      </motion.div>
+    </>
   );
 };
 

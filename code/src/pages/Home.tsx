@@ -726,8 +726,18 @@ const Home = () => {
                     </div>
                     <div className="h-2 w-full dark:bg-gray-700 bg-gray-100 rounded-full overflow-hidden">
                       <div
-                        className={`h-full bg-${item.color}-500 rounded-full`}
-                        style={{ width: item.value }}
+                        className="h-full rounded-full"
+                        style={{
+                          width: item.value,
+                          backgroundColor: item.color === 'blue' ? '#3B82F6' :
+                            item.color === 'green' ? '#22C55E' :
+                              item.color === 'yellow' ? '#EAB308' :
+                                item.color === 'orange' ? '#F97316' :
+                                  item.color === 'indigo' ? '#6366F1' :
+                                    item.color === 'red' ? '#EF4444' :
+                                      item.color === 'purple' ? '#A855F7' :
+                                        item.color === 'pink' ? '#EC4899' : '#3B82F6'
+                        }}
                       ></div>
                     </div>
                   </div>
@@ -1168,8 +1178,18 @@ const Home = () => {
                     </div>
                     <div className="h-3 w-full dark:bg-gray-700 bg-gray-100 rounded-full overflow-hidden">
                       <div
-                        className={`h-full bg-${item.color}-500 rounded-full`}
-                        style={{ width: item.value }}
+                        className="h-full rounded-full"
+                        style={{
+                          width: item.value,
+                          backgroundColor: item.color === 'blue' ? '#3B82F6' :
+                            item.color === 'green' ? '#22C55E' :
+                              item.color === 'yellow' ? '#EAB308' :
+                                item.color === 'orange' ? '#F97316' :
+                                  item.color === 'indigo' ? '#6366F1' :
+                                    item.color === 'red' ? '#EF4444' :
+                                      item.color === 'purple' ? '#A855F7' :
+                                        item.color === 'pink' ? '#EC4899' : '#3B82F6'
+                        }}
                       ></div>
                     </div>
                     <p className="mt-2 text-sm dark:text-gray-400 text-gray-500">
