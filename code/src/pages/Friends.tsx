@@ -67,19 +67,19 @@ const Friends = () => {
   // iOS风格的卡片样式
   const cardStyle = {
     backgroundColor: 'var(--glass-bg)',
-    borderRadius: '20px',
-    boxShadow: '0 4px 16px var(--glass-shadow), 0 2px 4px rgba(0,0,0,0.04)',
+    borderRadius: '22px',
+    boxShadow: '0 5px 20px var(--glass-shadow), 0 2px 6px rgba(0,0,0,0.05)',
     overflow: 'hidden',
-    transition: 'all 0.3s cubic-bezier(0.25, 1, 0.5, 1)',
+    transition: 'all 0.35s cubic-bezier(0.25, 1, 0.5, 1)',
     border: '1px solid var(--glass-border)',
-    backdropFilter: 'blur(10px)',
-    WebkitBackdropFilter: 'blur(10px)'
+    backdropFilter: 'blur(12px)',
+    WebkitBackdropFilter: 'blur(12px)'
   };
 
   // 鼠标悬停时的放大效果
   const hoverStyle = {
-    transform: 'scale(1.03)',
-    boxShadow: '0 8px 24px var(--glass-shadow), 0 4px 8px rgba(0,0,0,0.06)'
+    transform: 'translateY(-5px) scale(1.02)',
+    boxShadow: '0 10px 30px var(--glass-shadow), 0 5px 10px rgba(0,0,0,0.08)'
   };
 
   // 不同类型卡片的颜色变量
@@ -109,59 +109,102 @@ const Friends = () => {
       hash = name.charCodeAt(i) + ((hash << 5) - hash);
     }
 
-    // 根据数字选择颜色组合
+    // 根据数字选择颜色组合 - 优化后的柔和色彩方案
     const colorOptions = [
+      // 蓝色系
       {
-        bg: 'from-blue-400/10 to-blue-600/10 dark:from-blue-700/20 dark:to-blue-900/20',
-        border: 'border-blue-200/30 dark:border-blue-700/30',
-        shadow: 'shadow-blue-500/5 dark:shadow-blue-800/10',
+        bg: 'from-blue-400/15 to-blue-600/15 dark:from-blue-700/25 dark:to-blue-900/25',
+        border: 'border-blue-200/40 dark:border-blue-700/40',
+        shadow: 'shadow-blue-500/10 dark:shadow-blue-800/15',
         text: 'text-blue-600 dark:text-blue-400'
       },
+      // 紫色系
       {
-        bg: 'from-purple-400/10 to-purple-600/10 dark:from-purple-700/20 dark:to-purple-900/20',
-        border: 'border-purple-200/30 dark:border-purple-700/30',
-        shadow: 'shadow-purple-500/5 dark:shadow-purple-800/10',
+        bg: 'from-purple-400/15 to-purple-600/15 dark:from-purple-700/25 dark:to-purple-900/25',
+        border: 'border-purple-200/40 dark:border-purple-700/40',
+        shadow: 'shadow-purple-500/10 dark:shadow-purple-800/15',
         text: 'text-purple-600 dark:text-purple-400'
       },
+      // 青色系
       {
-        bg: 'from-teal-400/10 to-teal-600/10 dark:from-teal-700/20 dark:to-teal-900/20',
-        border: 'border-teal-200/30 dark:border-teal-700/30',
-        shadow: 'shadow-teal-500/5 dark:shadow-teal-800/10',
+        bg: 'from-teal-400/15 to-teal-600/15 dark:from-teal-700/25 dark:to-teal-900/25',
+        border: 'border-teal-200/40 dark:border-teal-700/40',
+        shadow: 'shadow-teal-500/10 dark:shadow-teal-800/15',
         text: 'text-teal-600 dark:text-teal-400'
       },
+      // 粉色系
       {
-        bg: 'from-pink-400/10 to-pink-600/10 dark:from-pink-700/20 dark:to-pink-900/20',
-        border: 'border-pink-200/30 dark:border-pink-700/30',
-        shadow: 'shadow-pink-500/5 dark:shadow-pink-800/10',
+        bg: 'from-pink-400/15 to-pink-600/15 dark:from-pink-700/25 dark:to-pink-900/25',
+        border: 'border-pink-200/40 dark:border-pink-700/40',
+        shadow: 'shadow-pink-500/10 dark:shadow-pink-800/15',
         text: 'text-pink-600 dark:text-pink-400'
       },
+      // 琥珀色系
       {
-        bg: 'from-amber-400/10 to-amber-600/10 dark:from-amber-700/20 dark:to-amber-900/20',
-        border: 'border-amber-200/30 dark:border-amber-700/30',
-        shadow: 'shadow-amber-500/5 dark:shadow-amber-800/10',
+        bg: 'from-amber-400/15 to-amber-600/15 dark:from-amber-700/25 dark:to-amber-900/25',
+        border: 'border-amber-200/40 dark:border-amber-700/40',
+        shadow: 'shadow-amber-500/10 dark:shadow-amber-800/15',
         text: 'text-amber-600 dark:text-amber-400'
       },
+      // 靛蓝色系
       {
-        bg: 'from-indigo-400/10 to-indigo-600/10 dark:from-indigo-700/20 dark:to-indigo-900/20',
-        border: 'border-indigo-200/30 dark:border-indigo-700/30',
-        shadow: 'shadow-indigo-500/5 dark:shadow-indigo-800/10',
+        bg: 'from-indigo-400/15 to-indigo-600/15 dark:from-indigo-700/25 dark:to-indigo-900/25',
+        border: 'border-indigo-200/40 dark:border-indigo-700/40',
+        shadow: 'shadow-indigo-500/10 dark:shadow-indigo-800/15',
         text: 'text-indigo-600 dark:text-indigo-400'
       },
+      // 绿色系
       {
-        bg: 'from-green-400/10 to-green-600/10 dark:from-green-700/20 dark:to-green-900/20',
-        border: 'border-green-200/30 dark:border-green-700/30',
-        shadow: 'shadow-green-500/5 dark:shadow-green-800/10',
-        text: 'text-green-600 dark:text-green-400'
+        bg: 'from-green-400/15 to-emerald-600/15 dark:from-green-700/25 dark:to-emerald-900/25',
+        border: 'border-green-200/40 dark:border-emerald-700/40',
+        shadow: 'shadow-green-500/10 dark:shadow-emerald-800/15',
+        text: 'text-green-600 dark:text-emerald-400'
       },
+      // 赤色系
       {
-        bg: 'from-red-400/10 to-red-600/10 dark:from-red-700/20 dark:to-red-900/20',
-        border: 'border-red-200/30 dark:border-red-700/30',
-        shadow: 'shadow-red-500/5 dark:shadow-red-800/10',
+        bg: 'from-red-400/15 to-red-600/15 dark:from-red-700/25 dark:to-red-900/25',
+        border: 'border-red-200/40 dark:border-red-700/40',
+        shadow: 'shadow-red-500/10 dark:shadow-red-800/15',
         text: 'text-red-600 dark:text-red-400'
+      },
+      // 天蓝色系
+      {
+        bg: 'from-sky-400/15 to-blue-500/15 dark:from-sky-700/25 dark:to-blue-800/25',
+        border: 'border-sky-200/40 dark:border-sky-700/40',
+        shadow: 'shadow-sky-500/10 dark:shadow-sky-800/15',
+        text: 'text-sky-600 dark:text-sky-400'
+      },
+      // 玫瑰红色系
+      {
+        bg: 'from-rose-400/15 to-pink-500/15 dark:from-rose-700/25 dark:to-pink-800/25',
+        border: 'border-rose-200/40 dark:border-rose-700/40',
+        shadow: 'shadow-rose-500/10 dark:shadow-rose-800/15',
+        text: 'text-rose-600 dark:text-rose-400'
+      },
+      // 石板蓝色系
+      {
+        bg: 'from-slate-400/15 to-slate-500/15 dark:from-slate-700/25 dark:to-slate-800/25',
+        border: 'border-slate-200/40 dark:border-slate-700/40',
+        shadow: 'shadow-slate-500/10 dark:shadow-slate-800/15',
+        text: 'text-slate-600 dark:text-slate-400'
+      },
+      // 青柠色系
+      {
+        bg: 'from-lime-400/15 to-green-500/15 dark:from-lime-700/25 dark:to-green-800/25',
+        border: 'border-lime-200/40 dark:border-lime-700/40',
+        shadow: 'shadow-lime-500/10 dark:shadow-lime-800/15',
+        text: 'text-lime-600 dark:text-lime-400'
       }
     ];
 
-    return colorOptions[Math.abs(hash) % colorOptions.length];
+    // 使用名称的每个字符来生成一个更独特的哈希值
+    const nameSum = name.split('').reduce((sum, char, index) => {
+      return sum + char.charCodeAt(0) * (index + 1);
+    }, 0);
+
+    // 结合两种哈希方法以提高唯一性
+    const combinedHash = (hash + nameSum) % colorOptions.length;
+    return colorOptions[Math.abs(combinedHash)];
   };
 
   return (
@@ -203,7 +246,8 @@ const Friends = () => {
                 custom={index}
                 initial="hidden"
                 animate="visible"
-                whileHover={{ scale: 1.02 }}
+                whileHover={{ scale: 1.02, y: -5 }}
+                transition={{ type: "spring", stiffness: 300, damping: 15 }}
                 className="block h-full"
               >
                 <div
@@ -212,7 +256,7 @@ const Friends = () => {
                 >
                   <div className="p-5 flex items-center h-full">
                     <div className="w-16 h-16 md:w-20 md:h-20 rounded-full overflow-hidden border-2 dark:border-gray-700 border-white shadow-md flex-shrink-0 relative">
-                      <img src={friend.avatar} alt={friend.name} className="w-full h-full object-cover" />
+                      <img src={friend.avatar} alt={friend.name} className="w-full h-full object-cover transform transition-transform duration-700 hover:scale-110" />
                       <div className={`absolute -bottom-0.5 -right-0.5 w-4 h-4 rounded-full ${getFriendColor(friend.name).text.replace('text-', 'bg-').replace('dark:', '')}`}></div>
                     </div>
                     <div className="ml-4 flex-1">
@@ -251,7 +295,8 @@ const Friends = () => {
                 custom={index}
                 initial="hidden"
                 animate="visible"
-                whileHover={{ scale: 1.02 }}
+                whileHover={{ scale: 1.02, y: -5 }}
+                transition={{ type: "spring", stiffness: 300, damping: 15 }}
                 className="block h-full"
               >
                 <div
@@ -260,7 +305,7 @@ const Friends = () => {
                 >
                   <div className="p-4 flex items-center h-full">
                     <div className="w-12 h-12 rounded-full overflow-hidden border-2 dark:border-gray-700 border-white shadow-md flex-shrink-0 relative">
-                      <img src={friend.avatar} alt={friend.name} className="w-full h-full object-cover" />
+                      <img src={friend.avatar} alt={friend.name} className="w-full h-full object-cover transform transition-transform duration-700 hover:scale-110" />
                       <div className={`absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full ${getFriendColor(friend.name).text.replace('text-', 'bg-').replace('dark:', '')}`}></div>
                     </div>
                     <div className="ml-3 flex-1">
@@ -341,72 +386,176 @@ const Friends = () => {
             <div className="h-0.5 bg-gradient-to-r from-teal-500/50 to-transparent ml-4 flex-grow"></div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <ul className="space-y-4 text-base dark:text-gray-300 text-gray-700 leading-relaxed">
-                <li className="flex items-start">
-                  <span className="mr-2 text-lg dark:text-blue-400 text-blue-600">•</span>
-                  申请友链请将博客必备项目检查完毕并有我站的友链，并加入黑名单。
-                </li>
-                <li className="flex items-start">
-                  <span className="mr-2 text-lg dark:text-purple-400 text-purple-600">•</span>
-                  若站点长时间无法访问，我会删除您的友链，恢复后可再次申请。
-                </li>
-                <li className="flex items-start">
-                  <span className="mr-2 text-lg dark:text-teal-400 text-teal-600">•</span>
-                  请保证您的网站不存在被治安管制的内容及违法内容，没有过多广告、无恶意软件、脚本，且链文章原创出处。
-                </li>
-                <li className="flex items-start">
-                  <span className="mr-2 text-lg dark:text-blue-400 text-blue-600">•</span>
-                  请保站点全局启用HTTPS
-                </li>
-                <li className="flex items-start">
-                  <span className="mr-2 text-lg dark:text-purple-400 text-purple-600">•</span>
-                  您需要有自己的独立域名，暂且不同公开子域名或免费域名类的友链申请（如github.io、vercel.app、eu.org、js.cool、tk、ml、cf等）
-                </li>
-                <li className="flex items-start">
-                  <span className="mr-2 text-lg dark:text-teal-400 text-teal-600">•</span>
-                  暂时不同意路边及其个人网站的友链申请
-                </li>
-              </ul>
-            </div>
-
-            <div className="bg-white/10 dark:bg-gray-900/20 rounded-xl p-5 border border-gray-200/30 dark:border-gray-700/30">
-              <h4 className="text-lg font-semibold dark:text-white text-gray-900 mb-3 flex items-center tracking-tight">
-                <svg className="w-5 h-5 mr-2 text-blue-600 dark:text-blue-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
-                  <polyline points="22,6 12,13 2,6"></polyline>
-                </svg>
-                添加方式
-              </h4>
-
-              <div className="space-y-3">
-                <p className="text-sm dark:text-gray-300 text-gray-700">
-                  发送邮箱：<a href="mailto:Email@damesck.net" className="text-blue-600 dark:text-blue-400 hover:underline font-medium">Email@damesck.net</a>
-                </p>
-
-                <p className="text-sm dark:text-gray-300 text-gray-700 font-medium">发送内容：</p>
-                <ul className="pl-5 space-y-1.5">
-                  <li className="text-sm dark:text-gray-300 text-gray-700 list-disc">昵称</li>
-                  <li className="text-sm dark:text-gray-300 text-gray-700 list-disc">站点标题</li>
-                  <li className="text-sm dark:text-gray-300 text-gray-700 list-disc">网站</li>
-                  <li className="text-sm dark:text-gray-300 text-gray-700 list-disc">头像</li>
-                  <li className="text-sm dark:text-gray-300 text-gray-700 list-disc">描述</li>
-                </ul>
-              </div>
-            </div>
-          </div>
+          <ul className="space-y-4 text-base dark:text-gray-300 text-gray-700 leading-relaxed max-w-3xl mx-auto">
+            <li className="flex items-start">
+              <span className="mr-2 text-lg dark:text-blue-400 text-blue-600">•</span>
+              申请友链请将博客必备项目检查完毕并有我站的友链，并加入黑名单。
+            </li>
+            <li className="flex items-start">
+              <span className="mr-2 text-lg dark:text-purple-400 text-purple-600">•</span>
+              若站点长时间无法访问，我会删除您的友链，恢复后可再次申请。
+            </li>
+            <li className="flex items-start">
+              <span className="mr-2 text-lg dark:text-teal-400 text-teal-600">•</span>
+              请保证您的网站不存在被治安管制的内容及违法内容，没有过多广告、无恶意软件、脚本，且链文章原创出处。
+            </li>
+            <li className="flex items-start">
+              <span className="mr-2 text-lg dark:text-blue-400 text-blue-600">•</span>
+              请保站点全局启用HTTPS
+            </li>
+            <li className="flex items-start">
+              <span className="mr-2 text-lg dark:text-purple-400 text-purple-600">•</span>
+              您需要有自己的独立域名，暂且不同公开子域名或免费域名类的友链申请（如github.io、vercel.app、eu.org、js.cool、tk、ml、cf等）
+            </li>
+            <li className="flex items-start">
+              <span className="mr-2 text-lg dark:text-teal-400 text-teal-600">•</span>
+              暂时不同意路边及其个人网站的友链申请
+            </li>
+          </ul>
         </motion.div>
       </div>
 
-      {/* 站点标题 */}
+      {/* 友链申请与站点信息 - 左右并排布局 */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5, delay: 1 }}
-        className="text-center mt-12"
+        className="mt-12 mb-8"
       >
-        <p className="text-sm dark:text-gray-300 text-gray-600 backdrop-blur-sm py-2 rounded-full bg-gray-50/20 dark:bg-gray-800/20 inline-block px-6 font-medium">站点标题：damesck的小屋</p>
+        <div className="flex items-center mb-6">
+          <h2 className="text-2xl font-bold dark:text-white text-gray-900 tracking-tight flex items-center">
+            <svg className="w-5 h-5 mr-2 text-blue-600 dark:text-blue-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18z"></path>
+              <path d="M12 13V9"></path>
+              <path d="M12 17h.01"></path>
+            </svg>
+            友链申请与站点信息
+          </h2>
+          <div className="h-0.5 bg-gradient-to-r from-blue-500/50 to-transparent ml-4 flex-grow"></div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* 左侧：添加方式 */}
+          <div className="bg-gradient-to-br from-gray-100/30 to-gray-200/30 dark:from-gray-800/30 dark:to-gray-900/30 
+                        backdrop-blur-xl rounded-2xl p-6 border border-gray-200/50 dark:border-gray-700/30 
+                        shadow-sm h-full transform hover:scale-[1.01] transition-all duration-300"
+            style={{
+              backdropFilter: 'blur(12px)',
+              WebkitBackdropFilter: 'blur(12px)'
+            }}>
+            <h3 className="text-xl font-bold dark:text-white text-gray-900 mb-4 tracking-tight flex items-center">
+              <svg className="w-5 h-5 mr-2 text-teal-600 dark:text-teal-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                <polyline points="22,6 12,13 2,6"></polyline>
+              </svg>
+              添加方式
+            </h3>
+            <div className="h-0.5 bg-gradient-to-r from-teal-500/50 to-transparent mb-6"></div>
+
+            <div className="space-y-4">
+              <p className="text-base dark:text-gray-300 text-gray-700">
+                发送邮箱：<a href="mailto:Email@damesck.net" className="text-blue-600 dark:text-blue-400 hover:underline font-medium">Email@damesck.net</a>
+              </p>
+
+              <p className="text-base dark:text-gray-300 text-gray-700 font-medium mt-4">发送内容：</p>
+              <div className="space-y-2.5">
+                <div className="flex items-center space-x-2">
+                  <div className="w-2.5 h-2.5 rounded-full bg-blue-500"></div>
+                  <p className="text-sm dark:text-gray-300 text-gray-700">昵称</p>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <div className="w-2.5 h-2.5 rounded-full bg-purple-500"></div>
+                  <p className="text-sm dark:text-gray-300 text-gray-700">站点标题</p>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <div className="w-2.5 h-2.5 rounded-full bg-teal-500"></div>
+                  <p className="text-sm dark:text-gray-300 text-gray-700">网站</p>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <div className="w-2.5 h-2.5 rounded-full bg-amber-500"></div>
+                  <p className="text-sm dark:text-gray-300 text-gray-700">头像</p>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <div className="w-2.5 h-2.5 rounded-full bg-green-500"></div>
+                  <p className="text-sm dark:text-gray-300 text-gray-700">描述</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* 右侧：站点信息 */}
+          <div className="bg-gradient-to-br from-gray-100/30 to-gray-200/30 dark:from-gray-800/30 dark:to-gray-900/30 
+                        backdrop-blur-xl rounded-2xl p-6 border border-gray-200/50 dark:border-gray-700/30 
+                        shadow-sm h-full transform hover:scale-[1.01] transition-all duration-300"
+            style={{
+              backdropFilter: 'blur(12px)',
+              WebkitBackdropFilter: 'blur(12px)'
+            }}>
+            <h3 className="text-xl font-bold dark:text-white text-gray-900 mb-4 tracking-tight flex items-center">
+              <svg className="w-5 h-5 mr-2 text-blue-600 dark:text-blue-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M5 3a2 2 0 0 0-2 2v14c0 1.1.9 2 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2H5z"></path>
+                <path d="M12 15a2 2 0 1 0 0-4 2 2 0 0 0 0 4z"></path>
+              </svg>
+              站点信息
+            </h3>
+            <div className="h-0.5 bg-gradient-to-r from-blue-500/50 to-transparent mb-6"></div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="flex items-center bg-white/10 dark:bg-gray-900/20 rounded-xl p-4 border border-gray-200/30 dark:border-gray-700/30">
+                <div className="flex-shrink-0 w-10 h-10 flex items-center justify-center rounded-full bg-blue-100/50 dark:bg-blue-900/30">
+                  <svg className="w-5 h-5 text-blue-600 dark:text-blue-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                    <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                  </svg>
+                </div>
+                <div className="ml-3">
+                  <p className="text-xs text-gray-500 dark:text-gray-400">站点标题</p>
+                  <p className="font-medium dark:text-white text-gray-900">damesck的小屋</p>
+                </div>
+              </div>
+
+              <div className="flex items-center bg-white/10 dark:bg-gray-900/20 rounded-xl p-4 border border-gray-200/30 dark:border-gray-700/30">
+                <div className="flex-shrink-0 w-10 h-10 flex items-center justify-center rounded-full bg-purple-100/50 dark:bg-purple-900/30">
+                  <svg className="w-5 h-5 text-purple-600 dark:text-purple-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+                    <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+                  </svg>
+                </div>
+                <div className="ml-3">
+                  <p className="text-xs text-gray-500 dark:text-gray-400">站点描述</p>
+                  <p className="font-medium dark:text-white text-gray-900">致不完美的明天_</p>
+                </div>
+              </div>
+
+              <div className="flex items-center bg-white/10 dark:bg-gray-900/20 rounded-xl p-4 border border-gray-200/30 dark:border-gray-700/30">
+                <div className="flex-shrink-0 w-10 h-10 flex items-center justify-center rounded-full bg-amber-100/50 dark:bg-amber-900/30">
+                  <svg className="w-5 h-5 text-amber-600 dark:text-amber-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <circle cx="12" cy="8" r="5"></circle>
+                    <path d="M20 21a8 8 0 0 0-16 0"></path>
+                  </svg>
+                </div>
+                <div className="ml-3">
+                  <p className="text-xs text-gray-500 dark:text-gray-400">名字</p>
+                  <p className="font-medium dark:text-white text-gray-900">damesck</p>
+                </div>
+              </div>
+
+              <div className="flex items-center bg-white/10 dark:bg-gray-900/20 rounded-xl p-4 border border-gray-200/30 dark:border-gray-700/30">
+                <div className="flex-shrink-0 w-10 h-10 flex items-center justify-center rounded-full bg-teal-100/50 dark:bg-teal-900/30">
+                  <svg className="w-5 h-5 text-teal-600 dark:text-teal-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                    <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                    <polyline points="21 15 16 10 5 21"></polyline>
+                  </svg>
+                </div>
+                <div className="ml-3">
+                  <p className="text-xs text-gray-500 dark:text-gray-400">头像</p>
+                  <a href="https://user.klpbbs.com/data/avatar/000/00/61/73_avatar_big.jpg" className="font-medium text-blue-600 dark:text-blue-400 hover:underline transition-colors" target="_blank" rel="noopener noreferrer">点击下载</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </motion.div>
     </div>
   );
