@@ -536,7 +536,7 @@ const Friends = () => {
                 </div>
                 <div className="ml-3">
                   <p className="text-xs text-gray-500 dark:text-gray-400">URL</p>
-                  <p className="font-medium dark:text-white text-gray-900">https://damesck.net</p>
+                  <p className="font-medium dark:text-white text-gray-900">damesck.net</p>
                 </div>
               </div>
 
