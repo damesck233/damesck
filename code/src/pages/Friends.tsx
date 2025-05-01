@@ -535,8 +535,8 @@ const Friends = () => {
                   </svg>
                 </div>
                 <div className="ml-3">
-                  <p className="text-xs text-gray-500 dark:text-gray-400">名字</p>
-                  <p className="font-medium dark:text-white text-gray-900">damesck</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400">URL</p>
+                  <p className="font-medium dark:text-white text-gray-900">https://damesck.net</p>
                 </div>
               </div>
 
