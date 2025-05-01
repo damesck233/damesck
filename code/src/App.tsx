@@ -8,7 +8,8 @@ import {
   PencilIcon,
   PhoneIcon,
   Bars3Icon,
-  XMarkIcon
+  XMarkIcon,
+  UserGroupIcon
 } from '@heroicons/react/24/outline'
 
 // Apple风格的缓动函数
@@ -23,6 +24,7 @@ const Home = lazy(() => {
 });
 const Blog = lazy(() => import('./pages/Blog'))
 const Contact = lazy(() => import('./pages/Contact'))
+const Friends = lazy(() => import('./pages/Friends'))
 import Loading from './components/Loading'
 import WebWalker from './components/WebWalker'
 import ThemeToggle from './components/ThemeToggle'
@@ -80,13 +82,10 @@ const Menu = memo(({ isOpen, onClose }: { isOpen: boolean, onClose: () => void }
                 </svg>
                 damesck.cc
               </a>
-              <a href="#" className="flex items-center px-3 py-2 rounded-lg text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100/50 dark:hover:bg-gray-800/50">
-                <svg className="w-4 h-4 mr-2 text-blue-600 dark:text-blue-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M3 7a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-10z"></path>
-                  <path d="M3 7l9 6l9 -6"></path>
-                </svg>
-                朋友
-              </a>
+              <NavLink to="/friends" className={({ isActive }) => `flex items-center px-3 py-2 rounded-lg text-sm ${isActive ? 'bg-blue-100/50 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100/50 dark:hover:bg-gray-800/50'}`} onClick={onClose}>
+                <UserGroupIcon className="w-4 h-4 mr-2 text-blue-600 dark:text-blue-400" />
+                友情链接
+              </NavLink>
             </div>
           </div>
 
@@ -142,6 +141,7 @@ const PageContent = memo(() => (
         <Route path="/" element={<Home />} />
         <Route path="/blog" element={<Blog />} />
         <Route path="/contact" element={<Contact />} />
+        <Route path="/friends" element={<Friends />} />
       </Routes>
     </Suspense>
   </main>
