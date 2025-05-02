@@ -1,8 +1,7 @@
 import { motion } from 'framer-motion';
-import { useState, useEffect } from 'react';
-import { UserIcon, GlobeAltIcon, UserGroupIcon } from '@heroicons/react/24/outline';
-import { type SiteStatus } from '../api/checkSiteStatus';
-import statusChecker from '../utils/statusChecker';
+import { useState, useEffect, useCallback } from 'react';
+import { UserIcon, GlobeAltIcon, UserGroupIcon, ExclamationCircleIcon } from '@heroicons/react/24/outline';
+import StatusIndicator, { refreshAllStatusIndicators } from '../components/StatusIndicator';
 
 // 友情链接数据接口
 interface Friend {
@@ -10,86 +9,7 @@ interface Friend {
   avatar: string;
   url: string;
   description: string;
-  status?: SiteStatus;
-  lastChecked?: string;
 }
-
-// 网站访问状态指示器组件
-const SiteStatusIndicator = ({ status, lastChecked }: { status?: Friend['status'], lastChecked?: string }) => {
-  if (!status) return null;
-
-  const getStatusDetails = () => {
-    switch (status) {
-      case 'good':
-        return {
-          color: 'bg-green-500 dark:bg-green-400',
-          bars: 3,
-          title: '网站可正常访问',
-          isOffline: false
-        };
-      case 'slow':
-        return {
-          color: 'bg-orange-500 dark:bg-orange-400',
-          bars: 2,
-          title: '网站访问较慢',
-          isOffline: false
-        };
-      case 'very-slow':
-        return {
-          color: 'bg-red-500 dark:bg-red-400',
-          bars: 1,
-          title: '网站访问慢',
-          isOffline: false
-        };
-      case 'offline':
-        return {
-          color: 'bg-red-500 dark:bg-red-400',
-          bars: 0,
-          title: '网站可能无法访问',
-          isOffline: true
-        };
-      default:
-        return {
-          color: 'bg-gray-400 dark:bg-gray-500',
-          bars: 0,
-          title: '未知状态',
-          isOffline: false
-        };
-    }
-  };
-
-  const { color, bars, title, isOffline } = getStatusDetails();
-  const lastCheckedText = lastChecked ? `最后检查: ${lastChecked}` : '状态未知';
-
-  return (
-    <div className="absolute top-2 right-2 group z-10">
-      <div className={`w-5 h-5 rounded-full flex items-center justify-center ${color}`}>
-        {isOffline ? (
-          <svg className="w-3 h-3 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-          </svg>
-        ) : (
-          <div className="flex items-end h-3 space-x-0.5">
-            {[...Array(3)].map((_, i) => (
-              <div
-                key={i}
-                className={`w-1 ${i < bars ? 'bg-white' : 'bg-white/30'}`}
-                style={{ height: `${(i + 1) * 30}%` }}
-              />
-            ))}
-          </div>
-        )}
-      </div>
-
-      <div className="absolute right-0 w-40 p-2 bg-white dark:bg-gray-800 rounded-md shadow-lg 
-                    opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 
-                    text-xs text-gray-700 dark:text-gray-300 translate-y-1 z-20">
-        <p className="font-medium">{title}</p>
-        <p className="text-gray-500 dark:text-gray-400 text-xs mt-1">{lastCheckedText}</p>
-      </div>
-    </div>
-  );
-};
 
 // Apple风格的淡入动画
 const fadeIn = {
@@ -109,19 +29,15 @@ const Friends = () => {
   const [myFriends, setMyFriends] = useState<Friend[]>([
     {
       name: "Snowball_233",
-      avatar: "https://blog.qwq.my/_next/image?url=https%3A%2F%2Favatars.githubusercontent.com%2Fu%2F97330394%3Fv%3D4&w=640&q=75",
+      avatar: "https://user.klpbbs.com/data/avatar/001/08/24/63_avatar_big.jpg",
       url: "https://qwq.my",
-      description: "qwq.my",
-      status: "good",
-      lastChecked: "2023-08-05 08:30"
+      description: "qwq.my"
     },
     {
       name: "苦力怕纸",
       avatar: "https://user.klpbbs.com/data/avatar/000/00/00/01_avatar_big.jpg",
       url: "https://klpz.net/",
-      description: "苦力怕论坛站长",
-      status: "slow",
-      lastChecked: "2023-08-05 08:30"
+      description: "苦力怕论坛站长"
     }
   ]);
 
@@ -130,17 +46,19 @@ const Friends = () => {
       name: "御坂秋生の小窝",
       avatar: "https://webstatic.akio.top/user/NiuBoss123.jpg",
       url: "https://www.akio.top/",
-      description: "不努力就只能听到别人的好消息",
-      status: "very-slow",
-      lastChecked: "2023-08-05 08:30"
+      description: "不努力就只能听到别人的好消息"
     },
     {
       name: "iVampireSP 的物语",
       avatar: "https://nwl.im/avatar",
       url: "https://ivampiresp.com",
-      description: "比起千言万语，更重要的是心灵相通吧。",
-      status: "offline",
-      lastChecked: "2023-08-05 08:30"
+      description: "比起千言万语，更重要的是心灵相通吧。"
+    },
+    {
+      name: "M397749490",
+      avatar: "https://M397749490.com",
+      url: "https://M397749490/logo.png",
+      description: "M397749490.com"
     }
   ]);
 
@@ -152,6 +70,38 @@ const Friends = () => {
       description: "海猫工艺官方网站"
     }
   ]);
+
+  // 存储头像加载错误状态的对象
+  const [avatarErrors, setAvatarErrors] = useState<Record<string, boolean>>({});
+
+  // 处理头像加载错误
+  const handleAvatarError = (friendName: string) => {
+    setAvatarErrors(prev => ({
+      ...prev,
+      [friendName]: true
+    }));
+  };
+
+  // 生成头像首字母
+  const getInitials = (name: string) => {
+    return name.charAt(0).toUpperCase();
+  };
+
+  // 添加刷新状态
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [refreshCount, setRefreshCount] = useState(0);
+
+  // 处理刷新按钮点击
+  const handleRefresh = useCallback(() => {
+    setIsRefreshing(true);
+    refreshAllStatusIndicators();
+
+    // 5秒后自动重置刷新状态
+    setTimeout(() => {
+      setIsRefreshing(false);
+      setRefreshCount(prev => prev + 1);
+    }, 5000);
+  }, []);
 
   // iOS风格的卡片样式
   const cardStyle = {
@@ -296,113 +246,6 @@ const Friends = () => {
     return colorOptions[Math.abs(combinedHash)];
   };
 
-  // 添加一个获取网站状态的函数
-  useEffect(() => {
-    // 从状态检查器获取状态数据
-    const updateStatusFromChecker = () => {
-      const statusData = statusChecker.getStatusData();
-
-      // 更新朋友状态
-      setMyFriends(prevFriends =>
-        prevFriends.map(friend => {
-          try {
-            const domain = new URL(friend.url).hostname;
-            const status = statusData[domain];
-            if (status) {
-              return {
-                ...friend,
-                status: status.status,
-                lastChecked: status.lastChecked
-              };
-            }
-          } catch (error) {
-            console.error(`处理URL时出错: ${friend.url}`, error);
-          }
-          return friend;
-        })
-      );
-
-      setMoreFriends(prevFriends =>
-        prevFriends.map(friend => {
-          try {
-            const domain = new URL(friend.url).hostname;
-            const status = statusData[domain];
-            if (status) {
-              return {
-                ...friend,
-                status: status.status,
-                lastChecked: status.lastChecked
-              };
-            }
-          } catch (error) {
-            console.error(`处理URL时出错: ${friend.url}`, error);
-          }
-          return friend;
-        })
-      );
-    };
-
-    // 收集所有友链网站域名
-    const getAllFriendUrls = (): string[] => {
-      const urls: string[] = [];
-      try {
-        myFriends.forEach(friend => {
-          const domain = new URL(friend.url).hostname;
-          urls.push(domain);
-        });
-
-        moreFriends.forEach(friend => {
-          const domain = new URL(friend.url).hostname;
-          urls.push(domain);
-        });
-      } catch (error) {
-        console.error('获取友链域名时出错:', error);
-      }
-      return urls;
-    };
-
-    // 准备朋友数据，包括URL和头像
-    const prepareFriendsData = () => {
-      const friendsData = [...myFriends, ...moreFriends].map(friend => ({
-        url: friend.url,
-        avatar: friend.avatar
-      }));
-
-      // 更新状态检查器中的朋友数据
-      statusChecker.updateFriendsData(friendsData);
-    };
-
-    // 更新朋友数据
-    prepareFriendsData();
-
-    // 获取所有友链
-    const allUrls = getAllFriendUrls();
-
-    // 执行一次检测
-    const checkSites = async () => {
-      // 先检测所有站点
-      await statusChecker.start(allUrls);
-
-      // 然后获取更新后的状态
-      updateStatusFromChecker();
-    };
-
-    // 页面加载时执行一次检测
-    checkSites();
-
-    // 监听状态更新事件
-    const handleStatusUpdate = () => {
-      updateStatusFromChecker();
-    };
-
-    window.addEventListener('site-status-updated', handleStatusUpdate);
-
-    // 组件卸载时清理事件监听
-    return () => {
-      window.removeEventListener('site-status-updated', handleStatusUpdate);
-    };
-  }, [myFriends, moreFriends]);
-
   return (
     <div className="container mx-auto px-4 py-8 max-w-5xl">
       {/* 页面标题 */}
@@ -414,6 +257,76 @@ const Friends = () => {
       >
         <h1 className="text-4xl font-bold dark:text-white text-gray-900 mb-4 tracking-tight">朋友们</h1>
         <p className="text-lg dark:text-gray-300 text-gray-600 font-medium">海内存知己，天涯若比邻</p>
+
+        {/* 状态指示器说明 */}
+        <div className="mt-4 flex flex-wrap items-center gap-4 bg-gray-100/40 dark:bg-gray-800/40 p-3 rounded-xl backdrop-blur-md border border-gray-200/30 dark:border-gray-700/30">
+          <p className="text-sm dark:text-gray-300 text-gray-600">网站状态指示：</p>
+          <div className="flex items-center gap-4">
+            <div className="flex items-center">
+              <div className="relative h-5 w-5 flex items-center justify-center mr-1.5">
+                <div className="absolute w-4 h-4 rounded-full bg-gradient-to-br from-green-400/90 to-green-600/90 shadow-md shadow-green-500/20 dark:shadow-green-900/30 ring-1 ring-green-200/60 dark:ring-green-800/60 backdrop-blur-md"></div>
+                <div className="absolute w-1.5 h-1.5 rounded-full bg-white/90 dark:bg-green-200/90 backdrop-blur-sm"></div>
+              </div>
+              <span className="text-xs dark:text-gray-300 text-gray-600">畅通</span>
+            </div>
+
+            <div className="flex items-center">
+              <div className="relative h-5 w-5 flex items-center justify-center mr-1.5">
+                <div className="absolute w-4 h-4 rounded-full bg-gradient-to-br from-yellow-400/90 to-amber-500/90 shadow-md shadow-yellow-500/20 dark:shadow-yellow-900/30 ring-1 ring-yellow-200/60 dark:ring-yellow-800/60 backdrop-blur-md"></div>
+                <div className="absolute w-1.5 h-1.5 rounded-full bg-white/90 dark:bg-yellow-200/90 backdrop-blur-sm"></div>
+              </div>
+              <span className="text-xs dark:text-gray-300 text-gray-600">良好</span>
+            </div>
+
+            <div className="flex items-center">
+              <div className="relative h-5 w-5 flex items-center justify-center mr-1.5">
+                <div className="absolute w-4 h-4 rounded-full bg-gradient-to-br from-orange-400/90 to-red-500/90 shadow-md shadow-orange-500/20 dark:shadow-orange-900/30 ring-1 ring-orange-200/60 dark:ring-orange-800/60 backdrop-blur-md"></div>
+                <div className="absolute w-1.5 h-1.5 rounded-full bg-white/90 dark:bg-orange-200/90 backdrop-blur-sm"></div>
+              </div>
+              <span className="text-xs dark:text-gray-300 text-gray-600">较慢</span>
+            </div>
+
+            <div className="flex items-center">
+              <div className="relative h-5 w-5 flex items-center justify-center mr-1.5">
+                <div className="absolute w-4 h-4 rounded-full bg-gradient-to-br from-red-500/90 to-red-700/90 shadow-md shadow-red-500/20 dark:shadow-red-900/30 ring-1 ring-red-200/60 dark:ring-red-800/60 backdrop-blur-md"></div>
+                <div className="absolute w-3 h-3 flex items-center justify-center backdrop-blur-sm">
+                  <svg className="w-2 h-2 text-white/90" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="4">
+                    <path d="M18 6L6 18M6 6l12 12" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </div>
+              </div>
+              <span className="text-xs dark:text-gray-300 text-gray-600">无法访问</span>
+            </div>
+          </div>
+          <div className="flex items-center ml-auto">
+            <div className="flex items-center mr-3">
+              <ExclamationCircleIcon className="w-3.5 h-3.5 text-amber-500 mr-1" />
+              <p className="text-xs text-gray-500 dark:text-gray-400">头像加载失败会显示首字母</p>
+            </div>
+            <p className="text-xs text-gray-500 dark:text-gray-400 mr-2">状态每24小时自动更新一次</p>
+            <button
+              onClick={handleRefresh}
+              disabled={isRefreshing}
+              className={`text-xs px-3 py-1.5 rounded-full flex items-center transition-all duration-300 shadow-sm backdrop-blur-sm
+                ${isRefreshing
+                  ? 'bg-gray-400/80 text-gray-100 cursor-not-allowed'
+                  : 'bg-gradient-to-r from-blue-500/90 to-blue-600/90 hover:from-blue-600/90 hover:to-blue-700/90 text-white hover:shadow transform hover:-translate-y-0.5'
+                }`}
+            >
+              <svg
+                className={`w-3 h-3 mr-1.5 ${isRefreshing ? 'animate-spin' : ''}`}
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+              >
+                <path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                  strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+              {isRefreshing ? '刷新中...' : '刷新状态'}
+            </button>
+          </div>
+        </div>
       </motion.div>
 
       {/* 友链列表容器 */}
@@ -448,14 +361,27 @@ const Friends = () => {
               >
                 <div
                   style={cardStyle}
-                  className={`h-full bg-gradient-to-br ${getFriendColor(friend.name).bg} backdrop-blur-xl ${getFriendColor(friend.name).border} ${getFriendColor(friend.name).shadow} relative`}
+                  className={`h-full bg-gradient-to-br ${getFriendColor(friend.name).bg} backdrop-blur-xl ${getFriendColor(friend.name).border} ${getFriendColor(friend.name).shadow}`}
                 >
-                  {/* 添加状态指示器 */}
-                  <SiteStatusIndicator status={friend.status} lastChecked={friend.lastChecked} />
-
                   <div className="p-5 flex items-center h-full">
                     <div className="w-16 h-16 md:w-20 md:h-20 rounded-full overflow-hidden border-2 dark:border-gray-700 border-white shadow-md flex-shrink-0 relative">
-                      <img src={friend.avatar} alt={friend.name} className="w-full h-full object-cover transform transition-transform duration-700 hover:scale-110" />
+                      {avatarErrors[friend.name] ? (
+                        <div className="w-full h-full flex items-center justify-center bg-gray-200 dark:bg-gray-700">
+                          <div className="flex flex-col items-center justify-center">
+                            <span className="text-xl font-bold text-gray-500 dark:text-gray-400">
+                              {getInitials(friend.name)}
+                            </span>
+                            <ExclamationCircleIcon className="w-5 h-5 text-amber-500 mt-1" />
+                          </div>
+                        </div>
+                      ) : (
+                        <img
+                          src={friend.avatar}
+                          alt={friend.name}
+                          className="w-full h-full object-cover transform transition-transform duration-700 hover:scale-110"
+                          onError={() => handleAvatarError(friend.name)}
+                        />
+                      )}
                       <div className={`absolute -bottom-0.5 -right-0.5 w-4 h-4 rounded-full ${getFriendColor(friend.name).text.replace('text-', 'bg-').replace('dark:', '')}`}></div>
                     </div>
                     <div className="ml-4 flex-1">
@@ -464,6 +390,7 @@ const Friends = () => {
                         <p className="text-sm dark:text-gray-300 text-gray-600 mt-1 line-clamp-2 leading-relaxed">{friend.description}</p>
                       )}
                     </div>
+                    <StatusIndicator url={friend.url} avatarUrl={friend.avatar} />
                   </div>
                 </div>
               </motion.a>
@@ -500,14 +427,27 @@ const Friends = () => {
               >
                 <div
                   style={cardStyle}
-                  className={`h-full bg-gradient-to-br ${getFriendColor(friend.name).bg} backdrop-blur-xl ${getFriendColor(friend.name).border} ${getFriendColor(friend.name).shadow} relative`}
+                  className={`h-full bg-gradient-to-br ${getFriendColor(friend.name).bg} backdrop-blur-xl ${getFriendColor(friend.name).border} ${getFriendColor(friend.name).shadow}`}
                 >
-                  {/* 添加状态指示器 */}
-                  <SiteStatusIndicator status={friend.status} lastChecked={friend.lastChecked} />
-
                   <div className="p-4 flex items-center h-full">
                     <div className="w-12 h-12 rounded-full overflow-hidden border-2 dark:border-gray-700 border-white shadow-md flex-shrink-0 relative">
-                      <img src={friend.avatar} alt={friend.name} className="w-full h-full object-cover transform transition-transform duration-700 hover:scale-110" />
+                      {avatarErrors[friend.name] ? (
+                        <div className="w-full h-full flex items-center justify-center bg-gray-200 dark:bg-gray-700">
+                          <div className="flex flex-col items-center justify-center">
+                            <span className="text-sm font-bold text-gray-500 dark:text-gray-400">
+                              {getInitials(friend.name)}
+                            </span>
+                            <ExclamationCircleIcon className="w-3 h-3 text-amber-500 mt-0.5" />
+                          </div>
+                        </div>
+                      ) : (
+                        <img
+                          src={friend.avatar}
+                          alt={friend.name}
+                          className="w-full h-full object-cover transform transition-transform duration-700 hover:scale-110"
+                          onError={() => handleAvatarError(friend.name)}
+                        />
+                      )}
                       <div className={`absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full ${getFriendColor(friend.name).text.replace('text-', 'bg-').replace('dark:', '')}`}></div>
                     </div>
                     <div className="ml-3 flex-1">
@@ -516,6 +456,7 @@ const Friends = () => {
                         <p className="text-xs dark:text-gray-300 text-gray-600 mt-0.5 line-clamp-1 leading-relaxed">{friend.description}</p>
                       )}
                     </div>
+                    <StatusIndicator url={friend.url} avatarUrl={friend.avatar} />
                   </div>
                 </div>
               </motion.a>
@@ -552,7 +493,23 @@ const Friends = () => {
                 >
                   <div className="p-4 flex items-center h-full">
                     <div className="w-14 h-14 rounded-full overflow-hidden border-2 dark:border-gray-700 border-white shadow-md flex-shrink-0 relative">
-                      <img src={link.avatar} alt={link.name} className="w-full h-full object-cover" />
+                      {avatarErrors[link.name] ? (
+                        <div className="w-full h-full flex items-center justify-center bg-gray-200 dark:bg-gray-700">
+                          <div className="flex flex-col items-center justify-center">
+                            <span className="text-base font-bold text-gray-500 dark:text-gray-400">
+                              {getInitials(link.name)}
+                            </span>
+                            <ExclamationCircleIcon className="w-4 h-4 text-amber-500 mt-0.5" />
+                          </div>
+                        </div>
+                      ) : (
+                        <img 
+                          src={link.avatar} 
+                          alt={link.name} 
+                          className="w-full h-full object-cover"
+                          onError={() => handleAvatarError(link.name)}
+                        />
+                      )}
                       <div className={`absolute -bottom-0.5 -right-0.5 w-4 h-4 rounded-full ${getFriendColor(link.name).text.replace('text-', 'bg-').replace('dark:', '')}`}></div>
                     </div>
                     <div className="ml-3 flex-1">
