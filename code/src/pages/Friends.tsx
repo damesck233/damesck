@@ -55,9 +55,15 @@ const Friends = () => {
       description: "比起千言万语，更重要的是心灵相通吧。"
     },
     {
+      name: "Bingxin Home",
+      avatar: "https://blog.byteloid.one/img/march7th.webp",
+      url: "https://byteloid.one",
+      description: "相聚于此乐土。"
+    },
+    {
       name: "M397749490",
-      avatar: "https://M397749490.com",
-      url: "https://M397749490/logo.png",
+      avatar: "https://M397749490.com/logo.png",
+      url: "https://M397749490.com",
       description: "M397749490.com"
     }
   ]);
