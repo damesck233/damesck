@@ -111,6 +111,38 @@ interface ContactCardProps {
 
 // 卡片组件
 const ContactCard: React.FC<ContactCardProps> = ({ contact, onViewQRCode }) => {
+  // 友链卡片风格
+  const cardStyle = {
+    backgroundColor: 'var(--glass-bg)',
+    borderRadius: '18px',
+    boxShadow: '0 5px 15px var(--glass-shadow), 0 2px 5px rgba(0,0,0,0.05)',
+    overflow: 'hidden',
+    transition: 'all 0.35s cubic-bezier(0.25, 1, 0.5, 1)',
+    border: '1px solid var(--glass-border)',
+    backdropFilter: 'blur(12px)',
+    WebkitBackdropFilter: 'blur(12px)'
+  };
+
+  // 获取卡片颜色
+  const getCardColor = () => {
+    switch (contact.id) {
+      case 'wechat':
+        return 'from-green-400/15 to-green-600/15 dark:from-green-700/25 dark:to-green-900/25 border-green-200/40 dark:border-green-700/40';
+      case 'qq':
+        return 'from-blue-400/15 to-blue-600/15 dark:from-blue-700/25 dark:to-blue-900/25 border-blue-200/40 dark:border-blue-700/40';
+      case 'email':
+        return 'from-red-400/15 to-red-600/15 dark:from-red-700/25 dark:to-red-900/25 border-red-200/40 dark:border-red-700/40';
+      case 'github':
+        return 'from-slate-400/15 to-slate-600/15 dark:from-slate-700/25 dark:to-slate-900/25 border-slate-200/40 dark:border-slate-700/40';
+      case 'bilibili':
+        return 'from-sky-400/15 to-sky-600/15 dark:from-sky-700/25 dark:to-sky-900/25 border-sky-200/40 dark:border-sky-700/40';
+      case 'feishu':
+        return 'from-teal-400/15 to-teal-600/15 dark:from-teal-700/25 dark:to-teal-900/25 border-teal-200/40 dark:border-teal-700/40';
+      default:
+        return 'from-indigo-400/15 to-indigo-600/15 dark:from-indigo-700/25 dark:to-indigo-900/25 border-indigo-200/40 dark:border-indigo-700/40';
+    }
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 30 }}
@@ -120,93 +152,114 @@ const ContactCard: React.FC<ContactCardProps> = ({ contact, onViewQRCode }) => {
         ease: [0.22, 1, 0.36, 1],
       }}
       whileHover={{
-        scale: 1.03,
-        boxShadow: '0 12px 28px rgba(0, 0, 0, 0.1), 0 4px 12px rgba(0, 0, 0, 0.08)',
-        transition: { duration: 0.2 }
+        scale: 1.02,
+        y: -5,
+        transition: {
+          type: "spring",
+          stiffness: 300,
+          damping: 15
+        }
       }}
-      className={`split-card bg-white/70 dark:bg-gray-800/70 backdrop-blur-md relative overflow-hidden animate-element ${contact.color} h-full`}
+      className="h-full"
     >
-      <div className="p-6">
-        <div className="flex items-center mb-4">
-          <div className="p-3 rounded-full bg-white/80 dark:bg-gray-700/80 shadow-sm mr-4">
-            {contact.icon}
+      <div
+        style={cardStyle}
+        className={`h-full bg-gradient-to-br ${getCardColor()} backdrop-blur-xl overflow-hidden relative`}
+      >
+        <div className="p-3 sm:p-4 flex flex-col sm:flex-row items-start sm:items-center sm:justify-between h-full">
+          <div className="flex items-center flex-1 mb-3 sm:mb-0">
+            <div className="p-2 sm:p-2.5 rounded-full bg-white/80 dark:bg-gray-700/80 shadow-sm mr-3 shrink-0">
+              {contact.icon}
+            </div>
+            <div className="min-w-0">
+              <div className="flex items-center">
+                <h2 className="text-base sm:text-lg font-bold text-[#2c2c2e] dark:text-white truncate">{contact.title}</h2>
+                <div className="relative group ml-2 flex-shrink-0">
+                  <svg className="w-4 h-4 text-gray-400 cursor-help" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" />
+                  </svg>
+                  <div className="absolute left-0 w-48 p-2 bg-white dark:bg-gray-900 rounded-md shadow-lg 
+                    opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 
+                    text-xs text-gray-600 dark:text-gray-300 -translate-x-1/4 translate-y-1 z-10">
+                    {contact.description}
+                  </div>
+                </div>
+              </div>
+              <p className="text-xs sm:text-sm font-medium text-[#3c3c3e] dark:text-gray-200 mt-0.5 truncate max-w-[180px]">{contact.info}</p>
+            </div>
           </div>
-          <h2 className="text-xl font-bold text-[#2c2c2e] dark:text-white">{contact.title}</h2>
-        </div>
 
-        <div className="space-y-2">
-          <p className="text-lg font-medium text-[#3c3c3e] dark:text-gray-200">{contact.info}</p>
-          <p className="text-sm text-[#6c6c6e] dark:text-gray-400">{contact.description}</p>
+          <div className="flex flex-wrap gap-2 sm:flex-nowrap sm:space-x-2 w-full sm:w-auto justify-start sm:justify-end">
+            {contact.qrCode && (
+              <button
+                onClick={() => onViewQRCode(contact)}
+                className="inline-flex items-center px-2 sm:px-3 py-1 sm:py-1.5 rounded-full bg-[#007AFF] dark:bg-[#0063CC] text-white font-medium text-xs transition-all hover:bg-[#0063CC] sm:whitespace-nowrap"
+              >
+                查看二维码
+                <svg className="ml-1 w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
+                </svg>
+              </button>
+            )}
 
-          {contact.qrCode && (
-            <button
-              onClick={() => onViewQRCode(contact)}
-              className="mt-4 inline-flex items-center px-4 py-2 rounded-full bg-[#007AFF] dark:bg-[#0063CC] text-white font-medium text-sm transition-all hover:bg-[#0063CC]"
-            >
-              查看二维码
-              <svg className="ml-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
-              </svg>
-            </button>
-          )}
+            {contact.isEmail && (
+              <a
+                href={`mailto:${contact.info}`}
+                className="inline-flex items-center px-2 sm:px-3 py-1 sm:py-1.5 rounded-full bg-[#007AFF] dark:bg-[#0063CC] text-white font-medium text-xs transition-all hover:bg-[#0063CC] sm:whitespace-nowrap"
+              >
+                发送邮件
+                <svg className="ml-1 w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
+                </svg>
+              </a>
+            )}
 
-          {contact.isEmail && (
-            <a
-              href={`mailto:${contact.info}`}
-              className="mt-4 inline-flex items-center px-4 py-2 rounded-full bg-[#007AFF] dark:bg-[#0063CC] text-white font-medium text-sm transition-all hover:bg-[#0063CC]"
-            >
-              发送邮件
-              <svg className="ml-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
-              </svg>
-            </a>
-          )}
-
-          {contact.isLink && !contact.qrCode && (
-            <a
-              href={contact.link}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-4 inline-flex items-center px-4 py-2 rounded-full bg-[#007AFF] dark:bg-[#0063CC] text-white font-medium text-sm transition-all hover:bg-[#0063CC]"
-            >
-              访问链接
-              <svg className="ml-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-              </svg>
-            </a>
-          )}
-
-          {contact.isLink && contact.qrCode && (
-            <div className="flex flex-wrap gap-2 mt-4">
+            {contact.isLink && !contact.qrCode && (
               <a
                 href={contact.link}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center px-4 py-2 rounded-full bg-[#007AFF] dark:bg-[#0063CC] text-white font-medium text-sm transition-all hover:bg-[#0063CC]"
+                className="inline-flex items-center px-2 sm:px-3 py-1 sm:py-1.5 rounded-full bg-[#007AFF] dark:bg-[#0063CC] text-white font-medium text-xs transition-all hover:bg-[#0063CC] sm:whitespace-nowrap"
               >
                 访问链接
-                <svg className="ml-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="ml-1 w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                 </svg>
               </a>
+            )}
 
-              <button
-                onClick={() => onViewQRCode(contact)}
-                className="inline-flex items-center px-4 py-2 rounded-full bg-gray-600/80 dark:bg-gray-700/80 text-white font-medium text-sm transition-all hover:bg-gray-700"
-              >
-                查看二维码
-                <svg className="ml-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
-                </svg>
-              </button>
-            </div>
-          )}
+            {contact.isLink && contact.qrCode && (
+              <div className="flex gap-2 sm:space-x-2 w-full sm:w-auto">
+                <a
+                  href={contact.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center px-2 sm:px-3 py-1 sm:py-1.5 rounded-full bg-[#007AFF] dark:bg-[#0063CC] text-white font-medium text-xs transition-all hover:bg-[#0063CC] sm:whitespace-nowrap"
+                >
+                  访问链接
+                  <svg className="ml-1 w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                  </svg>
+                </a>
+
+                <button
+                  onClick={() => onViewQRCode(contact)}
+                  className="inline-flex items-center px-2 sm:px-3 py-1 sm:py-1.5 rounded-full bg-gray-600/80 dark:bg-gray-700/80 text-white font-medium text-xs transition-all hover:bg-gray-700 sm:whitespace-nowrap"
+                >
+                  二维码
+                  <svg className="ml-1 w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
+                  </svg>
+                </button>
+              </div>
+            )}
+          </div>
         </div>
-      </div>
 
-      {/* 卡片右下角装饰 */}
-      <div className="absolute bottom-0 right-0 w-24 h-24 opacity-10">
-        {contact.icon}
+        {/* 卡片右下角装饰 - 减小并降低透明度 */}
+        <div className="absolute top-1/2 right-0 -translate-y-1/2 w-12 h-12 opacity-[0.04]">
+          {contact.icon}
+        </div>
       </div>
     </motion.div>
   );
@@ -257,7 +310,7 @@ const QRCodeModal: React.FC<QRCodeModalProps> = ({ contact, onClose }) => {
           stiffness: 300,
           duration: 0.4
         }}
-        className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-md rounded-2xl p-6 max-w-sm w-full mx-4 shadow-2xl"
+        className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-md rounded-2xl p-5 max-w-xs w-full mx-4 shadow-2xl border border-white/20 dark:border-gray-700/30"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between mb-4">
@@ -265,29 +318,33 @@ const QRCodeModal: React.FC<QRCodeModalProps> = ({ contact, onClose }) => {
             <div className={`p-2 rounded-full ${contact.color} mr-3`}>
               {contact.icon}
             </div>
-            <h3 className="text-xl font-bold text-[#2c2c2e] dark:text-white">{getTitle()}</h3>
+            <h3 className="text-lg font-bold text-[#2c2c2e] dark:text-white">{getTitle()}</h3>
           </div>
           <button
             onClick={onClose}
-            className="w-8 h-8 rounded-full bg-gray-200/80 dark:bg-gray-600/80 flex items-center justify-center"
+            className="w-7 h-7 rounded-full bg-gray-200/80 dark:bg-gray-600/80 flex items-center justify-center transition-all hover:bg-gray-300 dark:hover:bg-gray-500"
           >
-            <svg className="w-5 h-5 text-gray-500 dark:text-gray-300" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <svg className="w-4 h-4 text-gray-500 dark:text-gray-300" viewBox="0 0 24 24" fill="none" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
         </div>
 
-        <div className="flex flex-col items-center justify-center py-4">
+        <div className="flex flex-col items-center justify-center py-2">
           {contact.qrCodeImage ? (
-            <div className="w-48 h-48 bg-white dark:bg-gray-700 p-3 rounded-xl shadow-sm mb-3 relative overflow-hidden">
+            <div className="w-44 h-44 bg-white dark:bg-gray-700 p-3 rounded-xl shadow-sm mb-3 relative overflow-hidden">
               <img
                 src={contact.qrCodeImage}
                 alt={`${contact.title}二维码`}
                 className="w-full h-full object-contain"
               />
+              {/* 添加小图标在右下角 */}
+              <div className="absolute bottom-2 right-2 w-8 h-8 rounded-full bg-white/90 dark:bg-gray-800/90 shadow-md p-1.5 flex items-center justify-center">
+                {contact.icon}
+              </div>
             </div>
           ) : (
-            <div className="w-48 h-48 bg-white dark:bg-gray-700 p-3 rounded-xl shadow-sm mb-3 relative overflow-hidden">
+            <div className="w-44 h-44 bg-white dark:bg-gray-700 p-3 rounded-xl shadow-sm mb-3 relative overflow-hidden">
               <div className="absolute inset-0 flex items-center justify-center text-gray-300 dark:text-gray-500">
                 <span className="text-sm">二维码占位</span>
               </div>
@@ -305,31 +362,61 @@ const QRCodeModal: React.FC<QRCodeModalProps> = ({ contact, onClose }) => {
           <p className="text-center text-[#6c6c6e] dark:text-gray-400 text-sm mt-1">{getMessage()}</p>
 
           {/* 添加适合该联系方式的操作按钮 */}
-          {contact.isLink && (
-            <a
-              href={contact.link}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-4 inline-flex items-center px-4 py-2 rounded-full bg-[#007AFF] dark:bg-[#0063CC] text-white font-medium text-sm transition-all hover:bg-[#0063CC]"
-            >
-              立即访问
-              <svg className="ml-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-              </svg>
-            </a>
-          )}
+          <div className="mt-4 flex space-x-2">
+            {contact.isLink && (
+              <a
+                href={contact.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex-1 inline-flex items-center justify-center px-4 py-2 rounded-full bg-[#007AFF] dark:bg-[#0063CC] text-white font-medium text-sm transition-all hover:bg-[#0063CC]"
+              >
+                立即访问
+                <svg className="ml-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                </svg>
+              </a>
+            )}
 
-          {contact.id === 'qq' && (
-            <a
-              href={`tencent://message/?uin=${contact.info}`}
-              className="mt-4 inline-flex items-center px-4 py-2 rounded-full bg-[#12B7F5] dark:bg-[#0095D3] text-white font-medium text-sm transition-all hover:bg-[#0095D3]"
-            >
-              打开QQ
-              <svg className="ml-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 5l7 7-7 7M5 5l7 7-7 7" />
-              </svg>
-            </a>
-          )}
+            {contact.id === 'qq' && (
+              <a
+                href={`tencent://message/?uin=${contact.info}`}
+                className="flex-1 inline-flex items-center justify-center px-4 py-2 rounded-full bg-[#12B7F5] dark:bg-[#0095D3] text-white font-medium text-sm transition-all hover:bg-[#0095D3]"
+              >
+                打开QQ
+                <svg className="ml-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 5l7 7-7 7M5 5l7 7-7 7" />
+                </svg>
+              </a>
+            )}
+
+            {contact.id === 'email' && (
+              <a
+                href={`mailto:${contact.info}`}
+                className="flex-1 inline-flex items-center justify-center px-4 py-2 rounded-full bg-[#EA4335] dark:bg-[#D03121] text-white font-medium text-sm transition-all hover:bg-[#D03121]"
+              >
+                发送邮件
+                <svg className="ml-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+              </a>
+            )}
+
+            {/* 如果没有任何按钮，则添加复制信息按钮 */}
+            {!contact.isLink && contact.id !== 'qq' && contact.id !== 'email' && (
+              <button
+                onClick={() => {
+                  navigator.clipboard.writeText(contact.info);
+                  // 可以添加一个复制成功的提示，不过这里简化处理
+                }}
+                className="flex-1 inline-flex items-center justify-center px-4 py-2 rounded-full bg-gray-500 dark:bg-gray-600 text-white font-medium text-sm transition-all hover:bg-gray-600 dark:hover:bg-gray-500"
+              >
+                复制信息
+                <svg className="ml-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
+                </svg>
+              </button>
+            )}
+          </div>
         </div>
       </motion.div>
     </motion.div>
@@ -347,38 +434,128 @@ const Contact: React.FC = () => {
     setSelectedContact(null);
   };
 
+  // 将联系方式按类别分组
+  const socialContacts = contactData.filter(c => ['wechat', 'qq', 'feishu'].includes(c.id));
+  const platformContacts = contactData.filter(c => ['github', 'bilibili'].includes(c.id));
+  const emailContacts = contactData.filter(c => ['email'].includes(c.id));
+
+  // 分类标题组件 - 更新为与朋友们页面一致的样式
+  const SectionTitle = ({ icon, title, color = "blue" }: { icon: React.ReactNode, title: string, color?: string }) => {
+    // 根据颜色参数返回对应的渐变色
+    const getGradientColor = () => {
+      switch (color) {
+        case 'purple':
+          return 'from-purple-500/50';
+        case 'teal':
+          return 'from-teal-500/50';
+        case 'red':
+          return 'from-red-500/50';
+        default:
+          return 'from-blue-500/50';
+      }
+    };
+
+    return (
+      <div className="flex items-center mb-6">
+        <h2 className="text-2xl font-bold dark:text-white text-gray-900 tracking-tight flex items-center">
+          <div className="w-5 h-5 mr-2 text-[#007AFF] dark:text-[#0063CC] flex-shrink-0">
+            {icon}
+          </div>
+          {title}
+        </h2>
+        <div className={`h-0.5 bg-gradient-to-r ${getGradientColor()} to-transparent ml-4 flex-grow`}></div>
+      </div>
+    );
+  };
+
   return (
     <div className="max-w-7xl mx-auto px-4 flex flex-col min-h-[calc(100vh-200px)]">
-      <motion.h1
+      <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="text-4xl font-bold mb-8 text-[#2c2c2e] dark:text-white"
+        className="mb-8 border-b pb-4 border-gray-200/50 dark:border-gray-700/50"
       >
-        联系方式
-      </motion.h1>
+        <h1 className="text-3xl md:text-4xl font-bold mb-2 text-[#2c2c2e] dark:text-white tracking-tight">
+          联系方式
+        </h1>
+        <p className="text-base md:text-lg text-[#3c3c3e] dark:text-gray-300">
+          选择您喜欢的方式与我取得联系，无论技术讨论、项目合作还是随便聊聊，我都很期待！
+        </p>
+      </motion.div>
 
-      {/* 联系方式卡片网格 */}
+      {/* 所有联系方式按分类合并展示 */}
       <motion.div
-        variants={{
-          hidden: { opacity: 0 },
-          show: {
-            opacity: 1,
-            transition: {
-              staggerChildren: 0.1
-            }
-          }
-        }}
-        initial="hidden"
-        animate="show"
-        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12 flex-grow"
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.2 }}
+        className="flex-grow space-y-12"
       >
-        {contactData.map((contact) => (
-          <ContactCard
-            key={contact.id}
-            contact={contact}
-            onViewQRCode={handleViewQRCode}
+        {/* 社交媒体 */}
+        <div>
+          <SectionTitle
+            icon={
+              <svg className="w-full h-full" viewBox="0 0 20 20" fill="currentColor">
+                <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z" />
+              </svg>
+            }
+            title="社交媒体"
+            color="blue"
           />
-        ))}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {socialContacts.map((contact) => (
+              <ContactCard
+                key={contact.id}
+                contact={contact}
+                onViewQRCode={handleViewQRCode}
+              />
+            ))}
+          </div>
+        </div>
+
+        {/* 内容平台 */}
+        <div>
+          <SectionTitle
+            icon={
+              <svg className="w-full h-full" viewBox="0 0 20 20" fill="currentColor">
+                <path fillRule="evenodd" d="M12.316 3.051a1 1 0 01.633 1.265l-4 12a1 1 0 11-1.898-.632l4-12a1 1 0 011.265-.633zM5.707 6.293a1 1 0 010 1.414L3.414 10l2.293 2.293a1 1 0 11-1.414 1.414l-3-3a1 1 0 010-1.414l3-3a1 1 0 011.414 0zm8.586 0a1 1 0 011.414 0l3 3a1 1 0 010 1.414l-3 3a1 1 0 11-1.414-1.414L16.586 10l-2.293-2.293a1 1 0 010-1.414z" clipRule="evenodd" />
+              </svg>
+            }
+            title="内容平台"
+            color="purple"
+          />
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {platformContacts.map((contact) => (
+              <ContactCard
+                key={contact.id}
+                contact={contact}
+                onViewQRCode={handleViewQRCode}
+              />
+            ))}
+          </div>
+        </div>
+
+        {/* 电子邮件 */}
+        <div>
+          <SectionTitle
+            icon={
+              <svg className="w-full h-full" viewBox="0 0 20 20" fill="currentColor">
+                <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
+                <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
+              </svg>
+            }
+            title="电子邮件"
+            color="teal"
+          />
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {emailContacts.map((contact) => (
+              <ContactCard
+                key={contact.id}
+                contact={contact}
+                onViewQRCode={handleViewQRCode}
+              />
+            ))}
+          </div>
+        </div>
       </motion.div>
 
       {/* 二维码弹窗 */}
