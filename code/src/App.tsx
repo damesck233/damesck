@@ -46,87 +46,114 @@ const BackgroundImage = memo(({ bgUrl }: { bgUrl: string }) => (
 ));
 
 // 将菜单组件分离
-const Menu = memo(({ isOpen, onClose }: { isOpen: boolean, onClose: () => void }) => (
-  <AnimatePresence>
-    {isOpen && (
-      <motion.div
-        initial={{ opacity: 0, y: -10 }}
-        animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: -10 }}
-        transition={{ duration: 0.2 }}
-        className="fixed top-[50px] right-4 z-50 backdrop-blur-lg rounded-xl shadow-lg overflow-hidden w-64 border dark:border-white/10 border-white/20 dark:bg-gray-900/95 bg-white/95"
-      >
-        <div className="p-2">
-          {/* 导航链接 */}
-          <div className="divide-y dark:divide-gray-700/30 divide-gray-100/30">
-            <NavLink to="/" className={({ isActive }) => `flex items-center gap-2 px-3 py-2 rounded-lg text-sm ${isActive ? 'bg-blue-100/50 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100/50 dark:hover:bg-gray-800/50'}`} onClick={onClose}>
-              <HomeIcon className="w-4 h-4" /> 首页
-            </NavLink>
-            <NavLink to="http://blog.damesck.net/" className={({ isActive }) => `flex items-center gap-2 px-3 py-2 rounded-lg text-sm ${isActive ? 'bg-blue-100/50 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100/50 dark:hover:bg-gray-800/50'}`} onClick={onClose}>
-              <PencilIcon className="w-4 h-4" /> 博客
-            </NavLink>
-            <NavLink to="/contact" className={({ isActive }) => `flex items-center gap-2 px-3 py-2 rounded-lg text-sm ${isActive ? 'bg-blue-100/50 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100/50 dark:hover:bg-gray-800/50'}`} onClick={onClose}>
-              <PhoneIcon className="w-4 h-4" /> 联系方式
-            </NavLink>
-          </div>
+const Menu = memo(({ isOpen, onClose }: { isOpen: boolean, onClose: () => void }) => {
+  // 创建一个ref用于菜单
+  const menuRef = useRef<HTMLDivElement>(null);
 
-          {/* 功能区 */}
-          <div className="mt-3 pt-3 border-t dark:border-gray-700/30 border-gray-200/30">
-            <h3 className="px-3 py-1 text-xs font-semibold text-gray-500 dark:text-gray-400">更多</h3>
-            <div className="mt-1 space-y-1">
-              <a href="#" className="flex items-center px-3 py-2 rounded-lg text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100/50 dark:hover:bg-gray-800/50">
-                <svg className="w-4 h-4 mr-2 text-blue-600 dark:text-blue-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M5 12l-2 0l9 -9l9 9l-2 0"></path>
-                  <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7"></path>
-                  <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6"></path>
-                </svg>
-                damesck.cc
-              </a>
-              <NavLink to="/friends" className={({ isActive }) => `flex items-center px-3 py-2 rounded-lg text-sm ${isActive ? 'bg-blue-100/50 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100/50 dark:hover:bg-gray-800/50'}`} onClick={onClose}>
-                <UserGroupIcon className="w-4 h-4 mr-2 text-blue-600 dark:text-blue-400" />
-                朋友们
+  // 添加点击外部关闭菜单的功能
+  useEffect(() => {
+    // 只在菜单打开时添加事件监听器
+    if (!isOpen) return;
+
+    const handleClickOutside = (event: MouseEvent) => {
+      // 检查点击是否在菜单外部
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        onClose();
+      }
+    };
+
+    // 添加事件监听器到document
+    document.addEventListener('mousedown', handleClickOutside);
+
+    // 清理函数
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isOpen, onClose]);
+
+  return (
+    <AnimatePresence>
+      {isOpen && (
+        <motion.div
+          ref={menuRef}
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -10 }}
+          transition={{ duration: 0.2 }}
+          className="fixed top-[50px] right-4 z-50 backdrop-blur-lg rounded-xl shadow-lg overflow-hidden w-64 border dark:border-white/10 border-white/20 dark:bg-gray-900/95 bg-white/95"
+        >
+          <div className="p-2">
+            {/* 导航链接 */}
+            <div className="divide-y dark:divide-gray-700/30 divide-gray-100/30">
+              <NavLink to="/" className={({ isActive }) => `flex items-center gap-2 px-3 py-2 rounded-lg text-sm ${isActive ? 'bg-blue-100/50 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100/50 dark:hover:bg-gray-800/50'}`} onClick={onClose}>
+                <HomeIcon className="w-4 h-4" /> 首页
+              </NavLink>
+              <NavLink to="http://blog.damesck.net/" className={({ isActive }) => `flex items-center gap-2 px-3 py-2 rounded-lg text-sm ${isActive ? 'bg-blue-100/50 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100/50 dark:hover:bg-gray-800/50'}`} onClick={onClose}>
+                <PencilIcon className="w-4 h-4" /> 博客
+              </NavLink>
+              <NavLink to="/contact" className={({ isActive }) => `flex items-center gap-2 px-3 py-2 rounded-lg text-sm ${isActive ? 'bg-blue-100/50 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100/50 dark:hover:bg-gray-800/50'}`} onClick={onClose}>
+                <PhoneIcon className="w-4 h-4" /> 联系方式
               </NavLink>
             </div>
-          </div>
 
-          {/* 选项 */}
-          <div className="mt-3 pt-3 border-t dark:border-gray-700/30 border-gray-200/30">
-            <h3 className="px-3 py-1 text-xs font-semibold text-gray-500 dark:text-gray-400">我的</h3>
-            <div className="mt-1 space-y-1">
-              <a href="#" className="flex items-center px-3 py-2 rounded-lg text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100/50 dark:hover:bg-gray-800/50">
-                <svg className="w-4 h-4 mr-2 text-blue-600 dark:text-blue-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M3 14h4v4h-4z"></path>
-                  <path d="M10 14h4v4h-4z"></path>
-                  <path d="M17 14h4v4h-4z"></path>
-                  <path d="M10 7h4v4h-4z"></path>
-                  <path d="M17 7h4v4h-4z"></path>
-                  <path d="M3 7h4v4h-4z"></path>
-                </svg>
-                管理后台(没写呢)
-              </a>
-              <a href="#" className="flex items-center px-3 py-2 rounded-lg text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100/50 dark:hover:bg-gray-800/50">
-                <svg className="w-4 h-4 mr-2 text-blue-600 dark:text-blue-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M8 9l3 3l-3 3"></path>
-                  <path d="M13 15h3a1 1 0 0 0 1 -1v-4a1 1 0 0 0 -1 -1h-3"></path>
-                  <path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0"></path>
-                </svg>
-                关于网站
-              </a>
-              <a href="https://qwq.my" className="flex items-center px-3 py-2 rounded-lg text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100/50 dark:hover:bg-gray-800/50">
-                <svg className="w-4 h-4 mr-2 text-blue-600 dark:text-blue-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <circle cx="12" cy="12" r="10"></circle>
-                  <path d="M12 16v-4"></path>
-                  <path d="M12 8h.01"></path>
-                </svg>
-                雪球qwq.my
-              </a>
+            {/* 功能区 */}
+            <div className="mt-3 pt-3 border-t dark:border-gray-700/30 border-gray-200/30">
+              <h3 className="px-3 py-1 text-xs font-semibold text-gray-500 dark:text-gray-400">更多</h3>
+              <div className="mt-1 space-y-1">
+                <a href="#" className="flex items-center px-3 py-2 rounded-lg text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100/50 dark:hover:bg-gray-800/50">
+                  <svg className="w-4 h-4 mr-2 text-blue-600 dark:text-blue-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M5 12l-2 0l9 -9l9 9l-2 0"></path>
+                    <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7"></path>
+                    <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6"></path>
+                  </svg>
+                  damesck.cc
+                </a>
+                <NavLink to="/friends" className={({ isActive }) => `flex items-center px-3 py-2 rounded-lg text-sm ${isActive ? 'bg-blue-100/50 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100/50 dark:hover:bg-gray-800/50'}`} onClick={onClose}>
+                  <UserGroupIcon className="w-4 h-4 mr-2 text-blue-600 dark:text-blue-400" />
+                  朋友们
+                </NavLink>
+              </div>
+            </div>
+
+            {/* 选项 */}
+            <div className="mt-3 pt-3 border-t dark:border-gray-700/30 border-gray-200/30">
+              <h3 className="px-3 py-1 text-xs font-semibold text-gray-500 dark:text-gray-400">我的</h3>
+              <div className="mt-1 space-y-1">
+                <a href="#" className="flex items-center px-3 py-2 rounded-lg text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100/50 dark:hover:bg-gray-800/50">
+                  <svg className="w-4 h-4 mr-2 text-blue-600 dark:text-blue-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M3 14h4v4h-4z"></path>
+                    <path d="M10 14h4v4h-4z"></path>
+                    <path d="M17 14h4v4h-4z"></path>
+                    <path d="M10 7h4v4h-4z"></path>
+                    <path d="M17 7h4v4h-4z"></path>
+                    <path d="M3 7h4v4h-4z"></path>
+                  </svg>
+                  管理后台(没写呢)
+                </a>
+                <a href="#" className="flex items-center px-3 py-2 rounded-lg text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100/50 dark:hover:bg-gray-800/50">
+                  <svg className="w-4 h-4 mr-2 text-blue-600 dark:text-blue-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M8 9l3 3l-3 3"></path>
+                    <path d="M13 15h3a1 1 0 0 0 1 -1v-4a1 1 0 0 0 -1 -1h-3"></path>
+                    <path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0"></path>
+                  </svg>
+                  关于网站
+                </a>
+                <a href="https://qwq.my" className="flex items-center px-3 py-2 rounded-lg text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100/50 dark:hover:bg-gray-800/50">
+                  <svg className="w-4 h-4 mr-2 text-blue-600 dark:text-blue-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <path d="M12 16v-4"></path>
+                    <path d="M12 8h.01"></path>
+                  </svg>
+                  雪球qwq.my
+                </a>
+              </div>
             </div>
           </div>
-        </div>
-      </motion.div>
-    )}
-  </AnimatePresence>
-));
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+});
 
 // 将页面内容组件分离
 const PageContent = memo(() => (
