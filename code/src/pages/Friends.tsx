@@ -389,7 +389,7 @@ const Friends = () => {
           <ul className="space-y-4 text-base dark:text-gray-300 text-gray-700 leading-relaxed max-w-3xl mx-auto">
             <li className="flex items-start">
               <span className="mr-2 text-lg dark:text-blue-400 text-blue-600">•</span>
-              申请友链请将博客必备项目检查完毕并有我站的友链，并加入黑名单。
+              申请友链前请务必确保贵站有我站的友链，若审批通过后移除本站链接，本站也将移除友链，并加入黑名单。
             </li>
             <li className="flex items-start">
               <span className="mr-2 text-lg dark:text-purple-400 text-purple-600">•</span>
@@ -409,7 +409,7 @@ const Friends = () => {
             </li>
             <li className="flex items-start">
               <span className="mr-2 text-lg dark:text-teal-400 text-teal-600">•</span>
-              暂时不同意路边及其个人网站的友链申请
+              暂时不同意商业及非个人的网站的友链申请
             </li>
           </ul>
         </motion.div>
