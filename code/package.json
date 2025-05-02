@@ -12,6 +12,7 @@
   "dependencies": {
     "@heroicons/react": "^2.2.0",
     "autoprefixer": "^10.4.21",
+    "axios": "^1.9.0",
     "babel-plugin-macros": "^3.1.0",
     "framer-motion": "^12.9.0",
     "postcss": "^8.5.3",

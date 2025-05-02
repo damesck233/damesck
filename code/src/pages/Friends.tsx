@@ -1,6 +1,8 @@
 import { motion } from 'framer-motion';
 import { useState, useEffect } from 'react';
 import { UserIcon, GlobeAltIcon, UserGroupIcon } from '@heroicons/react/24/outline';
+import { type SiteStatus } from '../api/checkSiteStatus';
+import statusChecker from '../utils/statusChecker';
 
 // 友情链接数据接口
 interface Friend {
@@ -8,7 +10,86 @@ interface Friend {
   avatar: string;
   url: string;
   description: string;
+  status?: SiteStatus;
+  lastChecked?: string;
 }
+
+// 网站访问状态指示器组件
+const SiteStatusIndicator = ({ status, lastChecked }: { status?: Friend['status'], lastChecked?: string }) => {
+  if (!status) return null;
+
+  const getStatusDetails = () => {
+    switch (status) {
+      case 'good':
+        return {
+          color: 'bg-green-500 dark:bg-green-400',
+          bars: 3,
+          title: '网站可正常访问',
+          isOffline: false
+        };
+      case 'slow':
+        return {
+          color: 'bg-orange-500 dark:bg-orange-400',
+          bars: 2,
+          title: '网站访问较慢',
+          isOffline: false
+        };
+      case 'very-slow':
+        return {
+          color: 'bg-red-500 dark:bg-red-400',
+          bars: 1,
+          title: '网站访问慢',
+          isOffline: false
+        };
+      case 'offline':
+        return {
+          color: 'bg-red-500 dark:bg-red-400',
+          bars: 0,
+          title: '网站可能无法访问',
+          isOffline: true
+        };
+      default:
+        return {
+          color: 'bg-gray-400 dark:bg-gray-500',
+          bars: 0,
+          title: '未知状态',
+          isOffline: false
+        };
+    }
+  };
+
+  const { color, bars, title, isOffline } = getStatusDetails();
+  const lastCheckedText = lastChecked ? `最后检查: ${lastChecked}` : '状态未知';
+
+  return (
+    <div className="absolute top-2 right-2 group z-10">
+      <div className={`w-5 h-5 rounded-full flex items-center justify-center ${color}`}>
+        {isOffline ? (
+          <svg className="w-3 h-3 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        ) : (
+          <div className="flex items-end h-3 space-x-0.5">
+            {[...Array(3)].map((_, i) => (
+              <div
+                key={i}
+                className={`w-1 ${i < bars ? 'bg-white' : 'bg-white/30'}`}
+                style={{ height: `${(i + 1) * 30}%` }}
+              />
+            ))}
+          </div>
+        )}
+      </div>
+
+      <div className="absolute right-0 w-40 p-2 bg-white dark:bg-gray-800 rounded-md shadow-lg 
+                    opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 
+                    text-xs text-gray-700 dark:text-gray-300 translate-y-1 z-20">
+        <p className="font-medium">{title}</p>
+        <p className="text-gray-500 dark:text-gray-400 text-xs mt-1">{lastCheckedText}</p>
+      </div>
+    </div>
+  );
+};
 
 // Apple风格的淡入动画
 const fadeIn = {
@@ -30,13 +111,17 @@ const Friends = () => {
       name: "Snowball_233",
       avatar: "https://blog.qwq.my/_next/image?url=https%3A%2F%2Favatars.githubusercontent.com%2Fu%2F97330394%3Fv%3D4&w=640&q=75",
       url: "https://qwq.my",
-      description: "qwq.my"
+      description: "qwq.my",
+      status: "good",
+      lastChecked: "2023-08-05 08:30"
     },
     {
       name: "苦力怕纸",
       avatar: "https://user.klpbbs.com/data/avatar/000/00/00/01_avatar_big.jpg",
       url: "https://klpz.net/",
-      description: "苦力怕论坛站长"
+      description: "苦力怕论坛站长",
+      status: "slow",
+      lastChecked: "2023-08-05 08:30"
     }
   ]);
 
@@ -45,13 +130,17 @@ const Friends = () => {
       name: "御坂秋生の小窝",
       avatar: "https://webstatic.akio.top/user/NiuBoss123.jpg",
       url: "https://www.akio.top/",
-      description: "不努力就只能听到别人的好消息"
+      description: "不努力就只能听到别人的好消息",
+      status: "very-slow",
+      lastChecked: "2023-08-05 08:30"
     },
     {
       name: "iVampireSP 的物语",
       avatar: "https://nwl.im/avatar",
       url: "https://ivampiresp.com",
-      description: "比起千言万语，更重要的是心灵相通吧。"
+      description: "比起千言万语，更重要的是心灵相通吧。",
+      status: "offline",
+      lastChecked: "2023-08-05 08:30"
     }
   ]);
 
@@ -207,6 +296,113 @@ const Friends = () => {
     return colorOptions[Math.abs(combinedHash)];
   };
 
+  // 添加一个获取网站状态的函数
+  useEffect(() => {
+    // 从状态检查器获取状态数据
+    const updateStatusFromChecker = () => {
+      const statusData = statusChecker.getStatusData();
+
+      // 更新朋友状态
+      setMyFriends(prevFriends =>
+        prevFriends.map(friend => {
+          try {
+            const domain = new URL(friend.url).hostname;
+            const status = statusData[domain];
+            if (status) {
+              return {
+                ...friend,
+                status: status.status,
+                lastChecked: status.lastChecked
+              };
+            }
+          } catch (error) {
+            console.error(`处理URL时出错: ${friend.url}`, error);
+          }
+          return friend;
+        })
+      );
+
+      setMoreFriends(prevFriends =>
+        prevFriends.map(friend => {
+          try {
+            const domain = new URL(friend.url).hostname;
+            const status = statusData[domain];
+            if (status) {
+              return {
+                ...friend,
+                status: status.status,
+                lastChecked: status.lastChecked
+              };
+            }
+          } catch (error) {
+            console.error(`处理URL时出错: ${friend.url}`, error);
+          }
+          return friend;
+        })
+      );
+    };
+
+    // 收集所有友链网站域名
+    const getAllFriendUrls = (): string[] => {
+      const urls: string[] = [];
+      try {
+        myFriends.forEach(friend => {
+          const domain = new URL(friend.url).hostname;
+          urls.push(domain);
+        });
+
+        moreFriends.forEach(friend => {
+          const domain = new URL(friend.url).hostname;
+          urls.push(domain);
+        });
+      } catch (error) {
+        console.error('获取友链域名时出错:', error);
+      }
+      return urls;
+    };
+
+    // 准备朋友数据，包括URL和头像
+    const prepareFriendsData = () => {
+      const friendsData = [...myFriends, ...moreFriends].map(friend => ({
+        url: friend.url,
+        avatar: friend.avatar
+      }));
+
+      // 更新状态检查器中的朋友数据
+      statusChecker.updateFriendsData(friendsData);
+    };
+
+    // 更新朋友数据
+    prepareFriendsData();
+
+    // 获取所有友链
+    const allUrls = getAllFriendUrls();
+
+    // 执行一次检测
+    const checkSites = async () => {
+      // 先检测所有站点
+      await statusChecker.start(allUrls);
+
+      // 然后获取更新后的状态
+      updateStatusFromChecker();
+    };
+
+    // 页面加载时执行一次检测
+    checkSites();
+
+    // 监听状态更新事件
+    const handleStatusUpdate = () => {
+      updateStatusFromChecker();
+    };
+
+    window.addEventListener('site-status-updated', handleStatusUpdate);
+
+    // 组件卸载时清理事件监听
+    return () => {
+      window.removeEventListener('site-status-updated', handleStatusUpdate);
+    };
+  }, [myFriends, moreFriends]);
+
   return (
     <div className="container mx-auto px-4 py-8 max-w-5xl">
       {/* 页面标题 */}
@@ -252,8 +448,11 @@ const Friends = () => {
               >
                 <div
                   style={cardStyle}
-                  className={`h-full bg-gradient-to-br ${getFriendColor(friend.name).bg} backdrop-blur-xl ${getFriendColor(friend.name).border} ${getFriendColor(friend.name).shadow}`}
+                  className={`h-full bg-gradient-to-br ${getFriendColor(friend.name).bg} backdrop-blur-xl ${getFriendColor(friend.name).border} ${getFriendColor(friend.name).shadow} relative`}
                 >
+                  {/* 添加状态指示器 */}
+                  <SiteStatusIndicator status={friend.status} lastChecked={friend.lastChecked} />
+
                   <div className="p-5 flex items-center h-full">
                     <div className="w-16 h-16 md:w-20 md:h-20 rounded-full overflow-hidden border-2 dark:border-gray-700 border-white shadow-md flex-shrink-0 relative">
                       <img src={friend.avatar} alt={friend.name} className="w-full h-full object-cover transform transition-transform duration-700 hover:scale-110" />
@@ -301,8 +500,11 @@ const Friends = () => {
               >
                 <div
                   style={cardStyle}
-                  className={`h-full bg-gradient-to-br ${getFriendColor(friend.name).bg} backdrop-blur-xl ${getFriendColor(friend.name).border} ${getFriendColor(friend.name).shadow}`}
+                  className={`h-full bg-gradient-to-br ${getFriendColor(friend.name).bg} backdrop-blur-xl ${getFriendColor(friend.name).border} ${getFriendColor(friend.name).shadow} relative`}
                 >
+                  {/* 添加状态指示器 */}
+                  <SiteStatusIndicator status={friend.status} lastChecked={friend.lastChecked} />
+
                   <div className="p-4 flex items-center h-full">
                     <div className="w-12 h-12 rounded-full overflow-hidden border-2 dark:border-gray-700 border-white shadow-md flex-shrink-0 relative">
                       <img src={friend.avatar} alt={friend.name} className="w-full h-full object-cover transform transition-transform duration-700 hover:scale-110" />
