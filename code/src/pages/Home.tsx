@@ -294,16 +294,18 @@ const fadeIn = {
 
 const Home = () => {
   // 计算剩余天数的函数
-  const calculateDaysLeft = () => {
-    const targetDate = new Date(portfolioData.countdown.targetDate);
+  const calculateDaysLeft = (targetDate: Date) => {
     const today = new Date();
     const timeDiff = targetDate.getTime() - today.getTime();
     const daysLeft = Math.ceil(timeDiff / (1000 * 3600 * 24));
-    return daysLeft;
+    return daysLeft > 0 ? daysLeft : 0;
   };
 
   // 实时倒计时状态
-  const [daysLeft, setDaysLeft] = useState(calculateDaysLeft());
+  const [daysLeft, setDaysLeft] = useState(() => {
+    const mainCountdown = countdown.find(item => item.top === true) || countdown[0];
+    return calculateDaysLeft(new Date(mainCountdown.targetDate));
+  });
 
   // 悬停状态管理
   const [hoveredCards, setHoveredCards] = useState({
@@ -373,7 +375,7 @@ const Home = () => {
   // 每天更新倒计时
   useEffect(() => {
     const timer = setInterval(() => {
-      setDaysLeft(calculateDaysLeft());
+      setDaysLeft(calculateDaysLeft(new Date(portfolioData.countdown.targetDate)));
     }, 86400000); // 每24小时更新一次
     return () => clearInterval(timer);
   }, []);
@@ -569,6 +571,11 @@ const Home = () => {
     };
   }, [modalOpen]);
 
+  // 获取主要倒计时（top为true的项目）
+  const getMainCountdown = () => {
+    return myCountdown.find(item => item.top === true) || myCountdown[0];
+  };
+
   return (
     <motion.div
       className="max-w-6xl mx-auto px-6 md:px-8 lg:px-12 pt-8 md:pt-12"
@@ -658,18 +665,136 @@ const Home = () => {
               </div>
             </div>
             <div style={cardBodyStyle} className="h-[calc(100%-64px)] overflow-y-auto">
-              <div className="grid grid-cols-1 gap-3 p-1">
+              <div className="flex flex-col h-full p-3">
                 {mySkills.map((skill, index) => (
-                  <div key={index} className="mb-2">
-                    <div className={`text-sm font-medium mb-1.5 dark:text-${skill.color}-400 text-${skill.color}-700`}>
-                      {skill.category}
-                    </div>
-                    <div className="flex flex-wrap gap-1">
-                      {skill.items.map((item, itemIndex) => (
-                        <span key={itemIndex} className={`dark:bg-${skill.color}-900/30 dark:text-${skill.color}-400 bg-${skill.color}-50 text-${skill.color}-700 px-1.5 py-0.5 text-xs rounded-md`}>
-                          {item}
+                  <div key={index} className="mb-3.5 group relative">
+                    {/* 背景装饰 */}
+                    <div
+                      className="absolute -left-1.5 top-1 w-[3px] h-[calc(100%-4px)] rounded-full opacity-70"
+                      style={{
+                        background: skill.color === 'blue' ? 'linear-gradient(to bottom, #3B82F6, #60A5FA)' :
+                          skill.color === 'green' ? 'linear-gradient(to bottom, #10B981, #34D399)' :
+                            skill.color === 'yellow' ? 'linear-gradient(to bottom, #F59E0B, #FBBF24)' :
+                              skill.color === 'orange' ? 'linear-gradient(to bottom, #F97316, #FB923C)' :
+                                skill.color === 'indigo' ? 'linear-gradient(to bottom, #4F46E5, #6366F1)' :
+                                  skill.color === 'red' ? 'linear-gradient(to bottom, #EF4444, #F87171)' :
+                                    skill.color === 'purple' ? 'linear-gradient(to bottom, #8B5CF6, #A78BFA)' :
+                                      skill.color === 'pink' ? 'linear-gradient(to bottom, #EC4899, #F472B6)' :
+                                        'linear-gradient(to bottom, #3B82F6, #60A5FA)'
+                      }}
+                    ></div>
+
+                    <div className="pl-3">
+                      {/* 分类标题 */}
+                      <div className={`text-sm font-medium mb-1.5 flex items-center`}>
+                        <div
+                          className="w-4 h-4 mr-2 rounded-md flex-shrink-0 flex items-center justify-center group-hover:scale-110 transition-transform duration-300"
+                          style={{
+                            background: skill.color === 'blue' ? 'linear-gradient(135deg, #3B82F6, #60A5FA)' :
+                              skill.color === 'green' ? 'linear-gradient(135deg, #10B981, #34D399)' :
+                                skill.color === 'yellow' ? 'linear-gradient(135deg, #F59E0B, #FBBF24)' :
+                                  skill.color === 'orange' ? 'linear-gradient(135deg, #F97316, #FB923C)' :
+                                    skill.color === 'indigo' ? 'linear-gradient(135deg, #4F46E5, #6366F1)' :
+                                      skill.color === 'red' ? 'linear-gradient(135deg, #EF4444, #F87171)' :
+                                        skill.color === 'purple' ? 'linear-gradient(135deg, #8B5CF6, #A78BFA)' :
+                                          skill.color === 'pink' ? 'linear-gradient(135deg, #EC4899, #F472B6)' :
+                                            'linear-gradient(135deg, #3B82F6, #60A5FA)',
+                            boxShadow: skill.color === 'blue' ? '0 2px 5px rgba(59, 130, 246, 0.3)' :
+                              skill.color === 'green' ? '0 2px 5px rgba(16, 185, 129, 0.3)' :
+                                skill.color === 'yellow' ? '0 2px 5px rgba(245, 158, 11, 0.3)' :
+                                  skill.color === 'orange' ? '0 2px 5px rgba(249, 115, 22, 0.3)' :
+                                    skill.color === 'indigo' ? '0 2px 5px rgba(79, 70, 229, 0.3)' :
+                                      skill.color === 'red' ? '0 2px 5px rgba(239, 68, 68, 0.3)' :
+                                        skill.color === 'purple' ? '0 2px 5px rgba(139, 92, 246, 0.3)' :
+                                          skill.color === 'pink' ? '0 2px 5px rgba(236, 72, 153, 0.3)' :
+                                            '0 2px 5px rgba(59, 130, 246, 0.3)'
+                          }}
+                        >
+                          <svg className="w-2.5 h-2.5 text-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                          </svg>
+                        </div>
+                        <span
+                          style={{
+                            color: skill.color === 'blue' ? '#3B82F6' :
+                              skill.color === 'green' ? '#10B981' :
+                                skill.color === 'yellow' ? '#F59E0B' :
+                                  skill.color === 'orange' ? '#F97316' :
+                                    skill.color === 'indigo' ? '#4F46E5' :
+                                      skill.color === 'red' ? '#EF4444' :
+                                        skill.color === 'purple' ? '#8B5CF6' :
+                                          skill.color === 'pink' ? '#EC4899' : '#3B82F6'
+                          }}
+                        >
+                          {skill.category}
                         </span>
-                      ))}
+                        <span className="text-xs ml-2 dark:text-gray-400 text-gray-500 opacity-0 group-hover:opacity-100 transition-opacity">
+                          {skill.items.length} 项技能
+                        </span>
+                      </div>
+
+                      {/* 技能标签 */}
+                      <div className="flex flex-wrap gap-1.5 ml-6">
+                        {skill.items.map((item, itemIndex) => {
+                          const isFirst = itemIndex === 0;
+                          const isBadge = itemIndex === 1;
+
+                          return (
+                            <span
+                              key={itemIndex}
+                              className={`
+                                text-xs inline-flex items-center px-2 py-1 
+                                transition-all duration-300 
+                                rounded-md group-hover:translate-y-[-1px]
+                                ${isFirst ? 'font-medium' : ''}
+                              `}
+                              style={{
+                                backgroundColor: skill.color === 'blue' ? `rgba(59, 130, 246, ${isFirst ? 0.15 : 0.1})` :
+                                  skill.color === 'green' ? `rgba(16, 185, 129, ${isFirst ? 0.15 : 0.1})` :
+                                    skill.color === 'yellow' ? `rgba(245, 158, 11, ${isFirst ? 0.15 : 0.1})` :
+                                      skill.color === 'orange' ? `rgba(249, 115, 22, ${isFirst ? 0.15 : 0.1})` :
+                                        skill.color === 'indigo' ? `rgba(79, 70, 229, ${isFirst ? 0.15 : 0.1})` :
+                                          skill.color === 'red' ? `rgba(239, 68, 68, ${isFirst ? 0.15 : 0.1})` :
+                                            skill.color === 'purple' ? `rgba(139, 92, 246, ${isFirst ? 0.15 : 0.1})` :
+                                              skill.color === 'pink' ? `rgba(236, 72, 153, ${isFirst ? 0.15 : 0.1})` :
+                                                `rgba(59, 130, 246, ${isFirst ? 0.15 : 0.1})`,
+                                color: skill.color === 'blue' ? '#3B82F6' :
+                                  skill.color === 'green' ? '#10B981' :
+                                    skill.color === 'yellow' ? '#F59E0B' :
+                                      skill.color === 'orange' ? '#F97316' :
+                                        skill.color === 'indigo' ? '#4F46E5' :
+                                          skill.color === 'red' ? '#EF4444' :
+                                            skill.color === 'purple' ? '#8B5CF6' :
+                                              skill.color === 'pink' ? '#EC4899' : '#3B82F6',
+                                borderColor: skill.color === 'blue' ? 'rgba(59, 130, 246, 0.2)' :
+                                  skill.color === 'green' ? 'rgba(16, 185, 129, 0.2)' :
+                                    skill.color === 'yellow' ? 'rgba(245, 158, 11, 0.2)' :
+                                      skill.color === 'orange' ? 'rgba(249, 115, 22, 0.2)' :
+                                        skill.color === 'indigo' ? 'rgba(79, 70, 229, 0.2)' :
+                                          skill.color === 'red' ? 'rgba(239, 68, 68, 0.2)' :
+                                            skill.color === 'purple' ? 'rgba(139, 92, 246, 0.2)' :
+                                              skill.color === 'pink' ? 'rgba(236, 72, 153, 0.2)' :
+                                                'rgba(59, 130, 246, 0.2)',
+                                borderWidth: isBadge ? '1px' : '0px'
+                              }}
+                            >
+                              {isFirst && (
+                                <span className="w-1 h-1 rounded-full mr-1.5" style={{
+                                  backgroundColor: skill.color === 'blue' ? '#3B82F6' :
+                                    skill.color === 'green' ? '#10B981' :
+                                      skill.color === 'yellow' ? '#F59E0B' :
+                                        skill.color === 'orange' ? '#F97316' :
+                                          skill.color === 'indigo' ? '#4F46E5' :
+                                            skill.color === 'red' ? '#EF4444' :
+                                              skill.color === 'purple' ? '#8B5CF6' :
+                                                skill.color === 'pink' ? '#EC4899' : '#3B82F6'
+                                }}></span>
+                              )}
+                              {item}
+                            </span>
+                          );
+                        })}
+                      </div>
                     </div>
                   </div>
                 ))}
@@ -717,28 +842,58 @@ const Home = () => {
               </div>
             </div>
             <div style={cardBodyStyle} className="h-[calc(100%-64px)] overflow-y-auto">
-              <div className="flex flex-col h-full p-2">
+              <div className="flex flex-col h-full p-3">
                 {myLearningProgress.map((item, index) => (
-                  <div key={index} className="mb-3">
-                    <div className="flex justify-between mb-1">
-                      <span className="text-sm font-medium dark:text-gray-300 text-gray-700 truncate">{item.name}</span>
-                      <span className="text-sm font-semibold dark:text-gray-200 text-gray-800">{item.value}</span>
-                    </div>
-                    <div className="h-2 w-full dark:bg-gray-700 bg-gray-100 rounded-full overflow-hidden">
-                      <div
-                        className="h-full rounded-full"
-                        style={{
-                          width: item.value,
-                          backgroundColor: item.color === 'blue' ? '#3B82F6' :
-                            item.color === 'green' ? '#22C55E' :
-                              item.color === 'yellow' ? '#EAB308' :
-                                item.color === 'orange' ? '#F97316' :
-                                  item.color === 'indigo' ? '#6366F1' :
-                                    item.color === 'red' ? '#EF4444' :
-                                      item.color === 'purple' ? '#A855F7' :
-                                        item.color === 'pink' ? '#EC4899' : '#3B82F6'
-                        }}
-                      ></div>
+                  <div key={index} className="mb-3.5 group hover:scale-[1.01] transition-all duration-300">
+                    <div className="flex items-center mb-1.5">
+                      <div className="relative w-8 h-8 mr-2.5 flex-shrink-0">
+                        {/* 外环 */}
+                        <div className="absolute inset-0 rounded-full opacity-20"
+                          style={{
+                            backgroundColor: item.color === 'blue' ? '#3B82F6' :
+                              item.color === 'green' ? '#22C55E' :
+                                item.color === 'yellow' ? '#EAB308' :
+                                  item.color === 'orange' ? '#F97316' :
+                                    item.color === 'indigo' ? '#6366F1' :
+                                      item.color === 'red' ? '#EF4444' :
+                                        item.color === 'purple' ? '#A855F7' :
+                                          item.color === 'pink' ? '#EC4899' : '#3B82F6'
+                          }}
+                        ></div>
+                        {/* 进度环 */}
+                        <svg className="absolute inset-0 w-full h-full transform -rotate-90">
+                          <circle
+                            cx="16"
+                            cy="16"
+                            r="15"
+                            strokeWidth="2"
+                            stroke="currentColor"
+                            fill="transparent"
+                            strokeDasharray="94.2"
+                            strokeDashoffset={`${94.2 * (1 - parseInt(item.value) / 100)}`}
+                            className="transition-all duration-700 ease-out"
+                            style={{
+                              color: item.color === 'blue' ? '#3B82F6' :
+                                item.color === 'green' ? '#22C55E' :
+                                  item.color === 'yellow' ? '#EAB308' :
+                                    item.color === 'orange' ? '#F97316' :
+                                      item.color === 'indigo' ? '#6366F1' :
+                                        item.color === 'red' ? '#EF4444' :
+                                          item.color === 'purple' ? '#A855F7' :
+                                            item.color === 'pink' ? '#EC4899' : '#3B82F6'
+                            }}
+                          />
+                        </svg>
+                        {/* 中间百分比 */}
+                        <div className="absolute inset-0 flex items-center justify-center text-xs font-semibold dark:text-gray-200 text-gray-700">{item.value}</div>
+                      </div>
+                      <div className="flex-grow overflow-hidden">
+                        <div className="flex items-center justify-between">
+                          <span className="text-sm font-medium dark:text-gray-300 text-gray-700 truncate block">{item.name}</span>
+                          <span className="text-2xs dark:text-gray-400 text-gray-500 opacity-80">{parseInt(item.value) < 30 ? '初学' : parseInt(item.value) < 60 ? '进阶' : parseInt(item.value) < 80 ? '熟练' : '精通'}</span>
+                        </div>
+                        <p className="text-xs dark:text-gray-400 text-gray-500 truncate">{item.description}</p>
+                      </div>
                     </div>
                   </div>
                 ))}
@@ -789,32 +944,96 @@ const Home = () => {
             <div style={cardBodyStyle} className="h-[calc(100%-64px)] overflow-y-auto">
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 {myDevices.slice(0, 3).map((device, index) => (
-                  <div key={index} className="flex flex-col overflow-hidden h-full dark:bg-gray-800/70 dark:border-gray-700/50 bg-white/70 rounded-xl p-3 hover:bg-white/90 dark:hover:bg-gray-700/90 transition-colors shadow-sm border border-gray-100/50">
-                    <div className="w-full h-20 dark:bg-gray-700/50 bg-gray-50/50 rounded-lg mb-2 overflow-hidden flex items-center justify-center">
-                      <img src={device.image} alt={device.name} className="w-full h-full object-contain p-1 transition-all duration-500 hover:scale-105" />
+                  <div key={index} className="relative flex flex-col overflow-hidden h-full dark:bg-gray-800/70 dark:border-gray-700/50 bg-white/70 rounded-xl hover:bg-white/90 dark:hover:bg-gray-700/90 transition-all shadow-sm border border-gray-100/50 group">
+                    {/* 背景装饰 */}
+                    <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                      <div className="absolute -right-6 -top-6 w-16 h-16 rounded-full bg-gradient-to-br from-blue-500/20 to-purple-500/20 blur-xl dark:from-blue-600/10 dark:to-purple-600/10"></div>
+                      <div className="absolute -left-4 -bottom-4 w-12 h-12 rounded-full bg-gradient-to-tr from-green-500/10 to-yellow-500/10 blur-lg dark:from-green-600/5 dark:to-yellow-600/5"></div>
                     </div>
-                    <div className="flex-1 flex flex-col">
-                      <h4 className="font-semibold dark:text-gray-100 text-[#1d1d1f] truncate mb-1">{device.name}</h4>
-                      <p className="text-xs dark:text-gray-400 text-gray-500 flex-grow line-clamp-2 mb-2">{device.description}</p>
-                      <div className="flex gap-1.5">
+
+                    {/* 上部图片与信息区 */}
+                    <div className="p-3 pb-2 relative z-10">
+                      <div className="flex items-center">
+                        <div className="relative w-14 h-14 rounded-xl overflow-hidden mr-3 shadow-sm flex-shrink-0">
+                          <div className="absolute inset-0 dark:bg-gradient-to-br dark:from-gray-700 dark:to-gray-800 bg-gradient-to-br from-gray-100 to-gray-200"></div>
+                          <img src={device.image} alt={device.name} className="w-full h-full object-contain p-1.5 relative z-10 transition-transform duration-500 group-hover:scale-110" />
+                        </div>
+                        <div className="flex-grow overflow-hidden">
+                          <h4 className="font-semibold dark:text-gray-100 text-[#1d1d1f] truncate">{device.name}</h4>
+                          <div className="flex items-center mt-0.5">
+                            <div className="w-2 h-2 rounded-full mr-1.5 flex-shrink-0"
+                              style={{
+                                backgroundColor: device.specs.condition === '良好' ? '#34D399' :
+                                  device.specs.condition === '一般' ? '#FBBF24' :
+                                    device.specs.condition === '需要维修' ? '#F87171' : '#60A5FA'
+                              }}
+                            ></div>
+                            <span className="text-xs dark:text-gray-400 text-gray-500">{device.specs.condition}</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* 中部卡片内容 */}
+                    <div className="flex-grow px-3 pb-1 flex flex-col relative z-10">
+                      <p className="text-xs dark:text-gray-400 text-gray-500 line-clamp-2 mb-2">{device.description}</p>
+
+                      {/* 信息卡片 */}
+                      <div className="mt-auto mb-2">
+                        <div className="w-full dark:bg-gray-700/40 bg-gray-100/80 rounded-lg p-2 backdrop-blur-sm">
+                          <div className="flex justify-between items-center">
+                            <span className="text-[10px] dark:text-gray-400 text-gray-500">购买日期</span>
+                            <span className="text-xs font-medium dark:text-gray-300 text-gray-700">{device.specs.purchaseDate}</span>
+                          </div>
+                          <div className="flex justify-between items-center mt-1">
+                            <span className="text-[10px] dark:text-gray-400 text-gray-500">保修状态</span>
+                            <span className="text-xs font-medium dark:text-gray-300 text-gray-700">{device.specs.warranty}</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* 底部标签区域 */}
+                    <div className="p-3 pt-0 relative z-10">
+                      <div className="flex flex-wrap gap-1.5">
                         {device.tags.map((tag, tagIndex) => (
-                          <span key={tagIndex} className="px-2 py-0.5 text-2xs rounded-full dark:bg-blue-900/30 dark:text-blue-400 bg-blue-50 text-blue-600 dark:border-blue-800/50 border border-blue-100/50">
+                          <span
+                            key={tagIndex}
+                            className="inline-flex items-center px-2 py-0.5 text-2xs rounded-full backdrop-blur-sm transition-all duration-300 group-hover:translate-y-[-1px] group-hover:shadow-sm"
+                            style={{
+                              backgroundColor: tagIndex === 0 ? 'rgba(59, 130, 246, 0.1)' :
+                                tagIndex === 1 ? 'rgba(16, 185, 129, 0.1)' :
+                                  'rgba(99, 102, 241, 0.1)',
+                              color: tagIndex === 0 ? '#3B82F6' :
+                                tagIndex === 1 ? '#10B981' :
+                                  '#6366F1',
+                              borderColor: tagIndex === 0 ? 'rgba(59, 130, 246, 0.2)' :
+                                tagIndex === 1 ? 'rgba(16, 185, 129, 0.2)' :
+                                  'rgba(99, 102, 241, 0.2)',
+                              borderWidth: '1px'
+                            }}
+                          >
+                            {tagIndex === 0 && (
+                              <svg className="w-2 h-2 mr-1" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 2C6.5 2 2 6.5 2 12S6.5 22 12 22 22 17.5 22 12 17.5 2 12 2M10 17L5 12L6.41 10.59L10 14.17L17.59 6.58L19 8L10 17Z" />
+                              </svg>
+                            )}
+                            {tagIndex === 1 && (
+                              <svg className="w-2 h-2 mr-1" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M13,9H11V7H13M13,17H11V11H13M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z" />
+                              </svg>
+                            )}
                             {tag.name}
                           </span>
                         ))}
                       </div>
                     </div>
+
+                    {/* 悬停指示器 */}
+                    <div className="absolute top-0 right-0 w-0 h-0 border-l-[24px] border-l-transparent border-t-[24px] border-blue-500/70 dark:border-blue-600/70 opacity-0 group-hover:opacity-100 transition-opacity"></div>
                   </div>
                 ))}
               </div>
-              {/* {myDevices.length > 3 && (
-                <div className="mt-4 flex justify-center">
-                  <button className="flex items-center text-sm text-blue-600 hover:text-blue-800 transition-colors">
-                    查看全部 {myDevices.length} 个设备
-                    <ArrowRightIcon className="w-4 h-4 ml-1" />
-                  </button>
-                </div>
-              )} */}
             </div>
           </div>
         </motion.div>
@@ -850,30 +1069,61 @@ const Home = () => {
                   <ClockIcon className="w-5 h-5 text-white" />
                 </AppleStyleIcon>
                 <div className="ml-3">
-                  <h3 className="text-base font-semibold dark:text-gray-100 text-[#2c2c2e]">{myCountdown.title}</h3>
+                  <h3 className="text-base font-semibold dark:text-gray-100 text-[#2c2c2e]">倒计日</h3>
                   <p className="text-xs dark:text-gray-400 text-gray-500 mt-0.5">剩余天数</p>
                 </div>
               </div>
               <div className="w-6 h-6 flex items-center justify-center rounded-full dark:bg-gray-700 bg-gray-100">
-                <span className="text-blue-500 font-semibold text-sm">1</span>
+                <span className="text-blue-500 font-semibold text-sm">{myCountdown.length}</span>
               </div>
             </div>
             <div style={cardBodyStyle} className="h-[calc(100%-64px)]">
-              <div className="h-full flex flex-col p-4">
-                <h4 className="font-medium text-xl mb-4 dark:text-gray-100 text-[#2c2c2e]">{myCountdown.title}</h4>
+              <div className="h-full flex flex-col p-4 relative">
+                {/* 背景装饰 */}
+                <div className="absolute -top-1 -right-1 w-24 h-24 bg-gradient-to-br from-blue-400/10 to-purple-500/10 rounded-full blur-xl pointer-events-none dark:from-blue-400/5 dark:to-purple-500/5"></div>
+                <div className="absolute -bottom-4 -left-4 w-20 h-20 bg-gradient-to-tr from-green-400/10 to-yellow-500/10 rounded-full blur-lg pointer-events-none dark:from-green-400/5 dark:to-yellow-500/5"></div>
 
-                <div className="flex items-end mb-4">
-                  <div className="text-6xl font-bold dark:text-blue-400 text-blue-600">{daysLeft}</div>
-                  <div className="text-2xl dark:text-gray-400 text-gray-500 ml-2 mb-2">天</div>
+                {/* 主倒计时 */}
+                <div className="flex justify-between items-start mb-3 relative z-10">
+                  <h4 className="font-medium text-lg dark:text-gray-100 text-[#2c2c2e]">{getMainCountdown().title}</h4>
+                  <span className="text-xs py-0.5 px-2 rounded-full font-medium dark:bg-blue-500/20 dark:text-blue-400 bg-blue-100 text-blue-600">主要</span>
                 </div>
 
-                <p className="dark:text-gray-400 text-gray-500 mb-3 text-sm">距离 {myCountdown.targetDate.replace(/-/g, '年') + '日'}</p>
+                <div className="relative z-10 mb-3 flex items-center">
+                  <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 dark:from-blue-600 dark:to-blue-700 flex items-center justify-center text-white shadow-md">
+                    <div className="text-3xl font-bold">{daysLeft}</div>
+                  </div>
+                  <div className="ml-3">
+                    <div className="text-sm dark:text-gray-400 text-gray-500 mb-1">距离目标日期</div>
+                    <div className="text-sm font-medium dark:text-gray-300 text-gray-700">{getMainCountdown().targetDate.replace(/-/g, '年') + '日'}</div>
+                  </div>
+                </div>
 
-                <div className="h-2.5 w-full dark:bg-gray-700 bg-gray-100 rounded-full overflow-hidden mt-auto">
+                <div className="h-1.5 w-full dark:bg-gray-700 bg-gray-100 rounded-full overflow-hidden shadow-inner mb-3 relative z-10">
                   <div
                     className="h-full dark:bg-blue-500 bg-blue-500 rounded-full transition-all duration-1000"
-                    style={{ width: `${(1 - daysLeft / myCountdown.totalDays) * 100}%` }}
+                    style={{ width: `${(1 - daysLeft / getMainCountdown().totalDays) * 100}%` }}
                   ></div>
+                </div>
+
+                {/* 更紧凑的其他倒计时列表 */}
+                <div className="relative z-10 flex-1 overflow-hidden">
+                  <h5 className="text-xs uppercase dark:text-gray-400 text-gray-500 mb-1.5 font-medium tracking-wider">其他倒计时</h5>
+                  <div className="space-y-1.5">
+                    {myCountdown.filter(item => !item.top).slice(0, 2).map((item, index) => (
+                      <div key={index} className="flex items-center justify-between">
+                        <div className="flex items-center">
+                          <div className="w-2 h-2 rounded-full mr-1.5"
+                            style={{
+                              backgroundColor: index === 0 ? '#22C55E' : '#F97316'
+                            }}
+                          ></div>
+                          <span className="text-xs dark:text-gray-300 text-gray-700">{item.title}</span>
+                        </div>
+                        <span className="text-xs font-medium dark:text-gray-300 text-gray-700">{calculateDaysLeft(new Date(item.targetDate))}天</span>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>
@@ -1171,14 +1421,32 @@ const Home = () => {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {myLearningProgress.map((item, index) => (
-                  <div key={index} className="dark:bg-gray-800 bg-white rounded-xl p-4 shadow-sm">
-                    <div className="flex justify-between mb-2">
-                      <h3 className="text-lg font-semibold dark:text-gray-100 text-gray-700">{item.name}</h3>
-                      <span className="text-lg font-bold dark:text-blue-400 text-blue-600">{item.value}</span>
+                  <div key={index} className="dark:bg-gray-800 bg-white rounded-xl p-5 shadow-sm hover:shadow-md transition-shadow">
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="flex items-center">
+                        <div
+                          className="w-4 h-4 rounded-full mr-2.5"
+                          style={{
+                            backgroundColor: item.color === 'blue' ? '#3B82F6' :
+                              item.color === 'green' ? '#22C55E' :
+                                item.color === 'yellow' ? '#EAB308' :
+                                  item.color === 'orange' ? '#F97316' :
+                                    item.color === 'indigo' ? '#6366F1' :
+                                      item.color === 'red' ? '#EF4444' :
+                                        item.color === 'purple' ? '#A855F7' :
+                                          item.color === 'pink' ? '#EC4899' : '#3B82F6'
+                          }}
+                        ></div>
+                        <h3 className="text-lg font-semibold dark:text-gray-100 text-gray-700">{item.name}</h3>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <span className="text-sm dark:text-gray-400 text-gray-600">{parseInt(item.value) < 30 ? '初学' : parseInt(item.value) < 60 ? '进阶' : parseInt(item.value) < 80 ? '熟练' : '精通'}</span>
+                        <span className="text-lg font-bold dark:text-blue-400 text-blue-600 bg-blue-50 dark:bg-blue-900/30 px-2.5 py-0.5 rounded-full">{item.value}</span>
+                      </div>
                     </div>
-                    <div className="h-3 w-full dark:bg-gray-700 bg-gray-100 rounded-full overflow-hidden">
+                    <div className="h-3.5 w-full dark:bg-gray-700 bg-gray-100 rounded-full overflow-hidden mb-3 shadow-inner">
                       <div
-                        className="h-full rounded-full"
+                        className="h-full rounded-full transition-all duration-1000 ease-out"
                         style={{
                           width: item.value,
                           backgroundColor: item.color === 'blue' ? '#3B82F6' :
@@ -1192,8 +1460,8 @@ const Home = () => {
                         }}
                       ></div>
                     </div>
-                    <p className="mt-2 text-sm dark:text-gray-400 text-gray-500">
-                      {item.description}
+                    <p className="mt-2 text-sm dark:text-gray-400 text-gray-500 italic">
+                      "{item.description}"
                     </p>
                   </div>
                 ))}
@@ -1243,33 +1511,60 @@ const Home = () => {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {myDevices.map((device, index) => (
-                  <div key={index} className="dark:bg-gray-800 bg-white rounded-xl p-5 shadow-sm">
-                    <div className="flex items-start">
-                      <div className="w-24 h-24 dark:bg-gray-700 bg-gray-50 rounded-xl overflow-hidden p-2 mr-4">
-                        <img src={device.image} alt={device.name} className="w-full h-full object-contain" />
+                  <div key={index} className="dark:bg-gray-800 bg-white rounded-xl overflow-hidden shadow-sm group hover:shadow-md transition-all">
+                    <div className="relative h-40 overflow-hidden">
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent dark:from-black/50 dark:to-transparent z-10"></div>
+                      <div className="w-full h-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center">
+                        <img src={device.image} alt={device.name} className="w-full h-full object-contain p-4 transition-all duration-500 group-hover:scale-105" />
                       </div>
-                      <div className="flex-grow">
-                        <h3 className="text-lg font-semibold mb-1 dark:text-gray-100 text-[#2c2c2e]">{device.name}</h3>
-                        <p className="text-sm dark:text-gray-400 text-gray-600 mb-3">{device.description}</p>
-                        <div className="flex flex-wrap gap-2">
+                      <div className="absolute bottom-0 left-0 right-0 z-20 p-4">
+                        <h3 className="text-xl font-semibold mb-1 text-white drop-shadow-md">{device.name}</h3>
+                        <div className="flex flex-wrap gap-1 mt-2">
                           {device.tags.map((tag, tagIndex) => (
-                            <span key={tagIndex} className="px-3 py-1 rounded-md text-sm dark:bg-blue-900/30 dark:text-blue-400 bg-blue-50 text-blue-600">
+                            <span key={tagIndex} className="px-2 py-0.5 text-xs rounded-md bg-white/20 text-white backdrop-blur-sm border border-white/20">
                               {tag.name}
                             </span>
                           ))}
                         </div>
                       </div>
                     </div>
-                    <div className="mt-4 pt-4 dark:border-gray-700 border-t border-gray-100">
-                      <h4 className="text-sm font-medium mb-2 dark:text-gray-100 text-[#2c2c2e]">设备规格</h4>
-                      <ul className="text-sm dark:text-gray-400 text-gray-600 space-y-1">
-                        <li>• 购买日期: {device.specs.purchaseDate}</li>
-                        <li>• 保修状态: {device.specs.warranty}</li>
-                        <li>• 使用状态: {device.specs.condition}</li>
-                        {device.specs.details.map((detail, detailIndex) => (
-                          <li key={detailIndex}>• {detail}</li>
-                        ))}
-                      </ul>
+
+                    <div className="p-4">
+                      <p className="text-sm dark:text-gray-300 text-gray-600 mb-4 line-clamp-2">{device.description}</p>
+
+                      <div className="grid grid-cols-2 gap-2 mb-4">
+                        <div className="dark:bg-gray-700/50 bg-gray-100/80 rounded-lg p-2 flex flex-col items-center justify-center">
+                          <span className="text-xs dark:text-gray-400 text-gray-500">购买日期</span>
+                          <span className="text-sm font-medium dark:text-gray-200 text-gray-700">{device.specs.purchaseDate}</span>
+                        </div>
+                        <div className="dark:bg-gray-700/50 bg-gray-100/80 rounded-lg p-2 flex flex-col items-center justify-center">
+                          <span className="text-xs dark:text-gray-400 text-gray-500">保修状态</span>
+                          <span className="text-sm font-medium dark:text-gray-200 text-gray-700">{device.specs.warranty}</span>
+                        </div>
+                      </div>
+
+                      <div className="mb-3 flex items-center">
+                        <div className="w-3 h-3 rounded-full mr-2"
+                          style={{
+                            backgroundColor: device.specs.condition === '良好' ? '#34D399' :
+                              device.specs.condition === '一般' ? '#FBBF24' :
+                                device.specs.condition === '需要维修' ? '#F87171' : '#60A5FA'
+                          }}
+                        ></div>
+                        <span className="text-sm font-medium dark:text-gray-200 text-gray-700">状态: {device.specs.condition}</span>
+                      </div>
+
+                      <div className="dark:border-gray-700 border-t border-gray-100 pt-3 mt-1">
+                        <h4 className="text-sm font-medium mb-2 dark:text-gray-100 text-[#2c2c2e]">设备详情</h4>
+                        <ul className="text-xs dark:text-gray-400 text-gray-600 space-y-1">
+                          {device.specs.details.map((detail, detailIndex) => (
+                            <li key={detailIndex} className="flex items-start">
+                              <span className="mr-2 text-blue-500 dark:text-blue-400">•</span>
+                              <span>{detail}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
                     </div>
                   </div>
                 ))}
@@ -1306,7 +1601,7 @@ const Home = () => {
                     <ClockIcon className="w-5 h-5 text-white" />
                   </AppleStyleIcon>
                   <div className="ml-3">
-                    <h2 className="text-2xl font-bold dark:text-gray-100 text-[#2c2c2e]">{myCountdown.title}</h2>
+                    <h2 className="text-2xl font-bold dark:text-gray-100 text-[#2c2c2e]">倒计日</h2>
                   </div>
                 </div>
                 <button
@@ -1317,49 +1612,136 @@ const Home = () => {
                 </button>
               </div>
 
-              <div className="dark:bg-gray-800 bg-white rounded-xl p-6 shadow-sm">
-                <div className="flex flex-col md:flex-row gap-6 items-center mb-6">
-                  <div className="text-center">
-                    <div className="text-8xl font-bold dark:text-blue-400 text-blue-600">{daysLeft}</div>
-                    <div className="text-2xl dark:text-gray-400 text-gray-500 mt-2">天</div>
-                  </div>
+              <div className="dark:bg-gray-800 bg-white rounded-xl overflow-hidden shadow-sm">
+                <div className="relative p-6 pb-4">
+                  {/* 背景装饰 */}
+                  <div className="absolute -top-10 -right-10 w-40 h-40 bg-gradient-to-br from-blue-400/10 to-purple-500/10 rounded-full blur-2xl pointer-events-none"></div>
+                  <div className="absolute -bottom-10 -left-10 w-32 h-32 bg-gradient-to-tr from-green-400/10 to-yellow-500/10 rounded-full blur-xl pointer-events-none"></div>
 
-                  <div className="flex-grow">
-                    <div className="h-4 w-full dark:bg-gray-700 bg-gray-100 rounded-full overflow-hidden mb-2">
-                      <div
-                        className="h-full bg-blue-500 rounded-full transition-all duration-1000"
-                        style={{ width: `${(1 - daysLeft / myCountdown.totalDays) * 100}%` }}
-                      ></div>
+                  {/* 主倒计时显示 */}
+                  <div className="flex flex-col items-center md:flex-row md:items-start mb-6 relative">
+                    <div className="relative w-32 h-32 rounded-2xl bg-gradient-to-br from-blue-500 to-blue-600 flex flex-col items-center justify-center text-white shadow-lg mb-4 md:mb-0 overflow-hidden">
+                      <div className="absolute inset-0 backdrop-blur-sm bg-white/5"></div>
+                      <div className="z-10">
+                        <div className="text-6xl font-bold">{daysLeft}</div>
+                        <div className="text-sm font-medium text-center text-blue-100">剩余天数</div>
+                      </div>
                     </div>
-                    <div className="flex justify-between text-sm dark:text-gray-400 text-gray-500">
-                      <span>开始日期</span>
-                      <span>目标日期: {myCountdown.targetDate}</span>
+
+                    <div className="md:ml-6 flex-grow">
+                      <h3 className="text-2xl font-bold text-center md:text-left mb-3 dark:text-gray-100 text-gray-800">{getMainCountdown().title}</h3>
+                      <div className="h-3 w-full dark:bg-gray-700 bg-gray-100 rounded-full overflow-hidden mb-3 shadow-inner">
+                        <div
+                          className="h-full bg-blue-500 rounded-full transition-all duration-1000"
+                          style={{ width: `${(1 - daysLeft / getMainCountdown().totalDays) * 100}%` }}
+                        ></div>
+                      </div>
+                      <div className="flex justify-between text-sm dark:text-gray-400 text-gray-600">
+                        <span>开始日期: {getMainCountdown().Startdate}</span>
+                        <span>目标日期: {getMainCountdown().targetDate}</span>
+                      </div>
+
+                      <div className="grid grid-cols-3 gap-3 mt-4">
+                        <div className="dark:bg-gray-700/50 bg-gray-100/80 rounded-lg p-2 flex flex-col items-center justify-center">
+                          <span className="text-xs dark:text-gray-400 text-gray-500">已过天数</span>
+                          <span className="text-lg font-medium dark:text-gray-200 text-gray-700">{getMainCountdown().totalDays - daysLeft}</span>
+                        </div>
+                        <div className="dark:bg-gray-700/50 bg-gray-100/80 rounded-lg p-2 flex flex-col items-center justify-center">
+                          <span className="text-xs dark:text-gray-400 text-gray-500">总天数</span>
+                          <span className="text-lg font-medium dark:text-gray-200 text-gray-700">{getMainCountdown().totalDays}</span>
+                        </div>
+                        <div className="dark:bg-gray-700/50 bg-gray-100/80 rounded-lg p-2 flex flex-col items-center justify-center">
+                          <span className="text-xs dark:text-gray-400 text-gray-500">完成度</span>
+                          <span className="text-lg font-medium dark:text-gray-200 text-gray-700">
+                            {Math.round((1 - daysLeft / getMainCountdown().totalDays) * 100)}%
+                          </span>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
 
-                <div className="mt-6 pt-6 dark:border-gray-700 border-t border-gray-100">
-                  <h3 className="text-lg font-medium mb-4 dark:text-gray-100 text-[#2c2c2e]">事件详情</h3>
-                  <p className="dark:text-gray-400 text-gray-600 mb-4">
-                    这个重要日期标志着一个重要里程碑。在这段时间里，我们将努力实现设定的目标和计划。
-                    倒计时提醒着我们时间的宝贵和任务的紧迫性。
-                  </p>
+                {/* 其他倒计时列表 */}
+                <div className="border-t dark:border-gray-700 border-gray-100 px-6 pt-4 pb-6">
+                  <h4 className="text-lg font-medium mb-4 dark:text-gray-100 text-gray-800 flex items-center">
+                    <svg className="w-5 h-5 mr-2 text-blue-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                    所有倒计时
+                  </h4>
 
-                  <h4 className="font-medium mt-5 mb-2 dark:text-gray-100 text-[#2c2c2e]">相关任务</h4>
-                  <div className="space-y-2">
-                    <div className="flex items-center">
-                      <div className="w-4 h-4 rounded-full bg-green-500 mr-2"></div>
-                      <span className="text-sm dark:text-gray-300 text-gray-700">已完成的准备工作</span>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    {/* 主倒计时卡片 */}
+                    <div className="dark:bg-gray-700/30 bg-blue-50 rounded-xl p-4 border dark:border-blue-800/30 border-blue-100 shadow-sm relative overflow-hidden group">
+                      <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 to-indigo-500/5 group-hover:from-blue-500/10 group-hover:to-indigo-500/10 transition-all duration-300"></div>
+                      <div className="flex items-center justify-between mb-3 relative">
+                        <h5 className="font-semibold dark:text-blue-300 text-blue-700">{getMainCountdown().title}</h5>
+                        <span className="py-0.5 px-2 text-xs rounded-full dark:bg-blue-900/40 dark:text-blue-300 bg-blue-100 text-blue-600">主要</span>
+                      </div>
+                      <div className="flex items-center justify-between relative">
+                        <div className="flex items-baseline">
+                          <span className="text-3xl font-bold dark:text-blue-300 text-blue-700">{daysLeft}</span>
+                          <span className="ml-1 text-sm dark:text-gray-400 text-gray-500">天</span>
+                        </div>
+                        <span className="text-xs dark:text-gray-400 text-gray-600">{getMainCountdown().targetDate}</span>
+                      </div>
+                      <div className="mt-2 h-1.5 w-full dark:bg-gray-600/70 bg-blue-200/70 rounded-full overflow-hidden relative">
+                        <div
+                          className="h-full bg-blue-500 dark:bg-blue-400 rounded-full transition-all duration-300"
+                          style={{ width: `${(1 - daysLeft / getMainCountdown().totalDays) * 100}%` }}
+                        ></div>
+                      </div>
                     </div>
-                    <div className="flex items-center">
-                      <div className="w-4 h-4 rounded-full bg-yellow-500 mr-2"></div>
-                      <span className="text-sm dark:text-gray-300 text-gray-700">进行中的重要任务</span>
-                    </div>
-                    <div className="flex items-center">
-                      <div className="w-4 h-4 rounded-full bg-red-500 mr-2"></div>
-                      <span className="text-sm dark:text-gray-300 text-gray-700">尚未开始的紧急事项</span>
+
+                    {/* 其他倒计时卡片 */}
+                    {myCountdown.filter(item => !item.top).map((item, index) => (
+                      <div
+                        key={index}
+                        className="dark:bg-gray-700/30 bg-gray-50 rounded-xl p-4 border dark:border-gray-700/30 border-gray-100 shadow-sm relative overflow-hidden group"
+                        style={{
+                          background: index === 0 ? 'rgba(16, 185, 129, 0.05)' : 'rgba(249, 115, 22, 0.05)',
+                          borderColor: index === 0 ? 'rgba(16, 185, 129, 0.1)' : 'rgba(249, 115, 22, 0.1)'
+                        }}
+                      >
+                        <div className="flex items-center justify-between mb-3">
+                          <h5 className="font-semibold"
+                            style={{
+                              color: index === 0 ? '#10B981' : '#F97316'
+                            }}
+                          >{item.title}</h5>
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-baseline">
+                            <span className="text-2xl font-bold dark:text-gray-200 text-gray-700">{calculateDaysLeft(new Date(item.targetDate))}</span>
+                            <span className="ml-1 text-sm dark:text-gray-400 text-gray-500">天</span>
+                          </div>
+                          <span className="text-xs dark:text-gray-400 text-gray-600">{item.targetDate}</span>
+                        </div>
+                        <div className="mt-2 h-1.5 w-full dark:bg-gray-600/40 bg-gray-200/70 rounded-full overflow-hidden">
+                          <div
+                            className="h-full rounded-full transition-all duration-300"
+                            style={{
+                              width: `${100 - (calculateDaysLeft(new Date(item.targetDate)) / item.totalDays) * 100}%`,
+                              background: index === 0 ? '#10B981' : '#F97316'
+                            }}
+                          ></div>
+                        </div>
+                      </div>
+                    ))}
+
+                    {/* 添加新倒计时按钮卡片 */}
+                    <div className="dark:bg-gray-800/50 bg-gray-50 rounded-xl border dark:border-gray-700 border-gray-100 flex items-center justify-center p-4 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700/50 transition-colors group">
+                      <svg className="w-6 h-6 text-gray-400 group-hover:text-gray-500 dark:text-gray-500 dark:group-hover:text-gray-400 mr-2 transition-colors" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                      </svg>
+                      <span className="text-sm text-gray-500 group-hover:text-gray-600 dark:text-gray-400 dark:group-hover:text-gray-300 transition-colors">添加新倒计时</span>
                     </div>
                   </div>
+                </div>
+
+                {/* 底部提示区 */}
+                <div className="bg-gray-50 dark:bg-gray-800/50 px-6 py-3 text-xs text-gray-500 dark:text-gray-400 border-t dark:border-gray-700 border-gray-100">
+                  提示: 您可以点击每个倒计时卡片查看详细信息，或者添加新的倒计时事件。
                 </div>
               </div>
             </motion.div>
