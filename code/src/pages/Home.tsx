@@ -923,163 +923,89 @@ const Home = () => {
             </div>
             <div style={cardBodyStyle} className="h-[calc(100%-64px)] overflow-y-auto">
               <div className="flex flex-col h-full p-3">
-                {myLearningProgress.map((item, index) => {
-                  // 获取基于颜色的渐变配置
-                  let gradientStart, gradientEnd, colorSolid, bgColor;
-
-                  switch (item.color) {
-                    case 'blue':
-                      gradientStart = '#60A5FA';
-                      gradientEnd = '#3B82F6';
-                      colorSolid = '#3B82F6';
-                      bgColor = 'rgba(59, 130, 246, 0.1)';
-                      break;
-                    case 'green':
-                      gradientStart = '#34D399';
-                      gradientEnd = '#10B981';
-                      colorSolid = '#10B981';
-                      bgColor = 'rgba(16, 185, 129, 0.1)';
-                      break;
-                    case 'yellow':
-                      gradientStart = '#FBBF24';
-                      gradientEnd = '#F59E0B';
-                      colorSolid = '#F59E0B';
-                      bgColor = 'rgba(245, 158, 11, 0.1)';
-                      break;
-                    case 'orange':
-                      gradientStart = '#FB923C';
-                      gradientEnd = '#F97316';
-                      colorSolid = '#F97316';
-                      bgColor = 'rgba(249, 115, 22, 0.1)';
-                      break;
-                    case 'indigo':
-                      gradientStart = '#818CF8';
-                      gradientEnd = '#6366F1';
-                      colorSolid = '#6366F1';
-                      bgColor = 'rgba(99, 102, 241, 0.1)';
-                      break;
-                    case 'red':
-                      gradientStart = '#F87171';
-                      gradientEnd = '#EF4444';
-                      colorSolid = '#EF4444';
-                      bgColor = 'rgba(239, 68, 68, 0.1)';
-                      break;
-                    case 'purple':
-                      gradientStart = '#C084FC';
-                      gradientEnd = '#A855F7';
-                      colorSolid = '#A855F7';
-                      bgColor = 'rgba(168, 85, 247, 0.1)';
-                      break;
-                    case 'pink':
-                      gradientStart = '#F472B6';
-                      gradientEnd = '#EC4899';
-                      colorSolid = '#EC4899';
-                      bgColor = 'rgba(236, 72, 153, 0.1)';
-                      break;
-                    default:
-                      gradientStart = '#60A5FA';
-                      gradientEnd = '#3B82F6';
-                      colorSolid = '#3B82F6';
-                      bgColor = 'rgba(59, 130, 246, 0.1)';
-                  }
-
-                  // 获取技能等级
-                  const skillLevel = parseInt(item.value) < 30 ? '初学' :
-                    parseInt(item.value) < 60 ? '进阶' :
-                      parseInt(item.value) < 80 ? '熟练' : '精通';
-
-                  // 设置等级标签颜色
-                  const levelColorClass = parseInt(item.value) < 30 ? 'bg-blue-50 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400' :
-                    parseInt(item.value) < 60 ? 'bg-indigo-50 text-indigo-600 dark:bg-indigo-900/20 dark:text-indigo-400' :
-                      parseInt(item.value) < 80 ? 'bg-purple-50 text-purple-600 dark:bg-purple-900/20 dark:text-purple-400' :
-                        'bg-pink-50 text-pink-600 dark:bg-pink-900/20 dark:text-pink-400';
-
-                  // 计算圆环参数
-                  const circumference = 2 * Math.PI * 15;
-                  const dashOffset = circumference * (1 - parseInt(item.value) / 100);
-
-                  return (
-                    <div key={index} className="mb-4 group hover:scale-[1.02] transition-all duration-300">
-                      <div className="flex items-start mb-2">
-                        <div className="relative w-10 h-10 mr-3 flex-shrink-0">
-                          {/* 圆环背景 */}
-                          <div className="absolute inset-0 rounded-full opacity-10"
-                            style={{ backgroundColor: colorSolid }}
-                          ></div>
-
-                          {/* 磨砂玻璃效果圆盘 */}
-                          <div className="absolute inset-0.5 rounded-full backdrop-blur-[1px] bg-white/40 dark:bg-gray-800/40"></div>
-
-                          {/* 进度环 */}
-                          <svg className="absolute inset-0 w-full h-full transform -rotate-90">
-                            {/* 阴影效果 */}
-                            <filter id={`shadow-${index}`} x="-20%" y="-20%" width="140%" height="140%">
-                              <feDropShadow dx="0" dy="0" stdDeviation="1" floodColor={colorSolid} floodOpacity="0.3" />
-                            </filter>
-
-                            {/* 环形背景 */}
-                            <circle
-                              cx="20"
-                              cy="20"
-                              r="15"
-                              strokeWidth="1.5"
-                              stroke="currentColor"
-                              fill="transparent"
-                              className="text-gray-200 dark:text-gray-700"
-                            />
-
-                            {/* 进度显示，使用渐变 */}
-                            <defs>
-                              <linearGradient id={`gradient-${index}`} x1="0%" y1="0%" x2="100%" y2="100%">
-                                <stop offset="0%" stopColor={gradientStart} />
-                                <stop offset="100%" stopColor={gradientEnd} />
-                              </linearGradient>
-                            </defs>
-
-                            <circle
-                              cx="20"
-                              cy="20"
-                              r="15"
-                              strokeWidth="2.5"
-                              stroke={`url(#gradient-${index})`}
-                              fill="transparent"
-                              strokeDasharray={circumference}
-                              strokeDashoffset={dashOffset}
-                              strokeLinecap="round"
-                              filter={`url(#shadow-${index})`}
-                              className="transition-all duration-700 ease-out group-hover:stroke-width-3"
-                            />
-                          </svg>
-
-                          {/* 中间百分比 */}
-                          <div className="absolute inset-0 flex items-center justify-center">
-                            <span className="text-xs font-semibold" style={{ color: colorSolid }}>{item.value}</span>
-                          </div>
-                        </div>
-
-                        <div className="flex-grow overflow-hidden pt-1">
-                          <div className="flex items-center justify-between">
-                            <span className="text-sm font-medium dark:text-gray-200 text-gray-800 truncate block">{item.name}</span>
-                            <span className={`text-2xs px-1.5 py-0.5 rounded-full ${levelColorClass} ml-2 group-hover:scale-105 transition-transform`}>{skillLevel}</span>
-                          </div>
-
-                          <p className="text-xs dark:text-gray-400 text-gray-500 truncate mt-0.5">{item.description}</p>
-
-                          {/* 微型进度条 */}
-                          <div className="h-1 w-full mt-2 bg-gray-100 dark:bg-gray-700/50 rounded-full overflow-hidden">
-                            <div
-                              className="h-full rounded-full transition-all duration-500 ease-out"
-                              style={{
-                                width: item.value,
-                                background: `linear-gradient(to right, ${gradientStart}, ${gradientEnd})`
-                              }}
-                            ></div>
-                          </div>
-                        </div>
+                {myLearningProgress.map((item, index) => (
+                  <div key={index} className="mb-4 group hover:translate-y-[-2px] transition-all duration-300 bg-gradient-to-br from-white/80 to-white/60 dark:from-gray-800/80 dark:to-gray-800/60 rounded-xl p-4 shadow-sm hover:shadow-md dark:shadow-gray-900/10">
+                    <div className="flex items-center justify-between mb-2.5">
+                      <h4 className="text-base font-medium dark:text-white text-gray-800">{item.name}</h4>
+                      <div
+                        className="text-xs px-2 py-1 rounded-full font-medium border dark:border-opacity-20 border-opacity-30"
+                        style={{
+                          backgroundColor: item.color === 'blue' ? 'rgba(59, 130, 246, 0.08)' :
+                            item.color === 'green' ? 'rgba(16, 185, 129, 0.08)' :
+                              item.color === 'yellow' ? 'rgba(245, 158, 11, 0.08)' :
+                                item.color === 'orange' ? 'rgba(249, 115, 22, 0.08)' :
+                                  item.color === 'indigo' ? 'rgba(79, 70, 229, 0.08)' :
+                                    item.color === 'red' ? 'rgba(239, 68, 68, 0.08)' :
+                                      item.color === 'purple' ? 'rgba(139, 92, 246, 0.08)' :
+                                        item.color === 'pink' ? 'rgba(236, 72, 153, 0.08)' : 'rgba(59, 130, 246, 0.08)',
+                          color: item.color === 'blue' ? '#3B82F6' :
+                            item.color === 'green' ? '#10B981' :
+                              item.color === 'yellow' ? '#F59E0B' :
+                                item.color === 'orange' ? '#F97316' :
+                                  item.color === 'indigo' ? '#4F46E5' :
+                                    item.color === 'red' ? '#EF4444' :
+                                      item.color === 'purple' ? '#8B5CF6' :
+                                        item.color === 'pink' ? '#EC4899' : '#3B82F6',
+                          borderColor: item.color === 'blue' ? 'rgba(59, 130, 246, 0.2)' :
+                            item.color === 'green' ? 'rgba(16, 185, 129, 0.2)' :
+                              item.color === 'yellow' ? 'rgba(245, 158, 11, 0.2)' :
+                                item.color === 'orange' ? 'rgba(249, 115, 22, 0.2)' :
+                                  item.color === 'indigo' ? 'rgba(79, 70, 229, 0.2)' :
+                                    item.color === 'red' ? 'rgba(239, 68, 68, 0.2)' :
+                                      item.color === 'purple' ? 'rgba(139, 92, 246, 0.2)' :
+                                        item.color === 'pink' ? 'rgba(236, 72, 153, 0.2)' : 'rgba(59, 130, 246, 0.2)'
+                        }}
+                      >
+                        {parseInt(item.value) < 30 ? '初学' :
+                          parseInt(item.value) < 60 ? '进阶' :
+                            parseInt(item.value) < 80 ? '熟练' : '精通'}
                       </div>
                     </div>
-                  );
-                })}
+
+                    <p className="text-xs dark:text-gray-400 text-gray-500 mb-3 line-clamp-1">{item.description}</p>
+
+                    <div className="flex items-center">
+                      <div className="relative flex-grow mr-3">
+                        <div className="h-1.5 w-full bg-gray-100 dark:bg-gray-700 rounded-full overflow-hidden">
+                          <div
+                            className="h-full rounded-full transition-all duration-700 ease-out-quart"
+                            style={{
+                              width: item.value,
+                              backgroundColor: item.color === 'blue' ? '#3B82F6' :
+                                item.color === 'green' ? '#10B981' :
+                                  item.color === 'yellow' ? '#F59E0B' :
+                                    item.color === 'orange' ? '#F97316' :
+                                      item.color === 'indigo' ? '#4F46E5' :
+                                        item.color === 'red' ? '#EF4444' :
+                                          item.color === 'purple' ? '#8B5CF6' :
+                                            item.color === 'pink' ? '#EC4899' : '#3B82F6'
+                            }}
+                          ></div>
+                        </div>
+                        <div className="absolute -bottom-4 left-0 w-full flex justify-between text-[10px] text-gray-400 dark:text-gray-500 px-0.5">
+                          <span>0%</span>
+                          <span>50%</span>
+                          <span>100%</span>
+                        </div>
+                      </div>
+                      <div
+                        className="w-9 h-9 rounded-full flex items-center justify-center text-white font-semibold flex-shrink-0 text-sm shadow-sm"
+                        style={{
+                          backgroundColor: item.color === 'blue' ? '#3B82F6' :
+                            item.color === 'green' ? '#10B981' :
+                              item.color === 'yellow' ? '#F59E0B' :
+                                item.color === 'orange' ? '#F97316' :
+                                  item.color === 'indigo' ? '#4F46E5' :
+                                    item.color === 'red' ? '#EF4444' :
+                                      item.color === 'purple' ? '#8B5CF6' :
+                                        item.color === 'pink' ? '#EC4899' : '#3B82F6'
+                        }}
+                      >
+                        {item.value}
+                      </div>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
           </div>
@@ -1604,47 +1530,100 @@ const Home = () => {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {myLearningProgress.map((item, index) => (
-                  <div key={index} className="dark:bg-gray-800 bg-white rounded-xl p-5 shadow-sm hover:shadow-md transition-shadow">
-                    <div className="flex items-center justify-between mb-2">
+                  <div key={index} className="dark:bg-gray-800 bg-white rounded-xl p-6 shadow-sm hover:shadow transition-all duration-300 hover:translate-y-[-2px]">
+                    <div className="flex justify-between items-center mb-4">
                       <div className="flex items-center">
                         <div
-                          className="w-4 h-4 rounded-full mr-2.5"
+                          className="w-3 h-3 rounded-full mr-2 shadow-sm"
                           style={{
                             backgroundColor: item.color === 'blue' ? '#3B82F6' :
-                              item.color === 'green' ? '#22C55E' :
-                                item.color === 'yellow' ? '#EAB308' :
+                              item.color === 'green' ? '#10B981' :
+                                item.color === 'yellow' ? '#F59E0B' :
                                   item.color === 'orange' ? '#F97316' :
-                                    item.color === 'indigo' ? '#6366F1' :
+                                    item.color === 'indigo' ? '#4F46E5' :
                                       item.color === 'red' ? '#EF4444' :
-                                        item.color === 'purple' ? '#A855F7' :
+                                        item.color === 'purple' ? '#8B5CF6' :
                                           item.color === 'pink' ? '#EC4899' : '#3B82F6'
                           }}
                         ></div>
-                        <h3 className="text-lg font-semibold dark:text-gray-100 text-gray-700">{item.name}</h3>
+                        <h3 className="text-lg font-medium dark:text-gray-100 text-gray-800">{item.name}</h3>
                       </div>
-                      <div className="flex items-center space-x-2">
-                        <span className="text-sm dark:text-gray-400 text-gray-600">{parseInt(item.value) < 30 ? '初学' : parseInt(item.value) < 60 ? '进阶' : parseInt(item.value) < 80 ? '熟练' : '精通'}</span>
-                        <span className="text-lg font-bold dark:text-blue-400 text-blue-600 bg-blue-50 dark:bg-blue-900/30 px-2.5 py-0.5 rounded-full">{item.value}</span>
-                      </div>
-                    </div>
-                    <div className="h-3.5 w-full dark:bg-gray-700 bg-gray-100 rounded-full overflow-hidden mb-3 shadow-inner">
                       <div
-                        className="h-full rounded-full transition-all duration-1000 ease-out"
+                        className="flex items-center text-xs px-2.5 py-1 rounded-md font-medium"
                         style={{
-                          width: item.value,
-                          backgroundColor: item.color === 'blue' ? '#3B82F6' :
-                            item.color === 'green' ? '#22C55E' :
-                              item.color === 'yellow' ? '#EAB308' :
+                          backgroundColor: item.color === 'blue' ? 'rgba(59, 130, 246, 0.08)' :
+                            item.color === 'green' ? 'rgba(16, 185, 129, 0.08)' :
+                              item.color === 'yellow' ? 'rgba(245, 158, 11, 0.08)' :
+                                item.color === 'orange' ? 'rgba(249, 115, 22, 0.08)' :
+                                  item.color === 'indigo' ? 'rgba(79, 70, 229, 0.08)' :
+                                    item.color === 'red' ? 'rgba(239, 68, 68, 0.08)' :
+                                      item.color === 'purple' ? 'rgba(139, 92, 246, 0.08)' :
+                                        item.color === 'pink' ? 'rgba(236, 72, 153, 0.08)' : 'rgba(59, 130, 246, 0.08)',
+                          color: item.color === 'blue' ? '#3B82F6' :
+                            item.color === 'green' ? '#10B981' :
+                              item.color === 'yellow' ? '#F59E0B' :
                                 item.color === 'orange' ? '#F97316' :
-                                  item.color === 'indigo' ? '#6366F1' :
+                                  item.color === 'indigo' ? '#4F46E5' :
                                     item.color === 'red' ? '#EF4444' :
-                                      item.color === 'purple' ? '#A855F7' :
+                                      item.color === 'purple' ? '#8B5CF6' :
                                         item.color === 'pink' ? '#EC4899' : '#3B82F6'
                         }}
-                      ></div>
+                      >
+                        {parseInt(item.value) < 30 ? '初学' :
+                          parseInt(item.value) < 60 ? '进阶' :
+                            parseInt(item.value) < 80 ? '熟练' : '精通'}
+                      </div>
                     </div>
-                    <p className="mt-2 text-sm dark:text-gray-400 text-gray-500 italic">
-                      "{item.description}"
+
+                    <div className="flex items-end gap-5 mb-4">
+                      <div className="flex items-baseline gap-1.5">
+                        <span
+                          className="text-4xl font-light"
+                          style={{
+                            color: item.color === 'blue' ? '#3B82F6' :
+                              item.color === 'green' ? '#10B981' :
+                                item.color === 'yellow' ? '#F59E0B' :
+                                  item.color === 'orange' ? '#F97316' :
+                                    item.color === 'indigo' ? '#4F46E5' :
+                                      item.color === 'red' ? '#EF4444' :
+                                        item.color === 'purple' ? '#8B5CF6' :
+                                          item.color === 'pink' ? '#EC4899' : '#3B82F6'
+                          }}
+                        >
+                          {parseInt(item.value)}
+                        </span>
+                        <span className="text-sm dark:text-gray-400 text-gray-500">/ 100</span>
+                      </div>
+
+                      <div className="relative h-10 flex-grow">
+                        <div className="absolute bottom-0 left-0 right-0 h-1 bg-gray-100 dark:bg-gray-700 rounded-full">
+                          <div
+                            className="h-full rounded-full transition-all duration-1000 ease-out"
+                            style={{
+                              width: item.value,
+                              backgroundColor: item.color === 'blue' ? '#3B82F6' :
+                                item.color === 'green' ? '#10B981' :
+                                  item.color === 'yellow' ? '#F59E0B' :
+                                    item.color === 'orange' ? '#F97316' :
+                                      item.color === 'indigo' ? '#4F46E5' :
+                                        item.color === 'red' ? '#EF4444' :
+                                          item.color === 'purple' ? '#8B5CF6' :
+                                            item.color === 'pink' ? '#EC4899' : '#3B82F6'
+                            }}
+                          ></div>
+                        </div>
+                        <div className="absolute bottom-3 left-0 right-0 flex justify-between text-[10px] text-gray-400 dark:text-gray-500">
+                          <span>0</span>
+                          <span>25</span>
+                          <span>50</span>
+                          <span>75</span>
+                          <span>100</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <p className="text-sm dark:text-gray-400 text-gray-600 mt-2 border-t dark:border-gray-700 border-gray-100 pt-3">
+                      {item.description}
                     </p>
                   </div>
                 ))}
