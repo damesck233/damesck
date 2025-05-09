@@ -363,34 +363,28 @@ const calculateProgress = (item: CountdownItem): number => {
   return clampedProgress;
 };
 
-// 获取主要倒计时（top为true的项目）- 移至组件外部避免初始化顺序问题
-const getMainCountdown = (countdownData: CountdownItem[]): CountdownItem => {
-  const main = countdownData.find(item => item.top === true);
-  if (main) return main;
-
-  // 如果没有找到top为true的，返回第一个
-  return countdownData.length > 0 ? countdownData[0] : {
-    title: "默认倒计时",
-    Startdate: new Date().toISOString().split('T')[0],
-    targetDate: new Date().toISOString().split('T')[0],
-    totalDays: 1,
-    top: true
-  };
-};
-
 const Home = () => {
   // 从JSON转换为正确类型
   const countdownData = countdown as CountdownItem[];
 
-  // 使用新的数据文件替换旧数据
-  const mySkills = skills;
-  const myLearningProgress = learningProgress;
-  const myDevices = devices;
-  const mySocialLinks = socialLinks;
+  // 获取主要倒计时（top为true的项目）
+  const getMainCountdown = (): CountdownItem => {
+    const main = countdownData.find(item => item.top === true);
+    if (main) return main;
 
-  // 实时倒计时状态 - 使用组件外的函数初始化
+    // 如果没有找到top为true的，返回第一个
+    return countdownData.length > 0 ? countdownData[0] : {
+      title: "默认倒计时",
+      Startdate: new Date().toISOString().split('T')[0],
+      targetDate: new Date().toISOString().split('T')[0],
+      totalDays: 1,
+      top: true
+    };
+  };
+
+  // 实时倒计时状态
   const [daysLeft, setDaysLeft] = useState(() => {
-    const mainCountdown = getMainCountdown(countdownData);
+    const mainCountdown = getMainCountdown();
     return calculateDaysLeft(mainCountdown.targetDate);
   });
 
@@ -462,7 +456,7 @@ const Home = () => {
   // 每天更新倒计时
   useEffect(() => {
     const updateDaysLeft = () => {
-      const main = getMainCountdown(countdownData);
+      const main = getMainCountdown();
       if (main) {
         setDaysLeft(calculateDaysLeft(main.targetDate));
       }
@@ -470,7 +464,7 @@ const Home = () => {
 
     const timer = setInterval(updateDaysLeft, 86400000); // 每24小时更新一次
     return () => clearInterval(timer);
-  }, [countdownData]);
+  }, []);
 
   // 博客文章获取函数
   const fetchBlogPosts = async () => {
@@ -613,6 +607,12 @@ const Home = () => {
         return <BookOpenIcon className="w-5 h-5 text-gray-700" />;
     }
   };
+
+  // 使用新的数据文件替换旧数据
+  const mySkills = skills;
+  const myLearningProgress = learningProgress;
+  const myDevices = devices;
+  const mySocialLinks = socialLinks;
 
   // 添加全局鼠标移动监听器，确保卡片悬停状态正确清除
   useEffect(() => {
@@ -923,163 +923,60 @@ const Home = () => {
             </div>
             <div style={cardBodyStyle} className="h-[calc(100%-64px)] overflow-y-auto">
               <div className="flex flex-col h-full p-3">
-                {myLearningProgress.map((item, index) => {
-                  // 获取基于颜色的渐变配置
-                  let gradientStart, gradientEnd, colorSolid, bgColor;
-
-                  switch (item.color) {
-                    case 'blue':
-                      gradientStart = '#60A5FA';
-                      gradientEnd = '#3B82F6';
-                      colorSolid = '#3B82F6';
-                      bgColor = 'rgba(59, 130, 246, 0.1)';
-                      break;
-                    case 'green':
-                      gradientStart = '#34D399';
-                      gradientEnd = '#10B981';
-                      colorSolid = '#10B981';
-                      bgColor = 'rgba(16, 185, 129, 0.1)';
-                      break;
-                    case 'yellow':
-                      gradientStart = '#FBBF24';
-                      gradientEnd = '#F59E0B';
-                      colorSolid = '#F59E0B';
-                      bgColor = 'rgba(245, 158, 11, 0.1)';
-                      break;
-                    case 'orange':
-                      gradientStart = '#FB923C';
-                      gradientEnd = '#F97316';
-                      colorSolid = '#F97316';
-                      bgColor = 'rgba(249, 115, 22, 0.1)';
-                      break;
-                    case 'indigo':
-                      gradientStart = '#818CF8';
-                      gradientEnd = '#6366F1';
-                      colorSolid = '#6366F1';
-                      bgColor = 'rgba(99, 102, 241, 0.1)';
-                      break;
-                    case 'red':
-                      gradientStart = '#F87171';
-                      gradientEnd = '#EF4444';
-                      colorSolid = '#EF4444';
-                      bgColor = 'rgba(239, 68, 68, 0.1)';
-                      break;
-                    case 'purple':
-                      gradientStart = '#C084FC';
-                      gradientEnd = '#A855F7';
-                      colorSolid = '#A855F7';
-                      bgColor = 'rgba(168, 85, 247, 0.1)';
-                      break;
-                    case 'pink':
-                      gradientStart = '#F472B6';
-                      gradientEnd = '#EC4899';
-                      colorSolid = '#EC4899';
-                      bgColor = 'rgba(236, 72, 153, 0.1)';
-                      break;
-                    default:
-                      gradientStart = '#60A5FA';
-                      gradientEnd = '#3B82F6';
-                      colorSolid = '#3B82F6';
-                      bgColor = 'rgba(59, 130, 246, 0.1)';
-                  }
-
-                  // 获取技能等级
-                  const skillLevel = parseInt(item.value) < 30 ? '初学' :
-                    parseInt(item.value) < 60 ? '进阶' :
-                      parseInt(item.value) < 80 ? '熟练' : '精通';
-
-                  // 设置等级标签颜色
-                  const levelColorClass = parseInt(item.value) < 30 ? 'bg-blue-50 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400' :
-                    parseInt(item.value) < 60 ? 'bg-indigo-50 text-indigo-600 dark:bg-indigo-900/20 dark:text-indigo-400' :
-                      parseInt(item.value) < 80 ? 'bg-purple-50 text-purple-600 dark:bg-purple-900/20 dark:text-purple-400' :
-                        'bg-pink-50 text-pink-600 dark:bg-pink-900/20 dark:text-pink-400';
-
-                  // 计算圆环参数
-                  const circumference = 2 * Math.PI * 15;
-                  const dashOffset = circumference * (1 - parseInt(item.value) / 100);
-
-                  return (
-                    <div key={index} className="mb-4 group hover:scale-[1.02] transition-all duration-300">
-                      <div className="flex items-start mb-2">
-                        <div className="relative w-10 h-10 mr-3 flex-shrink-0">
-                          {/* 圆环背景 */}
-                          <div className="absolute inset-0 rounded-full opacity-10"
-                            style={{ backgroundColor: colorSolid }}
-                          ></div>
-
-                          {/* 磨砂玻璃效果圆盘 */}
-                          <div className="absolute inset-0.5 rounded-full backdrop-blur-[1px] bg-white/40 dark:bg-gray-800/40"></div>
-
-                          {/* 进度环 */}
-                          <svg className="absolute inset-0 w-full h-full transform -rotate-90">
-                            {/* 阴影效果 */}
-                            <filter id={`shadow-${index}`} x="-20%" y="-20%" width="140%" height="140%">
-                              <feDropShadow dx="0" dy="0" stdDeviation="1" floodColor={colorSolid} floodOpacity="0.3" />
-                            </filter>
-
-                            {/* 环形背景 */}
-                            <circle
-                              cx="20"
-                              cy="20"
-                              r="15"
-                              strokeWidth="1.5"
-                              stroke="currentColor"
-                              fill="transparent"
-                              className="text-gray-200 dark:text-gray-700"
-                            />
-
-                            {/* 进度显示，使用渐变 */}
-                            <defs>
-                              <linearGradient id={`gradient-${index}`} x1="0%" y1="0%" x2="100%" y2="100%">
-                                <stop offset="0%" stopColor={gradientStart} />
-                                <stop offset="100%" stopColor={gradientEnd} />
-                              </linearGradient>
-                            </defs>
-
-                            <circle
-                              cx="20"
-                              cy="20"
-                              r="15"
-                              strokeWidth="2.5"
-                              stroke={`url(#gradient-${index})`}
-                              fill="transparent"
-                              strokeDasharray={circumference}
-                              strokeDashoffset={dashOffset}
-                              strokeLinecap="round"
-                              filter={`url(#shadow-${index})`}
-                              className="transition-all duration-700 ease-out group-hover:stroke-width-3"
-                            />
-                          </svg>
-
-                          {/* 中间百分比 */}
-                          <div className="absolute inset-0 flex items-center justify-center">
-                            <span className="text-xs font-semibold" style={{ color: colorSolid }}>{item.value}</span>
-                          </div>
+                {myLearningProgress.map((item, index) => (
+                  <div key={index} className="mb-3.5 group hover:scale-[1.01] transition-all duration-300">
+                    <div className="flex items-center mb-1.5">
+                      <div className="relative w-8 h-8 mr-2.5 flex-shrink-0">
+                        {/* 外环 */}
+                        <div className="absolute inset-0 rounded-full opacity-20"
+                          style={{
+                            backgroundColor: item.color === 'blue' ? '#3B82F6' :
+                              item.color === 'green' ? '#22C55E' :
+                                item.color === 'yellow' ? '#EAB308' :
+                                  item.color === 'orange' ? '#F97316' :
+                                    item.color === 'indigo' ? '#6366F1' :
+                                      item.color === 'red' ? '#EF4444' :
+                                        item.color === 'purple' ? '#A855F7' :
+                                          item.color === 'pink' ? '#EC4899' : '#3B82F6'
+                          }}
+                        ></div>
+                        {/* 进度环 */}
+                        <svg className="absolute inset-0 w-full h-full transform -rotate-90">
+                          <circle
+                            cx="16"
+                            cy="16"
+                            r="15"
+                            strokeWidth="2"
+                            stroke="currentColor"
+                            fill="transparent"
+                            strokeDasharray="94.2"
+                            strokeDashoffset={`${94.2 * (1 - parseInt(item.value) / 100)}`}
+                            className="transition-all duration-700 ease-out"
+                            style={{
+                              color: item.color === 'blue' ? '#3B82F6' :
+                                item.color === 'green' ? '#22C55E' :
+                                  item.color === 'yellow' ? '#EAB308' :
+                                    item.color === 'orange' ? '#F97316' :
+                                      item.color === 'indigo' ? '#6366F1' :
+                                        item.color === 'red' ? '#EF4444' :
+                                          item.color === 'purple' ? '#A855F7' :
+                                            item.color === 'pink' ? '#EC4899' : '#3B82F6'
+                            }}
+                          />
+                        </svg>
+                        {/* 中间百分比 */}
+                        <div className="absolute inset-0 flex items-center justify-center text-xs font-semibold dark:text-gray-200 text-gray-700">{item.value}</div>
+                      </div>
+                      <div className="flex-grow overflow-hidden">
+                        <div className="flex items-center justify-between">
+                          <span className="text-sm font-medium dark:text-gray-300 text-gray-700 truncate block">{item.name}</span>
+                          <span className="text-2xs dark:text-gray-400 text-gray-500 opacity-80">{parseInt(item.value) < 30 ? '初学' : parseInt(item.value) < 60 ? '进阶' : parseInt(item.value) < 80 ? '熟练' : '精通'}</span>
                         </div>
-
-                        <div className="flex-grow overflow-hidden pt-1">
-                          <div className="flex items-center justify-between">
-                            <span className="text-sm font-medium dark:text-gray-200 text-gray-800 truncate block">{item.name}</span>
-                            <span className={`text-2xs px-1.5 py-0.5 rounded-full ${levelColorClass} ml-2 group-hover:scale-105 transition-transform`}>{skillLevel}</span>
-                          </div>
-
-                          <p className="text-xs dark:text-gray-400 text-gray-500 truncate mt-0.5">{item.description}</p>
-
-                          {/* 微型进度条 */}
-                          <div className="h-1 w-full mt-2 bg-gray-100 dark:bg-gray-700/50 rounded-full overflow-hidden">
-                            <div
-                              className="h-full rounded-full transition-all duration-500 ease-out"
-                              style={{
-                                width: item.value,
-                                background: `linear-gradient(to right, ${gradientStart}, ${gradientEnd})`
-                              }}
-                            ></div>
-                          </div>
-                        </div>
+                        <p className="text-xs dark:text-gray-400 text-gray-500 truncate">{item.description}</p>
                       </div>
                     </div>
-                  );
-                })}
+                  </div>
+                ))}
               </div>
             </div>
           </div>
@@ -1198,7 +1095,7 @@ const Home = () => {
                           >
                             {tagIndex === 0 && (
                               <svg className="w-2 h-2 mr-1" viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M12 2C6.5 2 2 6.5 2 12S6.5 22 12 22 22 17.5 22 12 17.5 2 12 2M10 17L5 12L6.41 10.59L10 14.17L17.59 6.58L19 8L10 17Z" />
+                                <path d="M12 2C6.5 2 2 6.5 2 12S6.5 22 12 22 22 17.5 22 12M10 17L5 12L6.41 10.59L10 14.17L17.59 6.58L19 8L10 17Z" />
                               </svg>
                             )}
                             {tagIndex === 1 && (
@@ -1220,438 +1117,6 @@ const Home = () => {
             </div>
           </div>
         </motion.div>
-
-        {/* 倒计时卡片 - 使用新数据 */}
-        <motion.div
-          variants={fadeIn}
-          custom={4}
-          initial="hidden"
-          animate="visible"
-          className="cursor-pointer card-container floating-element"
-          onMouseEnter={() => handleMouseEnter('countdown')}
-          onMouseLeave={() => handleMouseLeave('countdown')}
-          onClick={() => openModal('countdown')}
-        >
-          <div
-            className="h-full"
-            style={{
-              ...iosCardStyle,
-              ...(hoveredCards.countdown ? hoverStyle : {})
-            }}
-          >
-            <div
-              style={{
-                ...cardHeaderStyle
-              }}
-            >
-              <div className="flex items-center">
-                <AppleStyleIcon
-                  colorScheme="teal"
-                  size="md"
-                >
-                  <ClockIcon className="w-5 h-5 text-white" />
-                </AppleStyleIcon>
-                <div className="ml-3">
-                  <h3 className="text-base font-semibold dark:text-gray-100 text-[#2c2c2e]">倒计日</h3>
-                  <p className="text-xs dark:text-gray-400 text-gray-500 mt-0.5">剩余天数</p>
-                </div>
-              </div>
-              <div className="w-6 h-6 flex items-center justify-center rounded-full dark:bg-gray-700 bg-gray-100">
-                <span className="text-blue-500 font-semibold text-sm">{countdownData.length}</span>
-              </div>
-            </div>
-            <div style={cardBodyStyle} className="h-[calc(100%-64px)]">
-              <div className="h-full flex flex-col p-4 relative">
-                {/* 背景装饰 */}
-                <div className="absolute -top-1 -right-1 w-24 h-24 bg-gradient-to-br from-blue-400/10 to-purple-500/10 rounded-full blur-xl pointer-events-none dark:from-blue-400/5 dark:to-purple-500/5"></div>
-                <div className="absolute -bottom-4 -left-4 w-20 h-20 bg-gradient-to-tr from-green-400/10 to-yellow-500/10 rounded-full blur-lg pointer-events-none dark:from-green-400/5 dark:to-yellow-500/5"></div>
-
-                {/* 主倒计时 */}
-                <div className="flex justify-between items-start mb-3 relative z-10">
-                  <h4 className="font-medium text-lg dark:text-gray-100 text-[#2c2c2e]">{getMainCountdown(countdownData).title}</h4>
-                  <span className="text-xs py-0.5 px-2 rounded-full font-medium dark:bg-blue-500/20 dark:text-blue-400 bg-blue-100 text-blue-600">主要</span>
-                </div>
-
-                <div className="relative z-10 mb-3 flex items-center">
-                  <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 dark:from-blue-600 dark:to-blue-700 flex items-center justify-center text-white shadow-md">
-                    <div className="text-3xl font-bold">{daysLeft}</div>
-                  </div>
-                  <div className="ml-3">
-                    <div className="text-sm dark:text-gray-400 text-gray-500 mb-1">距离目标日期</div>
-                    <div className="text-sm font-medium dark:text-gray-300 text-gray-700">{getMainCountdown(countdownData).targetDate.replace(/-/g, '年') + '日'}</div>
-                  </div>
-                </div>
-
-                <div className="h-1.5 w-full dark:bg-gray-700 bg-gray-100 rounded-full overflow-hidden shadow-inner mb-3 relative z-10">
-                  <div
-                    className="h-full dark:bg-blue-500 bg-blue-500 rounded-full transition-all duration-1000"
-                    style={{ width: `${calculateProgress(getMainCountdown(countdownData))}%` }}
-                  ></div>
-                </div>
-
-                {/* 更紧凑的其他倒计时列表 */}
-                <div className="relative z-10 flex-1 overflow-hidden">
-                  <h5 className="text-xs uppercase dark:text-gray-400 text-gray-500 mb-1.5 font-medium tracking-wider">其他倒计时</h5>
-                  <div className="space-y-1.5">
-                    {countdownData.filter(item => !item.top).slice(0, 2).map((item, index) => (
-                      <div key={index} className="flex items-center justify-between">
-                        <div className="flex items-center">
-                          <div className="w-2 h-2 rounded-full mr-1.5"
-                            style={{
-                              backgroundColor: index === 0 ? '#22C55E' : '#F97316'
-                            }}
-                          ></div>
-                          <span className="text-xs dark:text-gray-300 text-gray-700">{item.title}</span>
-                        </div>
-                        <span className="text-xs font-medium dark:text-gray-300 text-gray-700">{calculateDaysLeft(item.targetDate)}天</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </motion.div>
-
-        {/* 最新博客卡片 */}
-        <motion.div
-          variants={fadeIn}
-          custom={5}
-          initial="hidden"
-          animate="visible"
-          className="md:col-span-3 cursor-pointer card-container floating-element"
-          style={{ height: '320px' }}
-          onMouseEnter={() => handleMouseEnter('blogs')}
-          onMouseLeave={() => handleMouseLeave('blogs')}
-          onClick={() => openModal('blogs')}
-        >
-          <div
-            className="h-full"
-            style={{
-              ...iosCardStyle,
-              ...(hoveredCards.blogs ? hoverStyle : {})
-            }}
-          >
-            <div
-              style={{
-                ...cardHeaderStyle
-              }}
-            >
-              <div className="flex items-center">
-                <AppleStyleIcon
-                  colorScheme="pink"
-                  size="md"
-                >
-                  <DocumentTextIcon className="w-5 h-5 text-white" />
-                </AppleStyleIcon>
-                <div className="ml-3">
-                  <h3 className="text-base font-semibold dark:text-gray-100 text-[#2c2c2e]">我的博客文章</h3>
-                  <p className="text-xs dark:text-gray-400 text-gray-500 mt-0.5">从 blog.damesck.net 获取的最新内容</p>
-                </div>
-              </div>
-              <div className="w-6 h-6 flex items-center justify-center rounded-full dark:bg-gray-700 bg-gray-100">
-                <span className="text-[#FF375F] font-semibold text-sm">{blogPosts.length || 0}</span>
-              </div>
-            </div>
-            <div style={cardBodyStyle} className="h-[calc(100%-64px)] overflow-y-auto">
-              {loading ? (
-                <div className="flex items-center justify-center h-full">
-                  <div className="animate-pulse flex flex-col items-center">
-                    <div className="h-2 w-20 dark:bg-gray-700 bg-gray-200 rounded mb-2"></div>
-                    <div className="h-2 w-16 dark:bg-gray-700 bg-gray-200 rounded"></div>
-                  </div>
-                </div>
-              ) : apiError ? (
-                <div className="flex flex-col items-center justify-center h-full p-4 text-center">
-                  <div className="text-red-500 mb-2 font-medium">请求失败 (错误代码: {apiError.code})</div>
-                  <div className="text-sm dark:text-gray-300 text-gray-700 mb-3">{apiError.message}</div>
-                  {apiError.details && (
-                    <div className="text-xs dark:text-gray-400 text-gray-500 max-w-md">{apiError.details}</div>
-                  )}
-                  <button
-                    onClick={fetchBlogPosts}
-                    className="mt-4 px-3 py-1 dark:bg-blue-900/50 dark:text-blue-300 bg-blue-100 text-blue-700 rounded-full text-xs dark:hover:bg-blue-800/70 hover:bg-blue-200 transition-colors"
-                  >
-                    重试
-                  </button>
-                </div>
-              ) : blogPosts.length > 0 ? (
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-2 px-3 py-2 h-full">
-                  {blogPosts.slice(0, 4).map((blog, index) => (
-                    <div key={index} className="dark:bg-gray-800/50 dark:hover:bg-gray-700/80 bg-gray-50/50 rounded-lg p-3 hover:bg-gray-50/80 transition-colors h-full flex flex-col">
-                      <h4 className="font-medium text-sm dark:text-gray-100 text-[#2c2c2e] truncate mb-2">{blog.title}</h4>
-                      <p className="text-xs dark:text-gray-400 text-gray-600 line-clamp-3 mb-auto">{blog.summary}</p>
-                      <div className="mt-3">
-                        <div className="flex gap-1 flex-wrap mb-2">
-                          {blog.tags.slice(0, 1).map((tag, tagIndex) => (
-                            <span key={tagIndex} className="px-1.5 py-0.5 text-xs rounded-md dark:bg-blue-900/30 dark:text-blue-400 bg-blue-50 text-blue-600">
-                              {tag.name}
-                            </span>
-                          ))}
-                        </div>
-                        <p className="text-xs dark:text-gray-500 text-gray-500 pt-2 dark:border-gray-700/50 border-t border-gray-100/50 w-full">{blog.date} · {blog.readTime}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-2 px-3 py-2 h-full">
-                  {portfolioData.blogs.slice(0, 4).map((blog: DefaultBlogPost, index) => (
-                    <div key={index} className="dark:bg-gray-800/50 dark:hover:bg-gray-700/80 bg-gray-50/50 rounded-lg p-3 hover:bg-gray-50/80 transition-colors h-full flex flex-col">
-                      <h4 className="font-medium text-sm dark:text-gray-100 text-[#2c2c2e] truncate mb-2">{blog.title}</h4>
-                      <p className="text-xs dark:text-gray-400 text-gray-600 line-clamp-3 mb-auto">{blog.summary}</p>
-                      <div className="mt-3">
-                        <div className="flex gap-1 flex-wrap mb-2">
-                          {blog.tags.slice(0, 1).map((tag, tagIndex) => (
-                            <span key={tagIndex} className="px-1.5 py-0.5 text-xs rounded-md dark:bg-blue-900/30 dark:text-blue-400 bg-blue-50 text-blue-600">
-                              {tag.name}
-                            </span>
-                          ))}
-                        </div>
-                        <p className="text-xs dark:text-gray-500 text-gray-500 pt-2 dark:border-gray-700/50 border-t border-gray-100/50 w-full">{blog.date} · {blog.readTime}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          </div>
-        </motion.div>
-      </div>
-
-      {/* 模态框 - 技能详情 */}
-      <AnimatePresence>
-        {modalOpen.skills && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            style={modalOverlayStyle}
-            onClick={() => closeModal('skills')}
-          >
-            <motion.div
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.9, opacity: 0 }}
-              style={modalContentStyle}
-              className="p-6"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div className="flex justify-between items-center mb-6">
-                <div className="flex items-center">
-                  <AppleStyleIcon
-                    colorScheme="green"
-                    size="lg"
-                  >
-                    <CodeBracketIcon className="w-6 h-6 text-white" />
-                  </AppleStyleIcon>
-                  <div className="ml-3">
-                    <h2 className="text-2xl font-bold dark:text-gray-100 text-[#2c2c2e]">部分技能详情</h2>
-                  </div>
-                </div>
-                <button
-                  className="w-8 h-8 rounded-full dark:bg-gray-700 dark:hover:bg-gray-600 bg-gray-100 flex items-center justify-center hover:bg-gray-200 transition-colors"
-                  onClick={() => closeModal('skills')}
-                >
-                  <XMarkIcon className="w-5 h-5 dark:text-gray-300 text-gray-600" />
-                </button>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {mySkills.map((skill, index) => (
-                  <div key={index} className="dark:bg-gray-800 bg-white rounded-xl p-4 shadow-sm">
-                    <h3 className={`text-lg font-semibold mb-3 dark:text-${skill.color}-400 text-${skill.color}-700`}>
-                      {skill.category}
-                    </h3>
-                    <div className="flex flex-wrap gap-2">
-                      {skill.items.map((item, itemIndex) => (
-                        <span key={itemIndex} className={`px-3 py-1 rounded-md text-sm dark:bg-${skill.color}-900/30 dark:text-${skill.color}-400 bg-${skill.color}-50 text-${skill.color}-700`}>
-                          {item}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* 模态框 - 个人资料 */}
-      <AnimatePresence>
-        {modalOpen.personal && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            style={modalOverlayStyle}
-            onClick={() => closeModal('personal')}
-          >
-            <motion.div
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.9, opacity: 0 }}
-              style={modalContentStyle}
-              className="p-6"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div className="flex justify-between items-center mb-6">
-                <div className="flex items-center">
-                  <AppleStyleIcon
-                    colorScheme="blue"
-                    size="lg"
-                  >
-                    <ChatBubbleLeftRightIcon className="w-6 h-6 text-white" />
-                  </AppleStyleIcon>
-                  <div className="ml-3">
-                    <h2 className="text-2xl font-bold dark:text-gray-100 text-[#2c2c2e]">个人资料详情</h2>
-                  </div>
-                </div>
-                <button
-                  className="w-8 h-8 rounded-full dark:bg-gray-700 dark:hover:bg-gray-600 bg-gray-100 flex items-center justify-center hover:bg-gray-200 transition-colors"
-                  onClick={() => closeModal('personal')}
-                >
-                  <XMarkIcon className="w-5 h-5 dark:text-gray-300 text-gray-600" />
-                </button>
-              </div>
-
-              <div className="flex flex-col md:flex-row gap-6">
-                <div className="md:w-1/3 flex flex-col items-center">
-                  <div className="w-40 h-40 rounded-full overflow-hidden border-4 dark:border-gray-700 border-white shadow-lg mb-4">
-                    <img
-                      src={personalInfo.avatar}
-                      alt="个人头像"
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <h3 className="text-xl font-bold dark:text-gray-100 text-[#2c2c2e] mb-1">
-                    {personalInfo.name}
-                  </h3>
-                  <p className="dark:text-gray-300 text-gray-600">
-                    {personalInfo.email}
-                  </p>
-                  <div className="mt-4 py-2 px-4 bg-blue-500 dark:bg-blue-600 rounded-full text-white text-sm font-medium">
-                    damesck.net
-                  </div>
-                </div>
-
-                <div className="md:w-2/3">
-                  <h4 className="text-lg font-medium mb-3 dark:text-gray-200 text-[#2c2c2e]">社交链接</h4>
-                  <div className="grid grid-cols-2 gap-3 mb-6">
-                    {mySocialLinks.map((link, index) => (
-                      <a
-                        key={index}
-                        href={link.url}
-                        className="flex items-center p-3 dark:bg-gray-800 dark:hover:bg-gray-700 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        {getSocialIcon(link.icon)}
-                        <span className="ml-2 dark:text-gray-300 text-gray-700">{link.name}</span>
-                      </a>
-                    ))}
-                  </div>
-
-                  <h4 className="text-lg font-medium mb-3 dark:text-gray-200 text-[#2c2c2e]">个人简介</h4>
-                  <p className="dark:text-gray-300 text-gray-600 mb-4">
-                    致不完美的明天_
-                  </p>
-                </div>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* 模态框 - 学习进度 */}
-      <AnimatePresence>
-        {modalOpen.stats && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            style={modalOverlayStyle}
-            onClick={() => closeModal('stats')}
-          >
-            <motion.div
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.9, opacity: 0 }}
-              style={modalContentStyle}
-              className="p-6"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div className="flex justify-between items-center mb-6">
-                <div className="flex items-center">
-                  <AppleStyleIcon
-                    colorScheme="indigo"
-                    size="lg"
-                  >
-                    <BookOpenIcon className="w-6 h-6 text-white" />
-                  </AppleStyleIcon>
-                  <div className="ml-3">
-                    <h2 className="text-2xl font-bold dark:text-gray-100 text-[#2c2c2e]">学习进度详情</h2>
-                  </div>
-                </div>
-                <button
-                  className="w-8 h-8 rounded-full dark:bg-gray-700 dark:hover:bg-gray-600 bg-gray-100 flex items-center justify-center hover:bg-gray-200 transition-colors"
-                  onClick={() => closeModal('stats')}
-                >
-                  <XMarkIcon className="w-5 h-5 dark:text-gray-300 text-gray-600" />
-                </button>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {myLearningProgress.map((item, index) => (
-                  <div key={index} className="dark:bg-gray-800 bg-white rounded-xl p-5 shadow-sm hover:shadow-md transition-shadow">
-                    <div className="flex items-center justify-between mb-2">
-                      <div className="flex items-center">
-                        <div
-                          className="w-4 h-4 rounded-full mr-2.5"
-                          style={{
-                            backgroundColor: item.color === 'blue' ? '#3B82F6' :
-                              item.color === 'green' ? '#22C55E' :
-                                item.color === 'yellow' ? '#EAB308' :
-                                  item.color === 'orange' ? '#F97316' :
-                                    item.color === 'indigo' ? '#6366F1' :
-                                      item.color === 'red' ? '#EF4444' :
-                                        item.color === 'purple' ? '#A855F7' :
-                                          item.color === 'pink' ? '#EC4899' : '#3B82F6'
-                          }}
-                        ></div>
-                        <h3 className="text-lg font-semibold dark:text-gray-100 text-gray-700">{item.name}</h3>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <span className="text-sm dark:text-gray-400 text-gray-600">{parseInt(item.value) < 30 ? '初学' : parseInt(item.value) < 60 ? '进阶' : parseInt(item.value) < 80 ? '熟练' : '精通'}</span>
-                        <span className="text-lg font-bold dark:text-blue-400 text-blue-600 bg-blue-50 dark:bg-blue-900/30 px-2.5 py-0.5 rounded-full">{item.value}</span>
-                      </div>
-                    </div>
-                    <div className="h-3.5 w-full dark:bg-gray-700 bg-gray-100 rounded-full overflow-hidden mb-3 shadow-inner">
-                      <div
-                        className="h-full rounded-full transition-all duration-1000 ease-out"
-                        style={{
-                          width: item.value,
-                          backgroundColor: item.color === 'blue' ? '#3B82F6' :
-                            item.color === 'green' ? '#22C55E' :
-                              item.color === 'yellow' ? '#EAB308' :
-                                item.color === 'orange' ? '#F97316' :
-                                  item.color === 'indigo' ? '#6366F1' :
-                                    item.color === 'red' ? '#EF4444' :
-                                      item.color === 'purple' ? '#A855F7' :
-                                        item.color === 'pink' ? '#EC4899' : '#3B82F6'
-                        }}
-                      ></div>
-                    </div>
-                    <p className="mt-2 text-sm dark:text-gray-400 text-gray-500 italic">
-                      "{item.description}"
-                    </p>
-                  </div>
-                ))}
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
       </AnimatePresence>
 
       {/* 模态框 - 我的设备 */}
@@ -1803,45 +1268,66 @@ const Home = () => {
 
                   {/* 主倒计时显示 */}
                   <div className="flex flex-col items-center md:flex-row md:items-start mb-6 relative">
-                    <div className="relative w-32 h-32 rounded-2xl bg-gradient-to-br from-blue-500 to-blue-600 flex flex-col items-center justify-center text-white shadow-lg mb-4 md:mb-0 overflow-hidden">
-                      <div className="absolute inset-0 backdrop-blur-sm bg-white/5"></div>
-                      <div className="z-10">
-                        <div className="text-6xl font-bold">{daysLeft}</div>
-                        <div className="text-sm font-medium text-center text-blue-100">剩余天数</div>
+                    <div className="relative w-32 h-32 flex-shrink-0 mb-4 md:mb-0">
+                      {/* 环形进度指示器 */}
+                      <div className="absolute inset-0 rounded-full bg-blue-100/30 dark:bg-blue-900/20"></div>
+                      <svg className="absolute inset-0 w-full h-full transform -rotate-90">
+                        <circle
+                          cx="64"
+                          cy="64"
+                          r="58"
+                          strokeWidth="12"
+                          stroke="currentColor"
+                          fill="transparent"
+                          strokeDasharray="364.4"
+                          strokeDashoffset={`${364.4 * (1 - calculateProgress(getMainCountdown()) / 100)}`}
+                          className="text-blue-500 dark:text-blue-400 transition-all duration-700 ease-out"
+                        />
+                      </svg>
+                      <div className="absolute inset-0 flex flex-col items-center justify-center">
+                        <div className="text-5xl font-bold text-blue-700 dark:text-blue-300">{daysLeft}</div>
+                        <div className="text-sm font-medium text-blue-600 dark:text-blue-400">剩余天数</div>
                       </div>
                     </div>
 
                     <div className="md:ml-6 flex-grow">
-                      <h3 className="text-2xl font-bold text-center md:text-left mb-3 dark:text-gray-100 text-gray-800">{getMainCountdown(countdownData).title}</h3>
-                      <div className="h-3 w-full dark:bg-gray-700 bg-gray-100 rounded-full overflow-hidden mb-3 shadow-inner">
-                        <div
-                          className="h-full bg-blue-500 rounded-full transition-all duration-1000"
-                          style={{ width: `${calculateProgress(getMainCountdown(countdownData))}%` }}
-                        ></div>
+                      <h3 className="text-2xl font-bold text-center md:text-left mb-3 dark:text-gray-100 text-gray-800">{getMainCountdown().title}</h3>
+                      <div className="flex justify-between text-sm dark:text-gray-400 text-gray-600 mb-3">
+                        <span>开始日期: {getMainCountdown().Startdate}</span>
+                        <span>目标日期: {getMainCountdown().targetDate}</span>
                       </div>
-                      <div className="flex justify-between text-sm dark:text-gray-400 text-gray-600">
-                        <span>开始日期: {getMainCountdown(countdownData).Startdate}</span>
-                        <span>目标日期: {getMainCountdown(countdownData).targetDate}</span>
+
+                      <div className="mb-3">
+                        <div className="flex justify-between items-center text-sm mb-1">
+                          <span className="dark:text-gray-400 text-gray-500">完成进度</span>
+                          <span className="font-medium dark:text-blue-400 text-blue-600">{Math.round(calculateProgress(getMainCountdown()))}%</span>
+                        </div>
+                        <div className="h-2 w-full dark:bg-gray-700 bg-gray-100 rounded-full overflow-hidden shadow-inner">
+                          <div
+                            className="h-full bg-blue-500 rounded-full transition-all duration-1000"
+                            style={{ width: `${calculateProgress(getMainCountdown())}%` }}
+                          ></div>
+                        </div>
                       </div>
 
                       <div className="grid grid-cols-3 gap-3 mt-4">
                         <div className="dark:bg-gray-700/50 bg-gray-100/80 rounded-lg p-2 flex flex-col items-center justify-center">
                           <span className="text-xs dark:text-gray-400 text-gray-500">已过天数</span>
                           <span className="text-lg font-medium dark:text-gray-200 text-gray-700">
-                            {getMainCountdown(countdownData)?.Startdate ? calculatePassedDays(getMainCountdown(countdownData).Startdate) : 0}
+                            {getMainCountdown()?.Startdate ? calculatePassedDays(getMainCountdown().Startdate) : 0}
                           </span>
                         </div>
                         <div className="dark:bg-gray-700/50 bg-gray-100/80 rounded-lg p-2 flex flex-col items-center justify-center">
                           <span className="text-xs dark:text-gray-400 text-gray-500">总天数</span>
                           <span className="text-lg font-medium dark:text-gray-200 text-gray-700">
-                            {(getMainCountdown(countdownData)?.Startdate && getMainCountdown(countdownData)?.targetDate) ?
-                              calculateTotalDays(getMainCountdown(countdownData).Startdate, getMainCountdown(countdownData).targetDate) : 0}
+                            {(getMainCountdown()?.Startdate && getMainCountdown()?.targetDate) ?
+                              calculateTotalDays(getMainCountdown().Startdate, getMainCountdown().targetDate) : 0}
                           </span>
                         </div>
                         <div className="dark:bg-gray-700/50 bg-gray-100/80 rounded-lg p-2 flex flex-col items-center justify-center">
                           <span className="text-xs dark:text-gray-400 text-gray-500">完成度</span>
                           <span className="text-lg font-medium dark:text-gray-200 text-gray-700">
-                            {Math.round(calculateProgress(getMainCountdown(countdownData)))}%
+                            {Math.round(calculateProgress(getMainCountdown()))}%
                           </span>
                         </div>
                       </div>
@@ -1863,20 +1349,38 @@ const Home = () => {
                     <div className="dark:bg-gray-700/30 bg-blue-50 rounded-xl p-4 border dark:border-blue-800/30 border-blue-100 shadow-sm relative overflow-hidden group">
                       <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 to-indigo-500/5 group-hover:from-blue-500/10 group-hover:to-indigo-500/10 transition-all duration-300"></div>
                       <div className="flex items-center justify-between mb-3 relative">
-                        <h5 className="font-semibold dark:text-blue-300 text-blue-700">{getMainCountdown(countdownData).title}</h5>
+                        <h5 className="font-semibold dark:text-blue-300 text-blue-700">{getMainCountdown().title}</h5>
                         <span className="py-0.5 px-2 text-xs rounded-full dark:bg-blue-900/40 dark:text-blue-300 bg-blue-100 text-blue-600">主要</span>
                       </div>
                       <div className="flex items-center justify-between relative">
-                        <div className="flex items-baseline">
-                          <span className="text-3xl font-bold dark:text-blue-300 text-blue-700">{daysLeft}</span>
-                          <span className="ml-1 text-sm dark:text-gray-400 text-gray-500">天</span>
+                        <div className="flex items-center">
+                          <div className="relative w-10 h-10 mr-2">
+                            <div className="absolute inset-0 rounded-full bg-blue-100/30 dark:bg-blue-900/20"></div>
+                            <svg className="absolute inset-0 w-full h-full transform -rotate-90">
+                              <circle
+                                cx="20"
+                                cy="20"
+                                r="18"
+                                strokeWidth="4"
+                                stroke="currentColor"
+                                fill="transparent"
+                                strokeDasharray="113.1"
+                                strokeDashoffset={`${113.1 * (1 - calculateProgress(getMainCountdown()) / 100)}`}
+                                className="text-blue-500 dark:text-blue-400 transition-all duration-700 ease-out"
+                              />
+                            </svg>
+                            <div className="absolute inset-0 flex items-center justify-center">
+                              <div className="text-sm font-bold text-blue-700 dark:text-blue-300">{daysLeft}</div>
+                            </div>
+                          </div>
+                          <span className="text-sm dark:text-gray-300 text-gray-700">剩余天数</span>
                         </div>
-                        <span className="text-xs dark:text-gray-400 text-gray-600">{getMainCountdown(countdownData).targetDate}</span>
+                        <span className="text-xs dark:text-gray-400 text-gray-600">{getMainCountdown().targetDate}</span>
                       </div>
                       <div className="mt-2 h-1.5 w-full dark:bg-gray-600/70 bg-blue-200/70 rounded-full overflow-hidden relative">
                         <div
                           className="h-full bg-blue-500 dark:bg-blue-400 rounded-full transition-all duration-300"
-                          style={{ width: `${calculateProgress(getMainCountdown(countdownData))}%` }}
+                          style={{ width: `${calculateProgress(getMainCountdown())}%` }}
                         ></div>
                       </div>
                     </div>
@@ -1899,9 +1403,32 @@ const Home = () => {
                           >{item.title}</h5>
                         </div>
                         <div className="flex items-center justify-between">
-                          <div className="flex items-baseline">
-                            <span className="text-2xl font-bold dark:text-gray-200 text-gray-700">{calculateDaysLeft(item.targetDate)}天</span>
-                            <span className="ml-1 text-sm dark:text-gray-400 text-gray-500">天</span>
+                          <div className="flex items-center">
+                            <div className="relative w-10 h-10 mr-2">
+                              <div className="absolute inset-0 rounded-full bg-gray-100/30 dark:bg-gray-700/20"></div>
+                              <svg className="absolute inset-0 w-full h-full transform -rotate-90">
+                                <circle
+                                  cx="20"
+                                  cy="20"
+                                  r="18"
+                                  strokeWidth="4"
+                                  stroke="currentColor"
+                                  fill="transparent"
+                                  strokeDasharray="113.1"
+                                  strokeDashoffset={`${113.1 * (1 - calculateProgress(item) / 100)}`}
+                                  style={{
+                                    color: index === 0 ? '#10B981' : '#F97316'
+                                  }}
+                                  className="transition-all duration-700 ease-out"
+                                />
+                              </svg>
+                              <div className="absolute inset-0 flex items-center justify-center">
+                                <div className="text-sm font-bold" style={{ color: index === 0 ? '#10B981' : '#F97316' }}>
+                                  {calculateDaysLeft(item.targetDate)}
+                                </div>
+                              </div>
+                            </div>
+                            <span className="text-sm dark:text-gray-300 text-gray-700">剩余天数</span>
                           </div>
                           <span className="text-xs dark:text-gray-400 text-gray-600">{item.targetDate}</span>
                         </div>
