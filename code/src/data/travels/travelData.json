@@ -21,7 +21,12 @@
         "to": "鄂尔多斯",
         "date": "2012-03-10",
         "number": "Z275",
-        "image": "https://images.unsplash.com/photo-1530521954074-e64f6810b32d"
+        "image": "https://images.unsplash.com/photo-1530521954074-e64f6810b32d",
+        "seat_type": "硬卧",
+        "ticket_id": "89757****3728",
+        "depart_time": "null",
+        "arrive_time": "null",
+        "trip_type": "单程"
       }
     ]
   },
@@ -47,7 +52,11 @@
         "to": "北京北",
         "date": "2024-06-21",
         "number": "G2496",
-        "image": "https://images.unsplash.com/photo-1577154879758-d429fc2feb0e"
+        "image": "https://images.unsplash.com/photo-1577154879758-d429fc2feb0e",
+        "seat_type": "二等座",
+        "ticket_id": "89757****4932",
+        "train_type": "高铁",
+        "trip_type": "往返"
       }
     ]
   },
@@ -81,7 +90,7 @@
     "id": "xian-2024",
     "city": "西安",
     "country": "中国",
-    "date": "2024-06-23",
+    "date": "2024-06-24",
     "coordinates": [
       108.940,
       34.341
@@ -95,11 +104,19 @@
       {
         "type": "flight",
         "ticket_type": "fly",
-        "from": "天津滨海机场T2",
+        "from": "天津滨海国际机场T2",
         "to": "西安咸阳国际机场T3",
-        "date": "2024-06-23",
+        "date": "2024-06-24",
         "number": "BK2884",
-        "image": "https://images.unsplash.com/photo-1540339832862-474599807836"
+        "seat_type": "经济舱",
+        "ticket_id": "789123****5678",
+        "depart_time": "01:00",
+        "arrive_time": "02:32",
+        "airline": "奥凯航空",
+        "gate": "226",
+        "flight_duration": "1小时32分",
+        "price": "¥496",
+        "trip_type": "单程"
       }
     ]
   },
@@ -225,11 +242,10 @@
       {
         "type": "flight",
         "ticket_type": "fly",
-        "from": "北京首都机场T3",
+        "from": "北京首都国际机场T3",
         "to": "库尔勒梨城机场",
         "date": "2024-09-12",
-        "number": "CA1257",
-        "image": "https://images.unsplash.com/photo-1540339832862-474599807836"
+        "number": "CA1257"
       }
     ]
   },

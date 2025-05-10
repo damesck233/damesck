@@ -1,10 +1,165 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { MapPinIcon, GlobeEuropeAfricaIcon, TicketIcon, ChevronRightIcon, XMarkIcon, CalendarIcon, ClockIcon } from '@heroicons/react/24/outline';
+import { MapPinIcon, GlobeEuropeAfricaIcon, TicketIcon, ChevronRightIcon, XMarkIcon, CalendarIcon, ClockIcon, PlusIcon, MinusIcon } from '@heroicons/react/24/outline';
 import 'leaflet/dist/leaflet.css';
 
 // 导入旅行数据
 import travelDataJson from '../data/travels/travelData.json';
+
+// 自定义缩放控件样式
+const leafletCustomStyles = `
+  /* 自定义缩放控件样式 */
+  .leaflet-control-zoom {
+    border: none !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12) !important;
+    border-radius: 12px !important;
+    overflow: hidden !important;
+    margin: 16px !important;
+  }
+  
+  .leaflet-control-zoom-in,
+  .leaflet-control-zoom-out {
+    width: 36px !important;
+    height: 36px !important;
+    line-height: 36px !important;
+    font-size: 18px !important;
+    background-color: rgba(255, 255, 255, 0.9) !important;
+    backdrop-filter: blur(10px) !important;
+    -webkit-backdrop-filter: blur(10px) !important;
+    color: #333 !important;
+    border: none !important;
+    transition: all 0.2s ease !important;
+  }
+  
+  .leaflet-control-zoom-in {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08) !important;
+  }
+  
+  .leaflet-control-zoom-in:hover,
+  .leaflet-control-zoom-out:hover {
+    background-color: rgba(255, 255, 255, 0.95) !important;
+    color: #0A84FF !important;
+  }
+  
+  /* 深色模式适配 */
+  .dark .leaflet-control-zoom-in,
+  .dark .leaflet-control-zoom-out {
+    background-color: rgba(50, 50, 50, 0.85) !important;
+    color: #fff !important;
+  }
+  
+  .dark .leaflet-control-zoom-in:hover,
+  .dark .leaflet-control-zoom-out:hover {
+    background-color: rgba(60, 60, 60, 0.95) !important;
+    color: #5E9EFF !important;
+  }
+  
+  /* 自定义全屏控件 */
+  .leaflet-fullscreen-control {
+    width: 36px !important;
+    height: 36px !important;
+    line-height: 36px !important;
+    background-color: rgba(255, 255, 255, 0.9) !important;
+    backdrop-filter: blur(10px) !important;
+    -webkit-backdrop-filter: blur(10px) !important;
+    color: #333 !important;
+    border: none !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12) !important;
+    border-radius: 12px !important;
+    cursor: pointer !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    transition: all 0.2s ease !important;
+    margin: 16px !important;
+  }
+  
+  .leaflet-fullscreen-control:hover {
+    background-color: rgba(255, 255, 255, 0.95) !important;
+    color: #0A84FF !important;
+  }
+  
+  .dark .leaflet-fullscreen-control {
+    background-color: rgba(50, 50, 50, 0.85) !important;
+    color: #fff !important;
+  }
+  
+  .dark .leaflet-fullscreen-control:hover {
+    background-color: rgba(60, 60, 60, 0.95) !important;
+    color: #5E9EFF !important;
+  }
+  
+  /* 自定义标记样式 */
+  .custom-marker-icon {
+    background-color: #0A84FF;
+    border-radius: 50%;
+    border: 2px solid white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  }
+  
+  /* 自定义弹出窗口样式 */
+  .leaflet-popup-content-wrapper {
+    border-radius: 12px !important;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15) !important;
+    backdrop-filter: blur(8px) !important;
+    -webkit-backdrop-filter: blur(8px) !important;
+    background-color: rgba(255, 255, 255, 0.95) !important;
+    overflow: hidden !important;
+  }
+  
+  .leaflet-popup-tip {
+    background-color: rgba(255, 255, 255, 0.95) !important;
+  }
+  
+  .dark .leaflet-popup-content-wrapper {
+    background-color: rgba(50, 50, 50, 0.9) !important;
+    color: white !important;
+  }
+  
+  .dark .leaflet-popup-tip {
+    background-color: rgba(50, 50, 50, 0.9) !important;
+  }
+  
+  .leaflet-popup-close-button {
+    padding: 8px !important;
+    font-size: 20px !important;
+    color: #666 !important;
+  }
+  
+  .dark .leaflet-popup-close-button {
+    color: #ccc !important;
+  }
+  
+  /* 自定义版权信息样式 */
+  .leaflet-control-attribution {
+    background-color: rgba(255, 255, 255, 0.9) !important;
+    backdrop-filter: blur(4px) !important;
+    -webkit-backdrop-filter: blur(4px) !important;
+    border-radius: 8px !important;
+    padding: 6px 10px !important;
+    font-size: 12px !important;
+    font-weight: 500 !important;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15) !important;
+    margin-left: 10px !important;
+    margin-bottom: 10px !important; /* 恢复正常边距 */
+    z-index: 1500 !important; /* 保持高z-index确保在最上层 */
+    border: 1px solid rgba(255, 255, 255, 0.5) !important;
+  }
+  
+  .dark .leaflet-control-attribution {
+    background-color: rgba(50, 50, 50, 0.8) !important;
+    color: #ccc !important;
+  }
+  
+  .leaflet-control-attribution a {
+    color: #0A84FF !important;
+    text-decoration: none !important;
+  }
+  
+  .dark .leaflet-control-attribution a {
+    color: #5E9EFF !important;
+  }
+`;
 
 // 坐标转换函数
 // WGS-84 to GCJ-02
@@ -65,6 +220,25 @@ const transformLng = (lng: number, lat: number) => {
   return ret;
 };
 
+// 切换全屏函数
+const toggleFullScreen = (element: HTMLElement | null) => {
+  if (!element) return;
+
+  if (!document.fullscreenElement) {
+    // 进入全屏
+    if (element.requestFullscreen) {
+      element.requestFullscreen().catch(err => {
+        console.error(`Error attempting to enable full-screen mode: ${err.message}`);
+      });
+    }
+  } else {
+    // 退出全屏
+    if (document.exitFullscreen) {
+      document.exitFullscreen();
+    }
+  }
+};
+
 // 定义旅行目的地数据类型
 interface TravelDestination {
   id: string;
@@ -82,11 +256,24 @@ interface TravelDestination {
     date: string;
     number: string;
     image?: string;
+    seat_type?: string;
+    ticket_id?: string;
+    depart_time?: string;
+    arrive_time?: string;
+    train_type?: string;
+    price?: string;
+    airline?: string;
+    gate?: string;
+    flight_duration?: string;
+    is_round_trip?: boolean; // 是否为往返票
+    trip_type?: '单程' | '往返' | '中转'; // 行程类型
   }[];
 }
 
-// 将导入的JSON数据转换为类型化数据
-const travelData: TravelDestination[] = travelDataJson as TravelDestination[];
+// 将导入的JSON数据转换为类型化数据并按日期排序（最新的在最前面）
+const travelData: TravelDestination[] = [...travelDataJson as TravelDestination[]].sort((a, b) => {
+  return new Date(b.date).getTime() - new Date(a.date).getTime();
+});
 
 // 修复票据类型
 travelData.forEach(destination => {
@@ -183,16 +370,20 @@ interface TicketProps {
 }
 
 // 火车票组件 - 12306报销凭证风格
-const TrainTicketCard: React.FC<TicketProps> = ({ ticket }) => {
+const TrainTicketCard: React.FC<TicketProps> = React.memo(({ ticket }) => {
+  // 检查是否有有效的出发和到达时间
+  const hasValidTimes = ticket.depart_time && ticket.arrive_time &&
+    ticket.depart_time !== "null" && ticket.arrive_time !== "null";
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{
-        duration: 0.4,
-        ease: [0.22, 1, 0.36, 1],
+        duration: 0.3,  // 降低动画时长
+        ease: [0.25, 0.1, 0.25, 1.0],  // 使用更高效的缓动函数
       }}
-      className="relative overflow-hidden rounded-xl backdrop-blur-xl flex mb-4"
+      className="relative overflow-hidden rounded-xl backdrop-blur-xl flex mb-4 will-change-transform"
       style={{
         background: 'var(--glass-bg)',
         border: '1px solid var(--card-border)',
@@ -221,7 +412,9 @@ const TrainTicketCard: React.FC<TicketProps> = ({ ticket }) => {
           {/* 车次信息 */}
           <div className="flex justify-between items-center mb-4">
             <div>
-              <div className="text-sm text-gray-500 dark:text-gray-400">车次</div>
+              <div className="text-sm text-gray-500 dark:text-gray-400">
+                {ticket.train_type ? `${ticket.train_type}车次` : '车次'}
+              </div>
               <div className="text-xl font-bold text-blue-600 dark:text-blue-400">{ticket.number}</div>
             </div>
             <div className="px-3 py-1 bg-blue-100 dark:bg-blue-800/30 rounded-full text-blue-600 dark:text-blue-300 text-xs font-semibold">
@@ -234,6 +427,9 @@ const TrainTicketCard: React.FC<TicketProps> = ({ ticket }) => {
             <div className="text-center">
               <div className="text-lg font-semibold">{ticket.from}</div>
               <div className="text-xs text-gray-500 dark:text-gray-400">出发站</div>
+              {hasValidTimes && ticket.depart_time && ticket.depart_time !== "null" && (
+                <div className="text-sm text-blue-600 dark:text-blue-400 mt-1">{ticket.depart_time}</div>
+              )}
             </div>
 
             <div className="flex-1 px-4 flex flex-col items-center">
@@ -249,12 +445,17 @@ const TrainTicketCard: React.FC<TicketProps> = ({ ticket }) => {
                 </div>
                 <div className="h-0.5 bg-gray-300 dark:bg-gray-600 flex-grow"></div>
               </div>
-              <div className="mt-1 text-xs text-gray-500 dark:text-gray-400">往返</div>
+              <div className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                {ticket.trip_type || (ticket.is_round_trip ? '往返' : '单程')}
+              </div>
             </div>
 
             <div className="text-center">
               <div className="text-lg font-semibold">{ticket.to}</div>
               <div className="text-xs text-gray-500 dark:text-gray-400">到达站</div>
+              {hasValidTimes && ticket.arrive_time && ticket.arrive_time !== "null" && (
+                <div className="text-sm text-blue-600 dark:text-blue-400 mt-1">{ticket.arrive_time}</div>
+              )}
             </div>
           </div>
 
@@ -268,17 +469,25 @@ const TrainTicketCard: React.FC<TicketProps> = ({ ticket }) => {
                   {ticket.date}
                 </div>
               </div>
-              <div>
-                <div className="text-xs text-gray-500 dark:text-gray-400">座位类型</div>
-                <div className="text-sm font-medium">二等座</div>
-              </div>
+              {ticket.seat_type && (
+                <div>
+                  <div className="text-xs text-gray-500 dark:text-gray-400">座位类型</div>
+                  <div className="text-sm font-medium">{ticket.seat_type}</div>
+                </div>
+              )}
+              {ticket.price && (
+                <div>
+                  <div className="text-xs text-gray-500 dark:text-gray-400">票价</div>
+                  <div className="text-sm font-medium text-orange-500">{ticket.price}</div>
+                </div>
+              )}
             </div>
           </div>
 
           {/* 底部信息 */}
           <div className="mt-4 text-xs text-gray-500 dark:text-gray-400 border-t border-dashed border-gray-300 dark:border-gray-600 pt-3">
             <div className="flex justify-between">
-              <span>票号: 89757****3728</span>
+              <span>票号: {ticket.ticket_id || '89757****3728'}</span>
               <span>旅客信息已隐藏</span>
             </div>
           </div>
@@ -286,19 +495,27 @@ const TrainTicketCard: React.FC<TicketProps> = ({ ticket }) => {
       </div>
     </motion.div>
   );
-};
+});
 
 // 飞机票组件
-const FlightTicketCard: React.FC<TicketProps> = ({ ticket }) => {
+const FlightTicketCard: React.FC<TicketProps> = React.memo(({ ticket }) => {
+  // 确认必需的数据是否存在
+  const hasValidTimes = ticket.depart_time && ticket.arrive_time &&
+    ticket.depart_time !== "null" && ticket.arrive_time !== "null";
+  const hasAirline = ticket.airline && ticket.airline !== "null";
+  const hasDuration = ticket.flight_duration && ticket.flight_duration !== "null";
+  const hasGate = ticket.gate && ticket.gate !== "null";
+  const hasPrice = ticket.price && ticket.price !== "null";
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{
-        duration: 0.4,
-        ease: [0.22, 1, 0.36, 1],
+        duration: 0.3,  // 降低动画时长
+        ease: [0.25, 0.1, 0.25, 1.0],  // 使用更高效的缓动函数
       }}
-      className="relative overflow-hidden rounded-xl backdrop-blur-xl flex mb-4"
+      className="relative overflow-hidden rounded-xl backdrop-blur-xl flex mb-4 will-change-transform"
       style={{
         background: 'linear-gradient(135deg, #f0f9ff 0%, #e1f5fe 100%)',
         border: '1px solid rgba(0,0,0,0.1)',
@@ -317,10 +534,12 @@ const FlightTicketCard: React.FC<TicketProps> = ({ ticket }) => {
             </div>
             <div>
               <div className="text-sm font-semibold text-gray-700">
-                {ticket.number.substring(0, 2) === 'CA' ? '中国国际航空' :
-                  ticket.number.substring(0, 2) === 'MU' ? '东方航空' :
-                    ticket.number.substring(0, 2) === 'CZ' ? '南方航空' :
-                      ticket.number.substring(0, 2) === 'JL' ? '日本航空' : '航空公司'}
+                {hasAirline ? ticket.airline :
+                  (ticket.number.substring(0, 2) === 'CA' ? '中国国际航空' :
+                    ticket.number.substring(0, 2) === 'MU' ? '东方航空' :
+                      ticket.number.substring(0, 2) === 'CZ' ? '南方航空' :
+                        ticket.number.substring(0, 2) === 'JL' ? '日本航空' :
+                          ticket.number.substring(0, 2) === 'BK' ? '天津航空' : '航空公司')}
               </div>
               <div className="text-xs text-gray-500">
                 航班号：{ticket.number}
@@ -336,7 +555,9 @@ const FlightTicketCard: React.FC<TicketProps> = ({ ticket }) => {
         <div className="flex items-center justify-between mb-6">
           <div className="text-center">
             <div className="text-xl font-bold text-gray-800">{ticket.from}</div>
-            <div className="text-xs text-gray-500 mt-1">09:30</div>
+            {hasValidTimes && ticket.depart_time && (
+              <div className="text-xs text-gray-500 mt-1">{ticket.depart_time}</div>
+            )}
           </div>
 
           <div className="flex-1 px-2 flex flex-col items-center mx-2">
@@ -348,7 +569,10 @@ const FlightTicketCard: React.FC<TicketProps> = ({ ticket }) => {
                   <path d="M21 13.5H7" strokeLinecap="round" />
                   <path d="M7 3.33785L2 6.83785L7 13.8378" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
-                <div className="text-xs text-gray-500 mt-1">2小时30分</div>
+                <div className="text-xs text-gray-500 mt-1">
+                  {hasDuration ? ticket.flight_duration : ""}
+                  {ticket.trip_type && <span className="ml-1">({ticket.trip_type})</span>}
+                </div>
               </div>
               <div className="h-px bg-gray-300 flex-grow"></div>
             </div>
@@ -356,7 +580,9 @@ const FlightTicketCard: React.FC<TicketProps> = ({ ticket }) => {
 
           <div className="text-center">
             <div className="text-xl font-bold text-gray-800">{ticket.to}</div>
-            <div className="text-xs text-gray-500 mt-1">12:00</div>
+            {hasValidTimes && ticket.arrive_time && (
+              <div className="text-xs text-gray-500 mt-1">{ticket.arrive_time}</div>
+            )}
           </div>
         </div>
 
@@ -369,14 +595,27 @@ const FlightTicketCard: React.FC<TicketProps> = ({ ticket }) => {
               {ticket.date}
             </div>
           </div>
-          <div>
-            <div className="text-xs text-gray-500">舱位</div>
-            <div className="text-sm font-medium text-gray-700">经济舱</div>
-          </div>
-          <div>
-            <div className="text-xs text-gray-500">登机口</div>
-            <div className="text-sm font-medium text-gray-700">B12</div>
-          </div>
+
+          {ticket.seat_type && (
+            <div>
+              <div className="text-xs text-gray-500">舱位</div>
+              <div className="text-sm font-medium text-gray-700">{ticket.seat_type}</div>
+            </div>
+          )}
+
+          {hasGate && (
+            <div>
+              <div className="text-xs text-gray-500">登机口</div>
+              <div className="text-sm font-medium text-gray-700">{ticket.gate}</div>
+            </div>
+          )}
+
+          {hasPrice && (
+            <div>
+              <div className="text-xs text-gray-500">票价</div>
+              <div className="text-sm font-medium text-orange-500">{ticket.price}</div>
+            </div>
+          )}
         </div>
 
         {/* 底部装饰 - 票据两侧的锯齿 */}
@@ -385,10 +624,10 @@ const FlightTicketCard: React.FC<TicketProps> = ({ ticket }) => {
       </div>
     </motion.div>
   );
-};
+});
 
 // 选择性渲染票据组件
-const TicketCard: React.FC<TicketProps> = ({ ticket }) => {
+const TicketCard: React.FC<TicketProps> = React.memo(({ ticket }) => {
   // 根据ticket_type选择不同票据样式
   if (ticket.ticket_type === 'Roven') {
     return <TrainTicketCard ticket={ticket} />;
@@ -396,16 +635,22 @@ const TicketCard: React.FC<TicketProps> = ({ ticket }) => {
     return <FlightTicketCard ticket={ticket} />;
   }
 
+  // 确认必需的数据是否存在
+  const hasValidTimes = ticket.depart_time && ticket.arrive_time &&
+    ticket.depart_time !== "null" && ticket.arrive_time !== "null";
+  const hasSeatType = ticket.seat_type && ticket.seat_type !== "null";
+  const hasPrice = ticket.price && ticket.price !== "null";
+
   // 默认票据样式 (兼容)
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{
-        duration: 0.4,
-        ease: [0.22, 1, 0.36, 1],
+        duration: 0.3,
+        ease: [0.25, 0.1, 0.25, 1.0],
       }}
-      className="relative overflow-hidden rounded-xl backdrop-blur-xl flex mb-4"
+      className="relative overflow-hidden rounded-xl backdrop-blur-xl flex mb-4 will-change-transform"
       style={{
         background: 'var(--glass-bg)',
         border: '1px solid var(--card-border)',
@@ -429,6 +674,7 @@ const TicketCard: React.FC<TicketProps> = ({ ticket }) => {
           <h3 className="ml-2.5 text-base font-semibold text-gray-800 dark:text-gray-100">
             {ticket.type === 'flight' ? '航班' : ticket.type === 'train' ? '火车' : ticket.type === 'bus' ? '汽车' : '船票'}
             <span className="ml-1.5 text-sm font-medium text-blue-600 dark:text-blue-400">{ticket.number}</span>
+            {ticket.trip_type && <span className="ml-2 text-xs text-gray-500 dark:text-gray-400">({ticket.trip_type})</span>}
           </h3>
         </div>
 
@@ -454,12 +700,28 @@ const TicketCard: React.FC<TicketProps> = ({ ticket }) => {
         </div>
 
         <div className="mt-3 text-xs text-gray-500 dark:text-gray-400">
-          日期: <span className="text-gray-700 dark:text-gray-300">{ticket.date}</span>
+          <div className="flex justify-between">
+            <span>日期: <span className="text-gray-700 dark:text-gray-300">{ticket.date}</span></span>
+            {hasValidTimes && (
+              <span>时间: <span className="text-gray-700 dark:text-gray-300">{ticket.depart_time} - {ticket.arrive_time}</span></span>
+            )}
+          </div>
+
+          {(hasSeatType || hasPrice) && (
+            <div className="flex justify-between mt-1">
+              {hasSeatType && (
+                <span>座位: <span className="text-gray-700 dark:text-gray-300">{ticket.seat_type}</span></span>
+              )}
+              {hasPrice && (
+                <span>票价: <span className="text-orange-500 dark:text-orange-300">{ticket.price}</span></span>
+              )}
+            </div>
+          )}
         </div>
 
         {ticket.image && (
           <div className="mt-3 rounded-lg overflow-hidden">
-            <img src={ticket.image} alt="Ticket" className="w-full h-24 object-cover" />
+            <img src={ticket.image} alt="Ticket" className="w-full h-24 object-cover" loading="lazy" />
           </div>
         )}
 
@@ -468,7 +730,7 @@ const TicketCard: React.FC<TicketProps> = ({ ticket }) => {
       </div>
     </motion.div>
   );
-};
+});
 
 // 目的地详情模态框组件
 interface DestinationModalProps {
@@ -476,7 +738,12 @@ interface DestinationModalProps {
   onClose: () => void;
 }
 
-const DestinationModal: React.FC<DestinationModalProps> = ({ destination, onClose }) => {
+// 添加图片预加载组件
+const ImagePreloader: React.FC<{ src: string }> = React.memo(({ src }) => {
+  return <img src={src} className="hidden" aria-hidden="true" alt="" />;
+});
+
+const DestinationModal: React.FC<DestinationModalProps> = React.memo(({ destination, onClose }) => {
   if (!destination) return null;
 
   return (
@@ -485,15 +752,20 @@ const DestinationModal: React.FC<DestinationModalProps> = ({ destination, onClos
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
+        transition={{ duration: 0.2 }}
         className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
         onClick={onClose}
       >
         <motion.div
-          initial={{ scale: 0.9, y: 20 }}
-          animate={{ scale: 1, y: 0 }}
-          exit={{ scale: 0.9, y: 20 }}
-          transition={{ type: "spring", stiffness: 300, damping: 25 }}
-          className="relative w-full max-w-2xl max-h-[80vh] overflow-auto rounded-2xl bg-white dark:bg-gray-900 shadow-xl"
+          initial={{ scale: 0.95, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          exit={{ scale: 0.95, opacity: 0 }}
+          transition={{
+            type: "tween",
+            duration: 0.2,
+            ease: [0.25, 0.1, 0.25, 1]
+          }}
+          className="relative w-full max-w-2xl max-h-[80vh] overflow-auto rounded-2xl bg-white dark:bg-gray-900 shadow-xl will-change-transform"
           onClick={(e) => e.stopPropagation()}
         >
           {/* 关闭按钮 */}
@@ -510,6 +782,8 @@ const DestinationModal: React.FC<DestinationModalProps> = ({ destination, onClos
               src={destination.photos[0]}
               alt={destination.city}
               className="w-full h-full object-cover"
+              loading="eager"
+              decoding="async"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
             <div className="absolute bottom-4 left-4 text-white">
@@ -541,7 +815,13 @@ const DestinationModal: React.FC<DestinationModalProps> = ({ destination, onClos
               <div className="grid grid-cols-2 gap-3">
                 {destination.photos.map((photo, idx) => (
                   <div key={idx} className="rounded-xl overflow-hidden aspect-video">
-                    <img src={photo} alt={`${destination.city} ${idx + 1}`} className="w-full h-full object-cover" />
+                    <img
+                      src={photo}
+                      alt={`${destination.city} ${idx + 1}`}
+                      className="w-full h-full object-cover"
+                      loading={idx === 0 ? "eager" : "lazy"}
+                      decoding="async"
+                    />
                   </div>
                 ))}
               </div>
@@ -551,11 +831,31 @@ const DestinationModal: React.FC<DestinationModalProps> = ({ destination, onClos
       </motion.div>
     </AnimatePresence>
   );
-};
+});
 
 // 主页面组件
 const Travels: React.FC = () => {
   const [selectedDestination, setSelectedDestination] = useState<TravelDestination | null>(null);
+  const [hoveredDestination, setHoveredDestination] = useState<string | null>(null);
+
+  // 预加载指定目的地的图片
+  const preloadDestinationImages = useCallback((destId: string) => {
+    const destination = travelData.find(d => d.id === destId);
+    if (destination) {
+      setHoveredDestination(destId);
+    }
+  }, []);
+
+  // 缓存目的地选择函数
+  const handleSelectDestination = useCallback((destination: TravelDestination) => {
+    preloadDestinationImages(destination.id);
+    setTimeout(() => setSelectedDestination(destination), 50);
+  }, [preloadDestinationImages]);
+
+  // 缓存关闭模态框函数
+  const handleCloseModal = useCallback(() => {
+    setSelectedDestination(null);
+  }, []);
 
   // 真实地图组件 - 使用Leaflet实现
   const MapComponent = () => {
@@ -563,18 +863,18 @@ const Travels: React.FC = () => {
     const mapInstanceRef = useRef<any>(null);
 
     // 计算地图中心点 - 取所有坐标的平均值，并转换为GCJ-02坐标系
-    const center: [number, number] = travelData.length > 0
-      ? (() => {
+    const center = useMemo<[number, number]>(() => {
+      if (travelData.length > 0) {
         const avgLat = travelData.reduce((sum, dest) => sum + dest.coordinates[1], 0) / travelData.length;
         const avgLng = travelData.reduce((sum, dest) => sum + dest.coordinates[0], 0) / travelData.length;
         const [gcjLng, gcjLat] = transformCoord(avgLng, avgLat);
         return [gcjLat, gcjLng]; // 纬度,经度格式
-      })()
-      : (() => {
-        // 默认中心点（成都）- 转换为GCJ-02
-        const [gcjLng, gcjLat] = transformCoord(104.07, 30.67);
-        return [gcjLat, gcjLng];
-      })();
+      }
+
+      // 默认中心点（成都）- 转换为GCJ-02
+      const [gcjLng, gcjLat] = transformCoord(104.07, 30.67);
+      return [gcjLat, gcjLng];
+    }, []);
 
     useEffect(() => {
       // 动态导入Leaflet，避免SSR问题
@@ -584,12 +884,18 @@ const Travels: React.FC = () => {
           // 确保mapRef.current不为null（TypeScript类型安全）
           if (!mapRef.current) return;
 
+          // 添加自定义样式到head
+          const styleElement = document.createElement('style');
+          styleElement.textContent = leafletCustomStyles;
+          styleElement.setAttribute('data-leaflet-custom-style', 'true');
+          document.head.appendChild(styleElement);
+
           // 初始化地图
           const map = L.map(mapRef.current, {
             center: center,
             zoom: 4,
-            zoomControl: true,
-            attributionControl: false, // 不显示attribution
+            zoomControl: true, // 保留原生缩放控件，但我们会自定义其样式
+            attributionControl: false, // 不显示默认attribution
           });
 
           // 添加高德地图图层
@@ -597,6 +903,14 @@ const Travels: React.FC = () => {
             subdomains: ["1", "2", "3", "4"],
             maxZoom: 18,
           }).addTo(map);
+
+          // 添加自定义版权信息
+          const attributionControl = L.control.attribution({
+            position: 'bottomright',
+            prefix: false
+          });
+          attributionControl.addAttribution('地图数据 &copy; <a href="https://www.amap.com/" target="_blank">高德地图</a>');
+          attributionControl.addTo(map);
 
           // 修复默认图标问题
           const defaultIcon = L.icon({
@@ -607,27 +921,67 @@ const Travels: React.FC = () => {
             popupAnchor: [1, -34],
           });
 
+          // 自定义Apple风格图标
+          const appleStyleIcon = L.divIcon({
+            className: 'custom-marker-icon',
+            html: `<div style="width: 14px; height: 14px;"></div>`,
+            iconSize: [14, 14],
+            iconAnchor: [7, 7],
+            popupAnchor: [0, -10]
+          });
+
+          // 添加自定义全屏控件
+          const FullscreenControl = L.Control.extend({
+            options: {
+              position: 'topright'
+            },
+
+            onAdd: function () {
+              const container = L.DomUtil.create('div', 'leaflet-fullscreen-control');
+              container.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M5.828 10.172a.5.5 0 0 0-.707 0l-4.096 4.096V11.5a.5.5 0 0 0-1 0v3.975a.5.5 0 0 0 .5.5H4.5a.5.5 0 0 0 0-1H1.732l4.096-4.096a.5.5 0 0 0 0-.707zm4.344 0a.5.5 0 0 1 .707 0l4.096 4.096V11.5a.5.5 0 1 1 1 0v3.975a.5.5 0 0 1-.5.5H11.5a.5.5 0 0 1 0-1h2.768l-4.096-4.096a.5.5 0 0 1 0-.707zm0-4.344a.5.5 0 0 0 .707 0l4.096-4.096V4.5a.5.5 0 1 0 1 0V.525a.5.5 0 0 0-.5-.5H11.5a.5.5 0 0 0 0 1h2.768l-4.096 4.096a.5.5 0 0 0 0 .707zm-4.344 0a.5.5 0 0 1-.707 0L1.025 1.732V4.5a.5.5 0 0 1-1 0V.525a.5.5 0 0 1 .5-.5H4.5a.5.5 0 0 1 0 1H1.732l4.096 4.096a.5.5 0 0 1 0 .707z"/></svg>';
+
+              L.DomEvent.on(container, 'click', function () {
+                toggleFullScreen(mapRef.current);
+              });
+
+              return container;
+            }
+          });
+
+          map.addControl(new FullscreenControl());
+
           // 添加标记
           travelData.forEach((dest) => {
             // 转换坐标（WGS-84 到 GCJ-02）
             const [gcjLng, gcjLat] = transformCoord(dest.coordinates[0], dest.coordinates[1]);
 
-            const marker = L.marker([gcjLat, gcjLng], { icon: defaultIcon })
+            const marker = L.marker([gcjLat, gcjLng], { icon: appleStyleIcon })
               .addTo(map);
 
             // 添加弹出信息
             marker.bindPopup(`
-              <div>
-                <h3 style="font-weight: 600; font-size: 16px;">${dest.city}</h3>
-                <p style="color: #666;">${dest.country}</p>
-                <p style="color: #888; font-size: 12px; margin-top: 4px;">
+              <div style="padding: 8px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+                <h3 style="font-weight: 600; font-size: 16px; margin: 0 0 6px 0; color: #0A84FF;">${dest.city}</h3>
+                <p style="margin: 0 0 8px 0; color: #666; font-size: 14px;">${dest.country}</p>
+                <p style="margin: 0 0 12px 0; color: #888; font-size: 12px; display: flex; align-items: center;">
+                  <svg style="width: 14px; height: 14px; margin-right: 4px; color: #0A84FF;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                  </svg>
                   ${new Date(dest.date).toLocaleDateString('zh-CN')}
                 </p>
-                <button 
-                  style="background: #3b82f6; color: white; border: none; padding: 4px 8px; border-radius: 4px; margin-top: 8px; font-size: 12px; cursor: pointer;"
-                  onclick="document.dispatchEvent(new CustomEvent('select-destination', {detail: '${dest.id}'}))">
-                  查看详情
-                </button>
+                <div style="margin-top: 5px;">
+                  <button 
+                    style="background: #0A84FF; color: white; border: none; padding: 6px 12px; border-radius: 6px; font-size: 13px; cursor: pointer; display: flex; align-items: center; justify-content: center; width: 100%; font-weight: 500;"
+                    onclick="document.dispatchEvent(new CustomEvent('select-destination', {detail: '${dest.id}'}))">
+                    <svg style="width: 14px; height: 14px; margin-right: 4px;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <polyline points="9 18 15 12 9 6"></polyline>
+                    </svg>
+                    查看详情
+                  </button>
+                </div>
               </div>
             `);
           });
@@ -653,6 +1007,11 @@ const Travels: React.FC = () => {
               mapInstanceRef.current.remove();
               mapInstanceRef.current = null;
             }
+            // 移除自定义样式
+            const customStyle = document.querySelector('style[data-leaflet-custom-style]');
+            if (customStyle) {
+              customStyle.remove();
+            }
           };
         });
       }
@@ -660,13 +1019,13 @@ const Travels: React.FC = () => {
 
     return (
       <div className="w-full h-[300px] sm:h-[400px] rounded-xl overflow-hidden backdrop-blur-lg border border-white/20 dark:border-gray-700/30">
-        <div ref={mapRef} id="map" style={{ height: '100%', width: '100%' }} className="z-0"></div>
+        <div ref={mapRef} id="map" style={{ height: '100%', width: '100%', position: 'relative' }} className="z-0"></div>
 
         {/* 地图信息覆盖层 */}
-        <div className="absolute bottom-4 left-4 right-4 z-[1000] rounded-lg backdrop-blur-md bg-white/70 dark:bg-gray-900/70 p-3 border border-white/30 dark:border-gray-700/30">
+        <div className="absolute top-4 right-4 left-auto z-[1000] rounded-lg backdrop-blur-md bg-white/70 dark:bg-gray-900/70 p-3 border border-white/30 dark:border-gray-700/30">
           <div className="flex items-center text-gray-700 dark:text-gray-300">
             <GlobeEuropeAfricaIcon className="w-5 h-5 mr-2 text-blue-500" />
-            <span className="text-sm">已经探索 <span className="font-semibold text-blue-600 dark:text-blue-400">{travelData.length}</span> 个目的地</span>
+            <span className="text-sm">已经探索 <span className="font-semibold text-blue-600 dark:text-blue-400">{travelData.length}</span> 个目的地 · 按日期排序（最新优先）</span>
           </div>
         </div>
       </div>
@@ -735,6 +1094,23 @@ const Travels: React.FC = () => {
           color="orange"
         />
 
+        <div className="mb-6 flex items-center text-sm text-gray-500 dark:text-gray-400">
+          <CalendarIcon className="w-4 h-4 mr-1 text-orange-500" />
+          <span>按日期排序 - 最新旅行优先显示</span>
+        </div>
+
+        {/* 预加载当前悬停的目的地图片 */}
+        {hoveredDestination && (
+          <>
+            {travelData
+              .find(dest => dest.id === hoveredDestination)
+              ?.photos.map((photo, idx) => (
+                <ImagePreloader key={`preload-${hoveredDestination}-${idx}`} src={photo} />
+              ))
+            }
+          </>
+        )}
+
         <div className="grid grid-cols-1 gap-8">
           {travelData.map((destination) => (
             <motion.div
@@ -742,6 +1118,7 @@ const Travels: React.FC = () => {
               whileHover={{ y: -5 }}
               transition={{ type: "spring", stiffness: 300, damping: 15 }}
               className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-lg rounded-xl overflow-hidden shadow-lg border border-white/20 dark:border-gray-700/30"
+              onMouseEnter={() => preloadDestinationImages(destination.id)}
             >
               <div className="flex flex-col md:flex-row">
                 {/* 目的地信息区 */}
@@ -751,6 +1128,10 @@ const Travels: React.FC = () => {
                       src={destination.photos[0]}
                       alt={destination.city}
                       className="w-full h-full object-cover"
+                      loading="lazy"
+                      decoding="async"
+                      width="400"
+                      height="300"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
                     <div className="absolute bottom-4 left-4 text-white">
@@ -778,7 +1159,7 @@ const Travels: React.FC = () => {
 
                   {/* 查看详情按钮 */}
                   <button
-                    onClick={() => setSelectedDestination(destination)}
+                    onClick={() => handleSelectDestination(destination)}
                     className="mt-2 flex items-center text-blue-500 dark:text-blue-400 text-sm font-medium hover:text-blue-600 dark:hover:text-blue-300 transition-colors"
                   >
                     查看更多详情
@@ -795,7 +1176,7 @@ const Travels: React.FC = () => {
       {selectedDestination && (
         <DestinationModal
           destination={selectedDestination}
-          onClose={() => setSelectedDestination(null)}
+          onClose={handleCloseModal}
         />
       )}
     </div>
