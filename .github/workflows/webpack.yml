@@ -24,6 +24,6 @@ jobs:
 
     - name: Build
       run: |
-        cd /code
+        cd code
         pnpm install
         pnpm run dev
