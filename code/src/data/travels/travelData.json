@@ -2,7 +2,7 @@
   {
     "id": "Ordos-2012",
     "city": "鄂尔多斯",
-    "country": "中国",
+    "country": "中国-内蒙古",
     "date": "2012-3-10",
     "coordinates": [
       109.781,
@@ -123,7 +123,7 @@
   {
     "id": "chengdu-2024",
     "city": "成都",
-    "country": "中国",
+    "country": "中国-四川",
     "date": "2024-6-26",
     "coordinates": [
       104.066,
@@ -227,7 +227,7 @@
   {
     "id": "Korla-2024",
     "city": "库尔勒",
-    "country": "中国",
+    "country": "中国-新疆",
     "date": "2024-09-12",
     "coordinates": [
       86.174,
@@ -252,7 +252,7 @@
   {
     "id": "Urumqi-2024",
     "city": "乌鲁木齐",
-    "country": "中国",
+    "country": "中国-新疆",
     "date": "2024-10-01",
     "coordinates": [
       87.617,

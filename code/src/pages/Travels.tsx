@@ -89,6 +89,41 @@ const leafletCustomStyles = `
     color: #5E9EFF !important;
   }
   
+  /* 自定义重置视图控件 */
+  .leaflet-reset-view-control {
+    width: 36px !important;
+    height: 36px !important;
+    line-height: 36px !important;
+    background-color: rgba(255, 255, 255, 0.9) !important;
+    backdrop-filter: blur(10px) !important;
+    -webkit-backdrop-filter: blur(10px) !important;
+    color: #333 !important;
+    border: none !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12) !important;
+    border-radius: 12px !important;
+    cursor: pointer !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    transition: all 0.2s ease !important;
+    margin: 16px !important;
+  }
+  
+  .leaflet-reset-view-control:hover {
+    background-color: rgba(255, 255, 255, 0.95) !important;
+    color: #0A84FF !important;
+  }
+  
+  .dark .leaflet-reset-view-control {
+    background-color: rgba(50, 50, 50, 0.85) !important;
+    color: #fff !important;
+  }
+  
+  .dark .leaflet-reset-view-control:hover {
+    background-color: rgba(60, 60, 60, 0.95) !important;
+    color: #5E9EFF !important;
+  }
+  
   /* 自定义标记样式 */
   .custom-marker-icon {
     background-color: #0A84FF;
@@ -948,7 +983,27 @@ const Travels: React.FC = () => {
             }
           });
 
+          // 添加重置视图控件
+          const ResetViewControl = L.Control.extend({
+            options: {
+              position: 'topright'
+            },
+
+            onAdd: function () {
+              const container = L.DomUtil.create('div', 'leaflet-reset-view-control');
+              container.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71V3.5z"/><path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm7-8A7 7 0 1 1 1 8a7 7 0 0 1 14 0z"/></svg>';
+              container.title = "恢复默认视图";
+
+              L.DomEvent.on(container, 'click', function () {
+                map.setView(center, 4);
+              });
+
+              return container;
+            }
+          });
+
           map.addControl(new FullscreenControl());
+          map.addControl(new ResetViewControl());
 
           // 添加标记
           travelData.forEach((dest) => {
