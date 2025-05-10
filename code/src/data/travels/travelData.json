@@ -1,0 +1,262 @@
+[
+  {
+    "id": "Ordos-2012",
+    "city": "鄂尔多斯",
+    "country": "中国",
+    "date": "2012-3-10",
+    "coordinates": [
+      109.781,
+      39.608
+    ],
+    "description": "人均GDP最高的城市，从小就生活在这里。草原风光辽阔，成吉思汗陵庄严肃穆，现代化的城市建设与蒙古族传统文化交相辉映。",
+    "photos": [
+      "https://data.klpbbs.com/file/tc/img/2025/05/10/681f0bb6a06ed.jpg",
+      "https://images.unsplash.com/photo-1580398390509-401f7f0356c0"
+    ],
+    "tickets": [
+      {
+        "type": "train",
+        "ticket_type": "Roven",
+        "from": "赤峰",
+        "to": "鄂尔多斯",
+        "date": "2012-03-10",
+        "number": "Z275",
+        "image": "https://images.unsplash.com/photo-1530521954074-e64f6810b32d"
+      }
+    ]
+  },
+  {
+    "id": "Beijing-2024",
+    "city": "北京",
+    "country": "中国",
+    "date": "2024-06-21",
+    "coordinates": [
+      116.407,
+      39.904
+    ],
+    "description": "作为旅行的中转站，也是中国的文化中心。参观了雄伟的故宫和长城，在798艺术区感受现代艺术氛围，品尝了正宗的北京烤鸭和豆汁儿。",
+    "photos": [
+      "https://images.unsplash.com/photo-1508804185872-d7badad00f7d",
+      "https://images.unsplash.com/photo-1551739440-5dd934d3a94a"
+    ],
+    "tickets": [
+      {
+        "type": "train",
+        "ticket_type": "Roven",
+        "from": "包头东",
+        "to": "北京北",
+        "date": "2024-06-21",
+        "number": "G2496",
+        "image": "https://images.unsplash.com/photo-1577154879758-d429fc2feb0e"
+      }
+    ]
+  },
+  {
+    "id": "Tianjin-2024",
+    "city": "天津",
+    "country": "中国",
+    "date": "2024-06-22",
+    "coordinates": [
+      117.200,
+      39.085
+    ],
+    "description": "游览了五大道的欧式建筑，漫步于古文化街感受津味民俗，品尝了正宗的狗不理包子和煎饼果子。意式风情区的异域风情和海河夜景令人难忘。",
+    "photos": [
+      "https://images.unsplash.com/photo-1591709974243-c99f3d2f3e71",
+      "https://images.unsplash.com/photo-1595568428911-6a5264fd9d1f"
+    ],
+    "tickets": [
+      {
+        "type": "train",
+        "ticket_type": "Roven",
+        "from": "北京南",
+        "to": "天津站",
+        "date": "2024-06-22",
+        "number": "C2029",
+        "image": "https://images.unsplash.com/photo-1584036553516-bf83210aa16c"
+      }
+    ]
+  },
+  {
+    "id": "xian-2024",
+    "city": "西安",
+    "country": "中国",
+    "date": "2024-06-23",
+    "coordinates": [
+      108.940,
+      34.341
+    ],
+    "description": "探索了古城墙和兵马俑的壮观历史遗迹，漫步于回民街品尝了各式陕西小吃。大雁塔和钟鼓楼的古韵厚重，让人感受到十三朝古都的历史底蕴。",
+    "photos": [
+      "https://images.unsplash.com/photo-1596030228969-39d19c126500",
+      "https://images.unsplash.com/photo-1597992758875-94fa038977ed"
+    ],
+    "tickets": [
+      {
+        "type": "flight",
+        "ticket_type": "fly",
+        "from": "天津滨海机场T2",
+        "to": "西安咸阳国际机场T3",
+        "date": "2024-06-23",
+        "number": "BK2884",
+        "image": "https://images.unsplash.com/photo-1540339832862-474599807836"
+      }
+    ]
+  },
+  {
+    "id": "chengdu-2024",
+    "city": "成都",
+    "country": "中国",
+    "date": "2024-6-26",
+    "coordinates": [
+      104.066,
+      30.659
+    ],
+    "description": "参观了成都大熊猫繁育研究基地，近距离观赏了国宝熊猫。体验了川剧变脸的神奇艺术，品尝了麻辣鲜香的正宗川菜和火锅。游览锦里古街和宽窄巷子，感受成都悠闲的生活方式和丰富的历史文化。",
+    "photos": [
+      "https://images.unsplash.com/photo-1588138902559-a52d9db3ef26",
+      "https://images.unsplash.com/photo-1612248717425-6b152baaa728"
+    ],
+    "tickets": [
+      {
+        "type": "train",
+        "ticket_type": "Roven",
+        "from": "西安北",
+        "to": "成都东",
+        "date": "2024-06-26",
+        "number": "G2241",
+        "image": "https://images.unsplash.com/photo-1518219832071-99a8bf95d5a8"
+      }
+    ]
+  },
+  {
+    "id": "Beijing-2024-9",
+    "city": "北京",
+    "country": "中国",
+    "date": "2024-9-07",
+    "coordinates": [
+      116.407,
+      39.904
+    ],
+    "description": "秋季再访北京，感受了不同于夏季的清爽氛围。游览了颐和园的秋色美景，在南锣鼓巷品尝了特色小吃，欣赏了国家大剧院的精彩演出，体验了京城深厚的文化底蕴。",
+    "photos": [
+      "https://images.unsplash.com/photo-1622957031940-b90abef1c67a",
+      "https://images.unsplash.com/photo-1639231727503-a218b11fcafb"
+    ],
+    "tickets": [
+      {
+        "type": "train",
+        "ticket_type": "Roven",
+        "from": "包头站",
+        "to": "北京北",
+        "date": "2024-09-07",
+        "number": "G2484",
+        "image": "https://images.unsplash.com/photo-1518219832071-99a8bf95d5a8"
+      }
+    ]
+  },
+  {
+    "id": "Tianjin-2024-9",
+    "city": "天津",
+    "country": "中国",
+    "date": "2024-09-08",
+    "coordinates": [
+      117.200,
+      39.085
+    ],
+    "description": "秋季访津，天气宜人。参观了天津博物馆，了解这座城市的历史变迁。在瓷房子感受艺术魅力，漫步于解放桥周边，欣赏海河两岸的城市风光。品尝了正宗的天津小吃，体验了这座城市独特的魅力。",
+    "photos": [
+      "https://images.unsplash.com/photo-1591709974261-a6e0f01ce079",
+      "https://images.unsplash.com/photo-1617695703288-5a4a1a56f6a8"
+    ],
+    "tickets": [
+      {
+        "type": "train",
+        "ticket_type": "Roven",
+        "from": "北京南",
+        "to": "天津站",
+        "date": "2024-09-08",
+        "number": "C2567",
+        "image": "https://images.unsplash.com/photo-1584036553516-bf83210aa16c"
+      }
+    ]
+  },
+  {
+    "id": "Tianjin-2024-9-back",
+    "city": "北京返程",
+    "country": "中国",
+    "date": "2024-09-11",
+    "coordinates": [
+      116.407,
+      39.904
+    ],
+    "description": "结束天津的旅行，乘坐城际列车返回北京。短短的旅程，却让人记忆深刻。高铁的快捷与舒适，让两座城市之间的往来变得简单便捷。",
+    "photos": [
+      "https://images.unsplash.com/photo-1532089006017-8d2cd1e12282",
+      "https://images.unsplash.com/photo-1599235002593-ca81139e4d6e"
+    ],
+    "tickets": [
+      {
+        "type": "train",
+        "ticket_type": "Roven",
+        "from": "天津站",
+        "to": "北京南",
+        "date": "2024-09-11",
+        "number": "C2016",
+        "image": "https://images.unsplash.com/photo-1584036553516-bf83210aa16c"
+      }
+    ]
+  },
+  {
+    "id": "Korla-2024",
+    "city": "库尔勒",
+    "country": "中国",
+    "date": "2024-09-12",
+    "coordinates": [
+      86.174,
+      41.726
+    ],
+    "description": "探访新疆库尔勒，感受塔里木盆地北缘的绿洲城市魅力。参观了库尔勒香梨博物馆，了解闻名全国的香梨文化。游览孔雀河和铁门关，体验西域风情和丰富的民族文化特色。",
+    "photos": [
+      "https://images.unsplash.com/photo-1531494391841-6ac2ef3859b8",
+      "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb"
+    ],
+    "tickets": [
+      {
+        "type": "flight",
+        "ticket_type": "fly",
+        "from": "北京首都机场T3",
+        "to": "库尔勒梨城机场",
+        "date": "2024-09-12",
+        "number": "CA1257",
+        "image": "https://images.unsplash.com/photo-1540339832862-474599807836"
+      }
+    ]
+  },
+  {
+    "id": "Urumqi-2024",
+    "city": "乌鲁木齐",
+    "country": "中国",
+    "date": "2024-10-01",
+    "coordinates": [
+      87.617,
+      43.825
+    ],
+    "description": "国庆期间游览新疆首府乌鲁木齐，登上天山感受壮丽自然风光。参观新疆博物馆了解丝绸之路文化和多民族历史。品尝了正宗的大盘鸡和烤羊肉串，体验多元文化交融的独特魅力。",
+    "photos": [
+      "https://images.unsplash.com/photo-1548918901-9b31223c5c3a",
+      "https://images.unsplash.com/photo-1629949006411-ae62c524df3d"
+    ],
+    "tickets": [
+      {
+        "type": "train",
+        "ticket_type": "Roven",
+        "from": "库尔勒站",
+        "to": "乌鲁木齐站",
+        "date": "2024-10-01",
+        "number": "C816",
+        "image": "https://images.unsplash.com/photo-1571516228128-a02a5f6b5aa6"
+      }
+    ]
+  }
+]
