@@ -65,6 +65,12 @@ const Friends = () => {
       avatar: "https://M397749490.com/logo.png",
       url: "https://M397749490.com",
       description: "M397749490.com"
+    },
+    {
+      name: "地球驿站",
+      avatar: "https://www.mugzx.top/api/avatar.png",
+      url: "https://blog.mugzx.top",
+      description: "向上革命，向下实践。"
     }
   ]);
 
