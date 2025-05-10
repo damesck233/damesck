@@ -18,14 +18,10 @@ const appleEaseIn = [0.64, 0, 0.78, 0]; // Apple风格缓入效果
 const appleEaseInOut = [0.4, 0, 0.2, 1]; // Apple风格曲线
 
 // 使用 lazy 加载页面组件，但预加载以提高速度
-const Home = lazy(() => {
-  const homePromise = import('./pages/Home');
-  return homePromise;
-});
+const Home = lazy(() => import('./pages/Home'));
 const Blog = lazy(() => import('./pages/Blog'))
 const Contact = lazy(() => import('./pages/Contact'))
 const Friends = lazy(() => import('./pages/Friends'))
-import Loading from './components/Loading'
 import WebWalker from './components/WebWalker'
 import ThemeToggle from './components/ThemeToggle'
 import { preloadResourcesWithMinTime } from './utils/preloader'
@@ -223,14 +219,12 @@ const NavigationBar = memo(({ isVisible, toggleMenu, menuOpen }: { isVisible: bo
 
 function App() {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
-  const [isPreRendering, setIsPreRendering] = useState(false);
   const [bgImageUrl, setBgImageUrl] = useState('');
   const mainContentRef = useRef<HTMLDivElement>(null);
   const [themeInitialized, setThemeInitialized] = useState(false);
   const componentsPreloaded = useRef(false);
-  // 添加控制导航栏显示的状态
-  const [navbarVisible, setNavbarVisible] = useState(false);
+  // 直接让导航栏可见
+  const [navbarVisible] = useState(true);
 
   const toggleMenu = () => {
     setMenuOpen(!menuOpen);
@@ -257,7 +251,16 @@ function App() {
   useEffect(() => {
     if (!componentsPreloaded.current) {
       // 立即开始预加载主要组件
-      import('./pages/Home');
+      const preloadPromises = [
+        import('./pages/Home'),
+        import('./pages/Contact'),
+        import('./pages/Friends')
+      ];
+
+      // 使用Promise.all并行加载
+      Promise.all(preloadPromises).catch(err => {
+        console.warn('组件预加载错误:', err);
+      });
 
       componentsPreloaded.current = true;
     }
@@ -266,91 +269,9 @@ function App() {
   useEffect(() => {
     if (!themeInitialized) return; // 等待主题初始化
 
-    // 确保加载组件显示足够长时间以完成动画，但不要太长
-    const minLoadingTime = 2000; // 减少到2秒
-    const startTime = Date.now();
-
-    // 预加载超时缩短
-    const timer = setTimeout(() => {
-      console.log('强制显示内容：预加载超时');
-      setIsLoading(false);
-      // 内容显示后，延迟显示导航栏
-      setTimeout(() => setNavbarVisible(true), 300);
-    }, 3500); // 减少超时时间
-
     // 预缓存背景图片 URL
     const bgUrl = 'https://www.loliapi.com/acg/';
-
-    // 优化预加载，并行处理更多资源
-    try {
-      console.log('开始预加载资源...');
-      const imagesToPreload = [
-        bgUrl,  // 背景图片
-        '/logo.png',  // Logo
-        '/logo.svg',  // SVG Logo for loading screen
-      ];
-
-      // 设置背景图片 URL
-      setBgImageUrl(bgUrl);
-
-      // 更提前显示预渲染内容
-      setTimeout(() => {
-        console.log('开始预渲染主内容');
-        setIsPreRendering(true);
-
-        // 确保主内容已经渲染但处于隐藏状态
-        if (mainContentRef.current) {
-          mainContentRef.current.style.visibility = 'hidden';
-          mainContentRef.current.style.opacity = '0';
-          // 确保DOM已完全加载
-          mainContentRef.current.style.display = 'block';
-        }
-      }, 1000); // 减少到1秒
-
-      preloadResourcesWithMinTime(imagesToPreload, 1000)
-        .then(() => {
-          const elapsed = Date.now() - startTime;
-          const remainingTime = Math.max(0, minLoadingTime - elapsed);
-
-          // 内容准备就绪后立即开始过渡
-          setTimeout(() => {
-            console.log('预加载完成，显示主页面');
-            clearTimeout(timer);
-
-            // 已预渲染的内容可见性变更
-            if (mainContentRef.current) {
-              mainContentRef.current.style.visibility = 'visible';
-              mainContentRef.current.style.opacity = '1';
-            }
-
-            setIsLoading(false);
-
-            // 内容显示后，延迟显示导航栏
-            setTimeout(() => setNavbarVisible(true), 300);
-          }, Math.max(100, remainingTime)); // 确保至少有100ms的延迟以允许UI更新
-        })
-        .catch(error => {
-          console.error('预加载过程出错:', error);
-          // 确保出错时也会显示页面
-          if (mainContentRef.current) {
-            mainContentRef.current.style.visibility = 'visible';
-            mainContentRef.current.style.opacity = '1';
-          }
-          setIsLoading(false);
-
-          // 内容显示后，延迟显示导航栏
-          setTimeout(() => setNavbarVisible(true), 300);
-        });
-    } catch (error) {
-      console.error('预加载初始化错误:', error);
-      // 确保出错时也会显示页面
-      setIsLoading(false);
-
-      // 内容显示后，延迟显示导航栏
-      setTimeout(() => setNavbarVisible(true), 300);
-    }
-
-    return () => clearTimeout(timer);
+    setBgImageUrl(bgUrl);
   }, [themeInitialized]); // 依赖于主题初始化
 
   return (
@@ -374,6 +295,7 @@ function App() {
         }}
         className="min-h-screen flex flex-col relative"
         style={{ minHeight: '100vh' }}
+        ref={mainContentRef}
       >
         {/* 顶部导航栏 - 使用单独的动画组件 */}
         <NavigationBar isVisible={navbarVisible} toggleMenu={toggleMenu} menuOpen={menuOpen} />
@@ -384,7 +306,7 @@ function App() {
         {/* 分离的页面内容组件 */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: !isLoading ? 1 : 0, y: !isLoading ? 0 : 20 }}
+          animate={{ opacity: 1, y: 0 }}
           transition={{
             duration: 0.8,
             ease: appleEaseOut,
@@ -398,7 +320,7 @@ function App() {
         {/* 底部栏 */}
         <motion.footer
           initial={{ opacity: 0 }}
-          animate={{ opacity: !isLoading ? 1 : 0 }}
+          animate={{ opacity: 1 }}
           transition={{
             duration: 0.8,
             ease: appleEaseOut,
@@ -419,11 +341,6 @@ function App() {
           </div>
         </motion.footer>
       </motion.div>
-
-      {/* 加载动画层 */}
-      <AnimatePresence mode="wait">
-        {isLoading && <Loading />}
-      </AnimatePresence>
     </Router>
   )
 }

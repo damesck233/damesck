@@ -24,8 +24,15 @@ export const preloadImage = (src: string): Promise<void> => {
     // 添加加载指示
     img.decoding = 'async';
 
+    // 添加超时处理，防止图片加载卡住
+    const timeout = setTimeout(() => {
+      console.warn(`图片加载超时: ${src}`);
+      resolve(); // 超时也resolve，不阻塞流程
+    }, 1500); // 1.5秒超时
+
     img.src = src;
     img.onload = () => {
+      clearTimeout(timeout);
       try {
         // 将图片存入会话缓存
         sessionStorage.setItem(`img_cache_${src}`, 'loaded');
@@ -35,6 +42,7 @@ export const preloadImage = (src: string): Promise<void> => {
       resolve();
     };
     img.onerror = () => {
+      clearTimeout(timeout);
       console.warn(`图片加载失败: ${src}`);
       resolve(); // 即使失败也resolve，不阻止整体流程
     };
@@ -47,19 +55,9 @@ export const preloadImage = (src: string): Promise<void> => {
  * @returns Promise
  */
 export const preloadImages = async (images: string[]): Promise<void> => {
-  // 分批加载，避免一次性请求过多
-  const batchSize = 3;
-  const batches = [];
-
-  for (let i = 0; i < images.length; i += batchSize) {
-    const batch = images.slice(i, i + batchSize);
-    batches.push(batch);
-  }
-
-  for (const batch of batches) {
-    const promises = batch.map(src => preloadImage(src));
-    await Promise.all(promises);
-  }
+  // 使用Promise.all并行加载所有图片，提高速度
+  const promises = images.map(src => preloadImage(src));
+  await Promise.all(promises);
 };
 
 /**
@@ -81,7 +79,7 @@ export const delay = (ms: number): Promise<void> => {
  */
 export const preloadResourcesWithMinTime = (
   images: string[],
-  minTimeMs: number = 800
+  minTimeMs: number = 500 // 减少默认最小等待时间
 ): Promise<void> => {
   // 确保参数有效
   if (!Array.isArray(images)) {
@@ -99,7 +97,7 @@ export const preloadResourcesWithMinTime = (
         return delay(minTimeMs - loadTime);
       }
     }),
-    delay(2000) // 设置最大等待时间，避免无限等待
+    delay(1500) // 减少最大等待时间，避免无限等待
   ]).then(() => {
     const loadTime = Date.now() - startTime;
     console.log(`所有资源预加载完成，耗时 ${loadTime}ms`);
