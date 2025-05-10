@@ -1,9 +1,69 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { MapPinIcon, GlobeEuropeAfricaIcon, TicketIcon, ChevronRightIcon, XMarkIcon, CalendarIcon, ClockIcon } from '@heroicons/react/24/outline';
+import 'leaflet/dist/leaflet.css';
 
 // 导入旅行数据
 import travelDataJson from '../data/travels/travelData.json';
+
+// 坐标转换函数
+// WGS-84 to GCJ-02
+const transformCoord = (lng: number, lat: number) => {
+  const PI = 3.14159265358979324;
+  const a = 6378245.0;
+  const ee = 0.00669342162296594323;
+
+  if (outOfChina(lng, lat)) {
+    return [lng, lat];
+  }
+
+  let dLat = transformLat(lng - 105.0, lat - 35.0);
+  let dLng = transformLng(lng - 105.0, lat - 35.0);
+
+  const radLat = lat / 180.0 * PI;
+  let magic = Math.sin(radLat);
+  magic = 1 - ee * magic * magic;
+
+  const sqrtMagic = Math.sqrt(magic);
+  dLat = (dLat * 180.0) / ((a * (1 - ee)) / (magic * sqrtMagic) * PI);
+  dLng = (dLng * 180.0) / (a / sqrtMagic * Math.cos(radLat) * PI);
+
+  const mgLat = lat + dLat;
+  const mgLng = lng + dLng;
+
+  return [mgLng, mgLat];
+};
+
+// 判断坐标是否在中国境外
+const outOfChina = (lng: number, lat: number) => {
+  if (lng < 72.004 || lng > 137.8347) {
+    return true;
+  }
+  if (lat < 0.8293 || lat > 55.8271) {
+    return true;
+  }
+  return false;
+};
+
+// 转换纬度
+const transformLat = (lng: number, lat: number) => {
+  let ret = -100.0 + 2.0 * lng + 3.0 * lat + 0.2 * lat * lat;
+  ret += 0.1 * lng * lat + 0.2 * Math.sqrt(Math.abs(lng));
+  ret += (20.0 * Math.sin(6.0 * lng * Math.PI) + 20.0 * Math.sin(2.0 * lng * Math.PI)) * 2.0 / 3.0;
+  ret += (20.0 * Math.sin(lat * Math.PI) + 40.0 * Math.sin(lat / 3.0 * Math.PI)) * 2.0 / 3.0;
+  ret += (160.0 * Math.sin(lat / 12.0 * Math.PI) + 320 * Math.sin(lat * Math.PI / 30.0)) * 2.0 / 3.0;
+  return ret;
+};
+
+// 转换经度
+const transformLng = (lng: number, lat: number) => {
+  let ret = 300.0 + lng + 2.0 * lat + 0.1 * lng * lng;
+  ret += 0.1 * lng * lat + 0.1 * Math.sqrt(Math.abs(lng));
+  ret += (20.0 * Math.sin(6.0 * lng * Math.PI) + 20.0 * Math.sin(2.0 * lng * Math.PI)) * 2.0 / 3.0;
+  ret += (20.0 * Math.sin(lng * Math.PI) + 40.0 * Math.sin(lng / 3.0 * Math.PI)) * 2.0 / 3.0;
+  ret += (150.0 * Math.sin(lng / 12.0 * Math.PI) + 300.0 * Math.sin(lng / 30.0 * Math.PI)) * 2.0 / 3.0;
+  return ret;
+};
 
 // 定义旅行目的地数据类型
 interface TravelDestination {
@@ -497,47 +557,121 @@ const DestinationModal: React.FC<DestinationModalProps> = ({ destination, onClos
 const Travels: React.FC = () => {
   const [selectedDestination, setSelectedDestination] = useState<TravelDestination | null>(null);
 
-  // 模拟地图组件 - 实际项目中可以使用Leaflet、Google Maps或高德地图等地图库
-  const MapPlaceholder = () => (
-    <div className="relative w-full h-[300px] sm:h-[400px] rounded-xl overflow-hidden backdrop-blur-lg border border-white/20 dark:border-gray-700/30 bg-white/20 dark:bg-gray-900/30">
-      {/* 模拟地图背景 */}
-      <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1569336415962-a4bd9f69c8bf')] bg-cover bg-center opacity-40"></div>
+  // 真实地图组件 - 使用Leaflet实现
+  const MapComponent = () => {
+    const mapRef = useRef<HTMLDivElement>(null);
+    const mapInstanceRef = useRef<any>(null);
 
-      {/* 地图标记 */}
-      {travelData.map((dest) => (
-        <button
-          key={dest.id}
-          onClick={() => setSelectedDestination(dest)}
-          className="absolute z-10 group"
-          style={{
-            left: `${((dest.coordinates[0] + 180) / 360) * 100}%`,
-            top: `${((90 - dest.coordinates[1]) / 180) * 100}%`,
-            transform: 'translate(-50%, -50%)'
-          }}
-        >
-          <div className="flex flex-col items-center">
-            <div className="relative">
-              <div className="animate-ping absolute w-4 h-4 rounded-full bg-blue-400 opacity-75"></div>
-              <div className="relative w-5 h-5 rounded-full bg-blue-500 flex items-center justify-center">
-                <MapPinIcon className="w-3 h-3 text-white" />
+    // 计算地图中心点 - 取所有坐标的平均值，并转换为GCJ-02坐标系
+    const center: [number, number] = travelData.length > 0
+      ? (() => {
+        const avgLat = travelData.reduce((sum, dest) => sum + dest.coordinates[1], 0) / travelData.length;
+        const avgLng = travelData.reduce((sum, dest) => sum + dest.coordinates[0], 0) / travelData.length;
+        const [gcjLng, gcjLat] = transformCoord(avgLng, avgLat);
+        return [gcjLat, gcjLng]; // 纬度,经度格式
+      })()
+      : (() => {
+        // 默认中心点（成都）- 转换为GCJ-02
+        const [gcjLng, gcjLat] = transformCoord(104.07, 30.67);
+        return [gcjLat, gcjLng];
+      })();
+
+    useEffect(() => {
+      // 动态导入Leaflet，避免SSR问题
+      if (typeof window !== 'undefined' && mapRef.current && !mapInstanceRef.current) {
+        // 动态导入Leaflet
+        import('leaflet').then((L) => {
+          // 确保mapRef.current不为null（TypeScript类型安全）
+          if (!mapRef.current) return;
+
+          // 初始化地图
+          const map = L.map(mapRef.current, {
+            center: center,
+            zoom: 4,
+            zoomControl: true,
+            attributionControl: false, // 不显示attribution
+          });
+
+          // 添加高德地图图层
+          L.tileLayer('https://webrd0{s}.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=8&x={x}&y={y}&z={z}', {
+            subdomains: ["1", "2", "3", "4"],
+            maxZoom: 18,
+          }).addTo(map);
+
+          // 修复默认图标问题
+          const defaultIcon = L.icon({
+            iconUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png',
+            shadowUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-shadow.png',
+            iconSize: [25, 41],
+            iconAnchor: [12, 41],
+            popupAnchor: [1, -34],
+          });
+
+          // 添加标记
+          travelData.forEach((dest) => {
+            // 转换坐标（WGS-84 到 GCJ-02）
+            const [gcjLng, gcjLat] = transformCoord(dest.coordinates[0], dest.coordinates[1]);
+
+            const marker = L.marker([gcjLat, gcjLng], { icon: defaultIcon })
+              .addTo(map);
+
+            // 添加弹出信息
+            marker.bindPopup(`
+              <div>
+                <h3 style="font-weight: 600; font-size: 16px;">${dest.city}</h3>
+                <p style="color: #666;">${dest.country}</p>
+                <p style="color: #888; font-size: 12px; margin-top: 4px;">
+                  ${new Date(dest.date).toLocaleDateString('zh-CN')}
+                </p>
+                <button 
+                  style="background: #3b82f6; color: white; border: none; padding: 4px 8px; border-radius: 4px; margin-top: 8px; font-size: 12px; cursor: pointer;"
+                  onclick="document.dispatchEvent(new CustomEvent('select-destination', {detail: '${dest.id}'}))">
+                  查看详情
+                </button>
               </div>
-            </div>
-            <div className="opacity-0 group-hover:opacity-100 transition-opacity mt-1 bg-white dark:bg-gray-900 rounded-lg px-2 py-1 text-xs shadow-lg whitespace-nowrap">
-              {dest.city}, {dest.country}
-            </div>
-          </div>
-        </button>
-      ))}
+            `);
+          });
 
-      {/* 地图信息覆盖层 */}
-      <div className="absolute bottom-4 left-4 right-4 rounded-lg backdrop-blur-md bg-white/70 dark:bg-gray-900/70 p-3 border border-white/30 dark:border-gray-700/30">
-        <div className="flex items-center text-gray-700 dark:text-gray-300">
-          <GlobeEuropeAfricaIcon className="w-5 h-5 mr-2 text-blue-500" />
-          <span className="text-sm">已经探索 <span className="font-semibold text-blue-600 dark:text-blue-400">{travelData.length}</span> 个目的地</span>
+          // 保存地图实例以便清理
+          mapInstanceRef.current = map;
+
+          // 添加事件监听器处理标记点击
+          const handleSelectDestination = (event: CustomEvent) => {
+            const destId = event.detail;
+            const destination = travelData.find(d => d.id === destId);
+            if (destination) {
+              setSelectedDestination(destination);
+            }
+          };
+
+          document.addEventListener('select-destination', handleSelectDestination as EventListener);
+
+          // 清理函数
+          return () => {
+            document.removeEventListener('select-destination', handleSelectDestination as EventListener);
+            if (mapInstanceRef.current) {
+              mapInstanceRef.current.remove();
+              mapInstanceRef.current = null;
+            }
+          };
+        });
+      }
+    }, []);
+
+    return (
+      <div className="w-full h-[300px] sm:h-[400px] rounded-xl overflow-hidden backdrop-blur-lg border border-white/20 dark:border-gray-700/30">
+        <div ref={mapRef} id="map" style={{ height: '100%', width: '100%' }} className="z-0"></div>
+
+        {/* 地图信息覆盖层 */}
+        <div className="absolute bottom-4 left-4 right-4 z-[1000] rounded-lg backdrop-blur-md bg-white/70 dark:bg-gray-900/70 p-3 border border-white/30 dark:border-gray-700/30">
+          <div className="flex items-center text-gray-700 dark:text-gray-300">
+            <GlobeEuropeAfricaIcon className="w-5 h-5 mr-2 text-blue-500" />
+            <span className="text-sm">已经探索 <span className="font-semibold text-blue-600 dark:text-blue-400">{travelData.length}</span> 个目的地</span>
+          </div>
         </div>
       </div>
-    </div>
-  );
+    );
+  };
 
   const SectionTitle = ({ icon, title, color = "blue" }: { icon: React.ReactNode, title: string, color?: string }) => {
     const getGradientColor = () => {
@@ -586,7 +720,7 @@ const Travels: React.FC = () => {
           title="旅行地图"
           color="blue"
         />
-        <MapPlaceholder />
+        <MapComponent />
       </motion.section>
 
       {/* 目的地列表 */}
