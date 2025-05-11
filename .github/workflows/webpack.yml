@@ -37,8 +37,8 @@ jobs:
         script: |
           cd ~/damesck/code
           git pull origin main
-          pnpm install
-          pnpm build
+          /root/.nvm/versions/node/v22.15.0/bin/pnpm install
+          /root/.nvm/versions/node/v22.15.0/bin/pnpm build
           cd ..
           docker-compose down
           docker-compose up -d --build
