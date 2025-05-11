@@ -253,6 +253,10 @@ const leafletCustomStyles = `
     border: 1px solid rgba(255, 255, 255, 0.5) !important;
     max-width: calc(100% - 32px) !important;
     white-space: nowrap !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    line-height: 1.2 !important;
   }
   
   .dark .leaflet-control-attribution {

@@ -1,36 +1,5 @@
 [
   {
-    "id": "Ordos-2012",
-    "city": "鄂尔多斯",
-    "country": "中国-内蒙古",
-    "date": "2012-3-10",
-    "coordinates": [
-      109.781,
-      39.608
-    ],
-    "description": "人均GDP最高的城市，从小就生活在这里。草原风光辽阔，成吉思汗陵庄严肃穆，现代化的城市建设与蒙古族传统文化交相辉映。",
-    "photos": [
-      "https://data.klpbbs.com/file/tc/img/2025/05/10/681f0bb6a06ed.jpg",
-      "https://images.unsplash.com/photo-1580398390509-401f7f0356c0"
-    ],
-    "tickets": [
-      {
-        "type": "train",
-        "ticket_type": "Roven",
-        "from": "赤峰",
-        "to": "鄂尔多斯",
-        "date": "2012-03-10",
-        "number": "Z275",
-        "image": "https://images.unsplash.com/photo-1530521954074-e64f6810b32d",
-        "seat_type": "硬卧",
-        "ticket_id": "89757****3728",
-        "depart_time": "null",
-        "arrive_time": "null",
-        "trip_type": "单程"
-      }
-    ]
-  },
-  {
     "id": "Beijing-2024",
     "city": "北京",
     "country": "中国",
@@ -41,8 +10,8 @@
     ],
     "description": "作为旅行的中转站，也是中国的文化中心。参观了雄伟的故宫和长城，在798艺术区感受现代艺术氛围，品尝了正宗的北京烤鸭和豆汁儿。",
     "photos": [
-      "https://images.unsplash.com/photo-1508804185872-d7badad00f7d",
-      "https://images.unsplash.com/photo-1551739440-5dd934d3a94a"
+      "https://data.klpbbs.com/file/tc/img/2025/05/11/682057c095887.jpg",
+      "https://data.klpbbs.com/file/tc/img/2025/05/11/682057ca6bfa7.jpg"
     ],
     "tickets": [
       {
@@ -56,7 +25,7 @@
         "seat_type": "二等座",
         "ticket_id": "89757****4932",
         "train_type": "高铁",
-        "trip_type": "往返"
+        "trip_type": "单程"
       }
     ]
   },
@@ -71,8 +40,8 @@
     ],
     "description": "游览了五大道的欧式建筑，漫步于古文化街感受津味民俗，品尝了正宗的狗不理包子和煎饼果子。意式风情区的异域风情和海河夜景令人难忘。",
     "photos": [
-      "https://images.unsplash.com/photo-1591709974243-c99f3d2f3e71",
-      "https://images.unsplash.com/photo-1595568428911-6a5264fd9d1f"
+      "https://data.klpbbs.com/file/tc/img/2025/05/11/6820587243bdc.jpg",
+      "https://data.klpbbs.com/file/tc/img/2025/05/11/682058749b114.jpg"
     ],
     "tickets": [
       {
@@ -97,8 +66,8 @@
     ],
     "description": "探索了古城墙和兵马俑的壮观历史遗迹，漫步于回民街品尝了各式陕西小吃。大雁塔和钟鼓楼的古韵厚重，让人感受到十三朝古都的历史底蕴。",
     "photos": [
-      "https://images.unsplash.com/photo-1596030228969-39d19c126500",
-      "https://images.unsplash.com/photo-1597992758875-94fa038977ed"
+      "https://data.klpbbs.com/file/tc/img/2025/05/11/682058e69f756.jpg",
+      "https://data.klpbbs.com/file/tc/img/2025/05/11/682058e85d347.jpg"
     ],
     "tickets": [
       {
