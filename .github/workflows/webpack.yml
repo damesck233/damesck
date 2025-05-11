@@ -35,10 +35,14 @@ jobs:
         password: ${{ secrets.SERVER_PASSWORD }}
         port: ${{ secrets.SERVER_PORT }}
         script: |
+          export NVM_DIR="$HOME/.nvm"
+          source $NVM_DIR/nvm.sh
+          nvm use 22
           cd ~/damesck/code
-          git pull origin main
-          /root/.nvm/versions/node/v22.15.0/bin/pnpm install
-          /root/.nvm/versions/node/v22.15.0/bin/pnpm build
+          git fetch --all
+          git reset --hard origin/main
+          pnpm install
+          pnpm build
           cd ..
           docker-compose down
           docker-compose up -d --build
