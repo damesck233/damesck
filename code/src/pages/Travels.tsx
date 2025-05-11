@@ -8,13 +8,25 @@ import travelDataJson from '../data/travels/travelData.json';
 
 // 自定义缩放控件样式
 const leafletCustomStyles = `
+  /* 控件组样式 - 左侧控件 */
+  .leaflet-top.leaflet-left {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 8px !important;
+  }
+
+  .leaflet-top.leaflet-left .leaflet-control {
+    clear: none !important;
+    margin-left: 16px !important;
+  }
+  
   /* 自定义缩放控件样式 */
   .leaflet-control-zoom {
     border: none !important;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12) !important;
     border-radius: 12px !important;
     overflow: hidden !important;
-    margin: 16px !important;
+    margin: 16px 0 0 16px !important;
   }
   
   .leaflet-control-zoom-in,
@@ -71,7 +83,7 @@ const leafletCustomStyles = `
     align-items: center !important;
     justify-content: center !important;
     transition: all 0.2s ease !important;
-    margin: 16px !important;
+    margin: 8px 0 0 16px !important;
   }
   
   .leaflet-fullscreen-control:hover {
@@ -106,7 +118,7 @@ const leafletCustomStyles = `
     align-items: center !important;
     justify-content: center !important;
     transition: all 0.2s ease !important;
-    margin: 16px !important;
+    margin: 8px 0 0 16px !important;
   }
   
   .leaflet-reset-view-control:hover {
@@ -122,6 +134,66 @@ const leafletCustomStyles = `
   .dark .leaflet-reset-view-control:hover {
     background-color: rgba(60, 60, 60, 0.95) !important;
     color: #5E9EFF !important;
+  }
+  
+  /* 控件动画效果 */
+  .leaflet-fullscreen-control,
+  .leaflet-reset-view-control,
+  .leaflet-control-zoom {
+    transition: transform 0.2s ease, box-shadow 0.2s ease !important;
+  }
+  
+  .leaflet-fullscreen-control:active,
+  .leaflet-reset-view-control:active,
+  .leaflet-control-zoom-in:active,
+  .leaflet-control-zoom-out:active {
+    transform: scale(0.95) !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+  }
+  
+  /* 移动设备优化 */
+  @media (max-width: 768px) {
+    .leaflet-control-zoom,
+    .leaflet-fullscreen-control,
+    .leaflet-reset-view-control {
+      margin-left: 12px !important;
+    }
+    
+    .leaflet-control-zoom {
+      margin-top: 12px !important;
+    }
+    
+    .leaflet-fullscreen-control {
+      margin-top: 8px !important;
+    }
+    
+    .leaflet-reset-view-control {
+      margin-top: 8px !important;
+    }
+    
+    .leaflet-control-zoom-in,
+    .leaflet-control-zoom-out,
+    .leaflet-fullscreen-control,
+    .leaflet-reset-view-control {
+      width: 32px !important;
+      height: 32px !important;
+      line-height: 32px !important;
+    }
+    
+    .leaflet-top.leaflet-left {
+      gap: 6px !important;
+    }
+  }
+  
+  /* 右侧控件样式 */
+  .leaflet-top.leaflet-right {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 8px !important;
+  }
+
+  .leaflet-top.leaflet-right .leaflet-control {
+    clear: none !important;
   }
   
   /* 自定义标记样式 */
@@ -175,10 +247,12 @@ const leafletCustomStyles = `
     font-size: 12px !important;
     font-weight: 500 !important;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15) !important;
-    margin-left: 10px !important;
-    margin-bottom: 10px !important; /* 恢复正常边距 */
-    z-index: 1500 !important; /* 保持高z-index确保在最上层 */
+    margin-right: 16px !important;
+    margin-bottom: 16px !important; 
+    z-index: 1500 !important;
     border: 1px solid rgba(255, 255, 255, 0.5) !important;
+    max-width: calc(100% - 32px) !important;
+    white-space: nowrap !important;
   }
   
   .dark .leaflet-control-attribution {
@@ -968,12 +1042,12 @@ const Travels: React.FC = () => {
           // 添加自定义全屏控件
           const FullscreenControl = L.Control.extend({
             options: {
-              position: 'topright'
+              position: 'topleft'
             },
 
             onAdd: function () {
               const container = L.DomUtil.create('div', 'leaflet-fullscreen-control');
-              container.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M5.828 10.172a.5.5 0 0 0-.707 0l-4.096 4.096V11.5a.5.5 0 0 0-1 0v3.975a.5.5 0 0 0 .5.5H4.5a.5.5 0 0 0 0-1H1.732l4.096-4.096a.5.5 0 0 0 0-.707zm4.344 0a.5.5 0 0 1 .707 0l4.096 4.096V11.5a.5.5 0 1 1 1 0v3.975a.5.5 0 0 1-.5.5H11.5a.5.5 0 0 1 0-1h2.768l-4.096-4.096a.5.5 0 0 1 0-.707zm0-4.344a.5.5 0 0 0 .707 0l4.096-4.096V4.5a.5.5 0 1 0 1 0V.525a.5.5 0 0 0-.5-.5H11.5a.5.5 0 0 0 0 1h2.768l-4.096 4.096a.5.5 0 0 0 0 .707zm-4.344 0a.5.5 0 0 1-.707 0L1.025 1.732V4.5a.5.5 0 0 1-1 0V.525a.5.5 0 0 1 .5-.5H4.5a.5.5 0 0 1 0 1H1.732l4.096 4.096a.5.5 0 0 1 0 .707z"/></svg>';
+              container.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M6.75 4.5C6.75 4.08579 6.41421 3.75 6 3.75C5.58579 3.75 5.25 4.08579 5.25 4.5V8.25C5.25 8.66421 5.58579 9 6 9H9.75C10.1642 9 10.5 8.66421 10.5 8.25C10.5 7.83579 10.1642 7.5 9.75 7.5H6.75V4.5Z"></path><path d="M17.25 4.5C17.25 4.08579 17.5858 3.75 18 3.75C18.4142 3.75 18.75 4.08579 18.75 4.5V8.25C18.75 8.66421 18.4142 9 18 9H14.25C13.8358 9 13.5 8.66421 13.5 8.25C13.5 7.83579 13.8358 7.5 14.25 7.5H17.25V4.5Z"></path><path d="M18 14.25C18.4142 14.25 18.75 14.5858 18.75 15V18.75H17.25V15.75H14.25C13.8358 15.75 13.5 15.4142 13.5 15C13.5 14.5858 13.8358 14.25 14.25 14.25H18Z"></path><path d="M9.75 14.25C10.1642 14.25 10.5 14.5858 10.5 15C10.5 15.4142 10.1642 15.75 9.75 15.75H6.75V18.75H5.25V15C5.25 14.5858 5.58579 14.25 6 14.25H9.75Z"></path></svg>';
 
               L.DomEvent.on(container, 'click', function () {
                 toggleFullScreen(mapRef.current);
@@ -986,12 +1060,12 @@ const Travels: React.FC = () => {
           // 添加重置视图控件
           const ResetViewControl = L.Control.extend({
             options: {
-              position: 'topright'
+              position: 'topleft'
             },
 
             onAdd: function () {
               const container = L.DomUtil.create('div', 'leaflet-reset-view-control');
-              container.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71V3.5z"/><path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm7-8A7 7 0 1 1 1 8a7 7 0 0 1 14 0z"/></svg>';
+              container.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M12 4.5C7.44 4.5 3.75 8.19 3.75 12.75C3.75 17.31 7.44 21 12 21C16.56 21 20.25 17.31 20.25 12.75C20.25 12.3358 20.5858 12 21 12C21.4142 12 21.75 12.3358 21.75 12.75C21.75 18.1383 17.3883 22.5 12 22.5C6.61172 22.5 2.25 18.1383 2.25 12.75C2.25 7.36172 6.61172 3 12 3C12.4142 3 12.75 3.33579 12.75 3.75C12.75 4.16421 12.4142 4.5 12 4.5Z"></path><path d="M16.5 7.5C16.5 6.67157 17.1716 6 18 6C18.8284 6 19.5 6.67157 19.5 7.5C19.5 8.32843 18.8284 9 18 9C17.1716 9 16.5 8.32843 16.5 7.5Z"></path><path d="M12 7.5C12.4142 7.5 12.75 7.83579 12.75 8.25V12.0858L15.3223 14.6581C15.6152 14.951 15.6152 15.4259 15.3223 15.7188C15.0294 16.0116 14.5546 16.0116 14.2617 15.7188L11.4697 12.9268C11.329 12.7861 11.25 12.5987 11.25 12.4032V8.25C11.25 7.83579 11.5858 7.5 12 7.5Z"></path></svg>';
               container.title = "恢复默认视图";
 
               L.DomEvent.on(container, 'click', function () {
@@ -1077,7 +1151,7 @@ const Travels: React.FC = () => {
         <div ref={mapRef} id="map" style={{ height: '100%', width: '100%', position: 'relative' }} className="z-0"></div>
 
         {/* 地图信息覆盖层 */}
-        <div className="absolute top-4 right-4 left-auto z-[1000] rounded-lg backdrop-blur-md bg-white/70 dark:bg-gray-900/70 p-3 border border-white/30 dark:border-gray-700/30">
+        <div className="absolute top-4 right-4 z-[1000] rounded-lg backdrop-blur-md bg-white/70 dark:bg-gray-900/70 p-3 border border-white/30 dark:border-gray-700/30">
           <div className="flex items-center text-gray-700 dark:text-gray-300">
             <GlobeEuropeAfricaIcon className="w-5 h-5 mr-2 text-blue-500" />
             <span className="text-sm">已经探索 <span className="font-semibold text-blue-600 dark:text-blue-400">{travelData.length}</span> 个目的地 · 按日期排序（最新优先）</span>

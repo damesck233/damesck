@@ -29,4 +29,4 @@ jobs:
       run: |
         cd code
         pnpm install
-        pnpm run build  # 或你自定义的构建命令
+        pnpm run build
