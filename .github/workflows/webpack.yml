@@ -20,9 +20,25 @@ jobs:
 
     - name: 安装pnpm
       run: npm install -g pnpm
-      
+
     - name: 安装依赖
       run: cd code && pnpm install
 
     - name: 构建
       run: cd code && pnpm run build
+
+    - name: 连接服务器并部署
+      uses: appleboy/ssh-action@v1.0.0
+      with:
+        host: ${{ secrets.SERVER_IP }}
+        username: root
+        password: ${{ secrets.SERVER_PASSWORD }}
+        port: ${{ secrets.SERVER_PORT }}
+        script: |
+          cd ~/damesck/code
+          git pull origin main
+          pnpm install
+          pnpm build
+          cd ..
+          docker-compose down
+          docker-compose up -d --build
