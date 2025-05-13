@@ -1460,29 +1460,142 @@ const Home = () => {
                   <div className="mt-4 py-2 px-4 bg-blue-500 dark:bg-blue-600 rounded-full text-white text-sm font-medium">
                     damesck.net
                   </div>
+
+                  {/* 社交链接 - 移动到侧边栏 */}
+                  <div className="mt-6 w-full">
+                    <h4 className="text-lg font-medium mb-3 dark:text-gray-200 text-[#2c2c2e]">社交链接</h4>
+                    <div className="grid grid-cols-1 gap-3">
+                      {mySocialLinks.map((link, index) => (
+                        <a
+                          key={index}
+                          href={link.url}
+                          className="flex items-center p-3 rounded-xl backdrop-blur-sm transition-all duration-300 hover:translate-y-[-2px] border dark:border-white/10 border-black/5 relative overflow-hidden group"
+                          style={{
+                            background: index === 0 ? 'linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(37, 99, 235, 0.1))' :
+                              index === 1 ? 'linear-gradient(135deg, rgba(236, 72, 153, 0.1), rgba(219, 39, 119, 0.1))' :
+                                index === 2 ? 'linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(5, 150, 105, 0.1))' :
+                                  'linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(124, 58, 237, 0.1))',
+                            boxShadow: '0 2px 10px rgba(0, 0, 0, 0.05)'
+                          }}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          {/* 背景装饰 */}
+                          <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
+                            style={{
+                              background: index === 0 ? 'linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(37, 99, 235, 0.2))' :
+                                index === 1 ? 'linear-gradient(135deg, rgba(236, 72, 153, 0.2), rgba(219, 39, 119, 0.2))' :
+                                  index === 2 ? 'linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(5, 150, 105, 0.2))' :
+                                    'linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(124, 58, 237, 0.2))'
+                            }}
+                          ></div>
+
+                          <div className="w-9 h-9 rounded-full flex items-center justify-center mr-3 relative"
+                            style={{
+                              background: index === 0 ? 'linear-gradient(135deg, #3B82F6, #2563EB)' :
+                                index === 1 ? 'linear-gradient(135deg, #EC4899, #DB2777)' :
+                                  index === 2 ? 'linear-gradient(135deg, #10B981, #059669)' :
+                                    'linear-gradient(135deg, #8B5CF6, #7C3AED)',
+                              boxShadow: index === 0 ? '0 2px 5px rgba(59, 130, 246, 0.3)' :
+                                index === 1 ? '0 2px 5px rgba(236, 72, 153, 0.3)' :
+                                  index === 2 ? '0 2px 5px rgba(16, 185, 129, 0.3)' :
+                                    '0 2px 5px rgba(139, 92, 246, 0.3)'
+                            }}
+                          >
+                            <div className="text-white">
+                              {getSocialIcon(link.icon)}
+                            </div>
+                            {/* 顶部亮光效果 */}
+                            <div className="absolute inset-0 rounded-full overflow-hidden">
+                              <div className="absolute top-0 left-1/4 right-1/4 h-1/2 bg-white/20 blur-sm"></div>
+                            </div>
+                          </div>
+
+                          <div className="flex-grow">
+                            <span className="font-medium dark:text-gray-200 text-gray-800 block">{link.name}</span>
+                            <span className="text-xs dark:text-gray-400 text-gray-500 block mt-0.5">
+                              {link.url.replace(/^https?:\/\//, '').replace(/\/$/, '')}
+                            </span>
+                          </div>
+
+                          <div className="ml-2">
+                            <svg className="w-4 h-4 dark:text-gray-400 text-gray-400 group-hover:translate-x-1 transition-transform duration-300" viewBox="0 0 20 20" fill="currentColor">
+                              <path fillRule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clipRule="evenodd" />
+                            </svg>
+                          </div>
+                        </a>
+                      ))}
+                    </div>
+                  </div>
                 </div>
 
                 <div className="md:w-2/3">
-                  <h4 className="text-lg font-medium mb-3 dark:text-gray-200 text-[#2c2c2e]">社交链接</h4>
-                  <div className="grid grid-cols-2 gap-3 mb-6">
-                    {mySocialLinks.map((link, index) => (
-                      <a
-                        key={index}
-                        href={link.url}
-                        className="flex items-center p-3 dark:bg-gray-800 dark:hover:bg-gray-700 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        {getSocialIcon(link.icon)}
-                        <span className="ml-2 dark:text-gray-300 text-gray-700">{link.name}</span>
-                      </a>
-                    ))}
-                  </div>
+                  {/* 个人简介与详细资料 */}
+                  <div className="mb-6 overflow-auto">
+                    <h2 className="text-2xl font-bold mb-4 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 inline-block text-transparent bg-clip-text">
+                      Me
+                    </h2>
 
-                  <h4 className="text-lg font-medium mb-3 dark:text-gray-200 text-[#2c2c2e]">个人简介</h4>
-                  <p className="dark:text-gray-300 text-gray-600 mb-4">
-                    致不完美的明天_
-                  </p>
+                    <h3 className="text-lg font-semibold mb-2 dark:text-gray-200 text-[#2c2c2e]">自我介绍</h3>
+                    <p className="dark:text-gray-300 text-gray-600 mb-4">
+                      我是 damesck，是一名热爱计算机硬件，网络，软件，编程(<span className="line-through">学不会</span>)的一名大专生<span className="line-through"><small>可能过两年就是本科生了吧</small></span>
+                    </p>
+
+                    <div className="border-t border-gray-200 dark:border-gray-700 my-6"></div>
+
+                    <h2 className="text-2xl font-bold mb-4 bg-gradient-to-r from-red-500 via-yellow-500 to-green-500 inline-block text-transparent bg-clip-text">
+                      Contributions
+                    </h2>
+                    <ul className="space-y-3 mb-4">
+                      <li className="flex items-start">
+                        <div className="h-2 w-2 rounded-full mt-2 mr-2 bg-gradient-to-r from-orange-500 to-pink-500"></div>
+                        <div>
+                          <h4 className="font-semibold dark:text-gray-200 text-[#2c2c2e]">程游ucyclub | 程游社区联合创始人</h4>
+                        </div>
+                      </li>
+                      <li className="flex items-start">
+                        <div className="h-2 w-2 rounded-full mt-2 mr-2 bg-gradient-to-r from-blue-500 to-green-500"></div>
+                        <div>
+                          <h4 className="font-semibold dark:text-gray-200 text-[#2c2c2e]">Vastsea瀚海 | 成员</h4>
+                        </div>
+                      </li>
+                    </ul>
+
+                    <div className="border-t border-gray-200 dark:border-gray-700 my-6"></div>
+
+                    <h2 className="text-2xl font-bold mb-4 bg-gradient-to-r from-green-500 via-blue-500 to-indigo-500 inline-block text-transparent bg-clip-text">
+                      Positions
+                    </h2>
+                    <ul className="space-y-3 mb-4">
+                      <li className="flex items-start">
+                        <div className="h-2 w-2 rounded-full mt-2 mr-2 bg-gradient-to-r from-yellow-500 to-green-500"></div>
+                        <div>
+                          <h4 className="font-semibold dark:text-gray-200 text-[#2c2c2e]">苦力怕论坛 | 超级版主</h4>
+                        </div>
+                      </li>
+                      <li className="flex items-start">
+                        <div className="h-2 w-2 rounded-full mt-2 mr-2 bg-gradient-to-r from-blue-500 to-purple-500"></div>
+                        <div>
+                          <h4 className="font-semibold dark:text-gray-200 text-[#2c2c2e]">程游社区 | 联合创始人</h4>
+                        </div>
+                      </li>
+                      <li className="flex items-start">
+                        <div className="h-2 w-2 rounded-full mt-2 mr-2 bg-gradient-to-r from-purple-500 to-pink-500"></div>
+                        <div>
+                          <h4 className="font-semibold dark:text-gray-200 text-[#2c2c2e]">鄂尔多斯市达拉特旗第十中学 | 网络运维与机房运维管理</h4>
+                        </div>
+                      </li>
+                    </ul>
+
+                    <div className="border-t border-gray-200 dark:border-gray-700 my-6"></div>
+
+                    <h2 className="text-2xl font-bold mb-4 bg-gradient-to-r from-indigo-500 via-purple-500 to-red-500 inline-block text-transparent bg-clip-text">
+                      Interest
+                    </h2>
+                    <p className="dark:text-gray-300 text-gray-600">
+                      计算机网络，计算机硬件，轨道交通，旅行，吃
+                    </p>
+                  </div>
                 </div>
               </div>
             </motion.div>
