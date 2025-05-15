@@ -6,6 +6,29 @@ import 'leaflet/dist/leaflet.css';
 // 导入旅行数据
 import travelDataJson from '../data/travels/travelData.json';
 
+// 添加被遮挡文本的样式
+const censoredTextStyle = `
+  span[data-censored="true"] {
+    position: relative;
+    display: inline-block;
+  }
+  
+  span[data-censored="true"]::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #000;
+    transition: opacity 0.3s ease;
+  }
+  
+  span[data-censored="true"]:hover::after {
+    opacity: 0;
+  }
+`;
+
 // 自定义缩放控件样式
 const leafletCustomStyles = `
   /* 控件组样式 - 左侧控件 */
@@ -912,7 +935,10 @@ const DestinationModal: React.FC<DestinationModalProps> = React.memo(({ destinat
                 <CalendarIcon className="w-4 h-4 mr-1 text-blue-500" />
                 游玩日期: {new Date(destination.date).toLocaleDateString('zh-CN')}
               </div>
-              <p className="text-gray-700 dark:text-gray-300">{destination.description}</p>
+              <p
+                className="text-gray-700 dark:text-gray-300"
+                dangerouslySetInnerHTML={{ __html: destination.description }}
+              ></p>
             </div>
 
             {/* 照片区域 */}
@@ -950,6 +976,17 @@ const DestinationModal: React.FC<DestinationModalProps> = React.memo(({ destinat
 const Travels: React.FC = () => {
   const [selectedDestination, setSelectedDestination] = useState<TravelDestination | null>(null);
   const [hoveredDestination, setHoveredDestination] = useState<string | null>(null);
+
+  // 添加遮挡文本的样式
+  useEffect(() => {
+    const style = document.createElement('style');
+    style.textContent = censoredTextStyle;
+    document.head.appendChild(style);
+
+    return () => {
+      document.head.removeChild(style);
+    };
+  }, []);
 
   // 预加载指定目的地的图片
   const preloadDestinationImages = useCallback((destId: string) => {
