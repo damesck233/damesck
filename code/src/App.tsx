@@ -89,9 +89,9 @@ const Menu = memo(({ isOpen, onClose }: { isOpen: boolean, onClose: () => void }
               <NavLink to="http://blog.damesck.net/" className={({ isActive }) => `flex items-center gap-2 px-3 py-2 rounded-lg text-sm ${isActive ? 'bg-blue-100/50 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100/50 dark:hover:bg-gray-800/50'}`} onClick={onClose}>
                 <PencilIcon className="w-4 h-4" /> 博客
               </NavLink>
-              {/* <NavLink to="/travels" className={({ isActive }) => `flex items-center gap-2 px-3 py-2 rounded-lg text-sm ${isActive ? 'bg-blue-100/50 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100/50 dark:hover:bg-gray-800/50'}`} onClick={onClose}>
+              <NavLink to="/travels" className={({ isActive }) => `flex items-center gap-2 px-3 py-2 rounded-lg text-sm ${isActive ? 'bg-blue-100/50 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100/50 dark:hover:bg-gray-800/50'}`} onClick={onClose}>
                 <MapPinIcon className="w-4 h-4" /> 旅行足迹
-              </NavLink> */}
+              </NavLink>
               <NavLink to="/contact" className={({ isActive }) => `flex items-center gap-2 px-3 py-2 rounded-lg text-sm ${isActive ? 'bg-blue-100/50 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100/50 dark:hover:bg-gray-800/50'}`} onClick={onClose}>
                 <PhoneIcon className="w-4 h-4" /> 联系方式
               </NavLink>
