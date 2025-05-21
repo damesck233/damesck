@@ -27,6 +27,9 @@ const Travels = lazy(() => import('./pages/Travels'))
 import WebWalker from './components/WebWalker'
 import ThemeToggle from './components/ThemeToggle'
 import { preloadResourcesWithMinTime } from './utils/preloader'
+// 直接导入工具相关组件
+import Tools from './pages/Tools'
+import SubnetCalculator from './pages/tools/SubnetCalculator'
 
 // 将背景图片组件分离，减少重渲染
 const BackgroundImage = memo(({ bgUrl }: { bgUrl: string }) => (
@@ -88,6 +91,9 @@ const Menu = memo(({ isOpen, onClose }: { isOpen: boolean, onClose: () => void }
               </NavLink>
               <NavLink to="http://blog.damesck.net/" className={({ isActive }) => `flex items-center gap-2 px-3 py-2 rounded-lg text-sm ${isActive ? 'bg-blue-100/50 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100/50 dark:hover:bg-gray-800/50'}`} onClick={onClose}>
                 <PencilIcon className="w-4 h-4" /> 博客
+              </NavLink>
+              <NavLink to="/tools" className={({ isActive }) => `flex items-center gap-2 px-3 py-2 rounded-lg text-sm ${isActive ? 'bg-blue-100/50 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100/50 dark:hover:bg-gray-800/50'}`} onClick={onClose}>
+                <BeakerIcon className="w-4 h-4" /> 工具箱
               </NavLink>
               <NavLink to="/travels" className={({ isActive }) => `flex items-center gap-2 px-3 py-2 rounded-lg text-sm ${isActive ? 'bg-blue-100/50 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100/50 dark:hover:bg-gray-800/50'}`} onClick={onClose}>
                 <MapPinIcon className="w-4 h-4" /> 旅行足迹
@@ -171,6 +177,8 @@ const PageContent = memo(() => (
         <Route path="/contact" element={<Contact />} />
         <Route path="/friends" element={<Friends />} />
         <Route path="/travels" element={<Travels />} />
+        <Route path="/tools" element={<Tools />} />
+        <Route path="/tools/subnet-calculator" element={<SubnetCalculator />} />
       </Routes>
     </Suspense>
   </main>

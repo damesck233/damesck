@@ -2,6 +2,7 @@
 // @ts-ignore - 暂时忽略找不到../components/Icons错误
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import {
   CodeBracketIcon,
   WrenchScrewdriverIcon,
@@ -16,7 +17,8 @@ import {
   DevicePhoneMobileIcon,
   ClockIcon as WatchIcon,
   ArrowRightIcon,
-  XMarkIcon
+  XMarkIcon,
+  BeakerIcon
 } from '@heroicons/react/24/outline';
 
 // 导入旧数据用于兼容
@@ -1459,6 +1461,54 @@ const Home = () => {
                   </p>
                   <div className="mt-4 py-2 px-4 bg-blue-500 dark:bg-blue-600 rounded-full text-white text-sm font-medium">
                     damesck.net
+                  </div>
+
+                  {/* 工具箱卡片 */}
+                  <div className="mt-6 w-full">
+                    <h4 className="text-lg font-medium mb-3 dark:text-gray-200 text-[#2c2c2e]">工具箱</h4>
+                    <Link
+                      to="/tools"
+                      className="flex items-center p-3 rounded-xl backdrop-blur-sm transition-all duration-300 hover:translate-y-[-2px] border dark:border-white/10 border-black/5 relative overflow-hidden group"
+                      style={{
+                        background: 'linear-gradient(135deg, rgba(14, 165, 233, 0.1), rgba(6, 182, 212, 0.1))',
+                        boxShadow: '0 2px 10px rgba(0, 0, 0, 0.05)'
+                      }}
+                    >
+                      {/* 背景装饰 */}
+                      <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
+                        style={{
+                          background: 'linear-gradient(135deg, rgba(14, 165, 233, 0.2), rgba(6, 182, 212, 0.2))'
+                        }}
+                      ></div>
+
+                      <div className="w-9 h-9 rounded-full flex items-center justify-center mr-3 relative"
+                        style={{
+                          background: 'linear-gradient(135deg, #0EA5E9, #06B6D4)',
+                          boxShadow: '0 2px 5px rgba(14, 165, 233, 0.3)'
+                        }}
+                      >
+                        <div className="text-white">
+                          <BeakerIcon className="w-5 h-5" />
+                        </div>
+                        {/* 顶部亮光效果 */}
+                        <div className="absolute inset-0 rounded-full overflow-hidden">
+                          <div className="absolute top-0 left-1/4 right-1/4 h-1/2 bg-white/20 blur-sm"></div>
+                        </div>
+                      </div>
+
+                      <div className="flex-grow">
+                        <span className="font-medium dark:text-gray-200 text-gray-800 block">网络工具集</span>
+                        <span className="text-xs dark:text-gray-400 text-gray-500 block mt-0.5">
+                          子网掩码计算器、IP转换等工具
+                        </span>
+                      </div>
+
+                      <div className="ml-2">
+                        <svg className="w-4 h-4 dark:text-gray-400 text-gray-400 group-hover:translate-x-1 transition-transform duration-300" viewBox="0 0 20 20" fill="currentColor">
+                          <path fillRule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clipRule="evenodd" />
+                        </svg>
+                      </div>
+                    </Link>
                   </div>
 
                   {/* 社交链接 - 移动到侧边栏 */}
