@@ -28,20 +28,20 @@ const Friends = () => {
   // 各种分类的友情链接
   const [myFriends, setMyFriends] = useState<Friend[]>([
     {
+      name: "damesck",
+      avatar: "https://user.klpbbs.com/data/avatar/000/00/61/73_avatar_big.jpg",
+      url: "https://damesck.net",
+      description: "damesck"
+    }
+  ]);
+
+  const [moreFriends, setMoreFriends] = useState<Friend[]>([
+    {
       name: "Snowball_233",
       avatar: "https://user.klpbbs.com/data/avatar/001/08/24/63_avatar_big.jpg",
       url: "https://qwq.my",
       description: "qwq.my"
     },
-    {
-      name: "苦力怕纸",
-      avatar: "https://user.klpbbs.com/data/avatar/000/00/00/01_avatar_big.jpg",
-      url: "https://klpz.net/",
-      description: "苦力怕论坛站长"
-    }
-  ]);
-
-  const [moreFriends, setMoreFriends] = useState<Friend[]>([
     {
       name: "御坂秋生の小窝",
       avatar: "https://webstatic.akio.top/user/NiuBoss123.jpg",
