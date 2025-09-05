@@ -29,7 +29,7 @@ const Friends = () => {
   const [myFriends, setMyFriends] = useState<Friend[]>([
     {
       name: "damesck",
-      avatar: "https://user.klpbbs.com/data/avatar/000/00/61/73_avatar_big.jpg",
+      avatar: "https://api.damesck.net/avatar.png",
       url: "https://damesck.net",
       description: "damesck"
     }
@@ -721,7 +721,7 @@ const Friends = () => {
                 </div>
                 <div className="ml-3">
                   <p className="text-xs text-gray-500 dark:text-gray-400">头像</p>
-                  <a href="https://user.klpbbs.com/data/avatar/000/00/61/73_avatar_big.jpg" className="font-medium text-blue-600 dark:text-blue-400 hover:underline transition-colors" target="_blank" rel="noopener noreferrer">点击下载</a>
+                  <a href="https://api.damesck.net/avatar.png" className="font-medium text-blue-600 dark:text-blue-400 hover:underline transition-colors" target="_blank" rel="noopener noreferrer">点击下载</a>
                 </div>
               </div>
             </div>

@@ -8,8 +8,18 @@ export default defineConfig({
     host: '0.0.0.0',
     port: 5175,
     // 服务器压缩
-    cors: true,
-    open: false
+    // cors: true,
+    open: false,
+    'proxy': {
+      '/api': {
+        target: 'https://blog.damesck.net',
+        changeOrigin: true,
+        rewrite: (path) => {
+          console.log(path)
+          return path;
+        },
+      },
+    }
   },
   build: {
     // 生产环境优化

@@ -32,6 +32,7 @@ import learningProgress from '../data/cards/learningProgress.json';
 import devices from '../data/cards/devices.json';
 import countdown from '../data/cards/countdown.json';
 import socialLinks from '../data/cards/socialLinks.json';
+import {useBlog} from "../composables/useBlog";
 
 // 定义博客文章接口
 interface BlogPost {
@@ -230,13 +231,6 @@ const cardHeaderStyle = {
   color: 'var(--text-primary)'
 };
 
-// 标题悬停效果
-const headerHoverStyle = {
-  backgroundColor: 'var(--hover-bg)',
-  boxShadow: 'inset 0 0 5px var(--glass-shadow), inset 0 0 0 1px rgba(0,0,0,0.05)',
-  transform: 'translateY(1px)'
-};
-
 // 卡片内容区域样式
 const cardBodyStyle = {
   backgroundColor: 'var(--card-bg)',
@@ -378,10 +372,10 @@ const getMainCountdown = (countdownData: CountdownItem[]): CountdownItem => {
   };
 };
 
+
 const Home = () => {
   // 从JSON转换为正确类型
   const countdownData = countdown as CountdownItem[];
-
   // 使用新的数据文件替换旧数据
   const mySkills = skills;
   const myLearningProgress = learningProgress;
