@@ -44,6 +44,6 @@ jobs:
           pnpm install
           pnpm build
           cd ..
-          docker-compose down
+          docker compose down
           sleep 5
-          docker-compose up -d --build
+          docker compose up -d --build
