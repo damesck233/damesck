@@ -20,7 +20,6 @@ import {
 } from '@heroicons/react/24/outline';
 
 // 导入旧数据用于兼容
-import portfolioData from '../data/portfolioData.json';
 
 // 导入博客数据
 import { blogData } from '../data/blog/data';
@@ -63,17 +62,7 @@ interface ApiError {
   details?: string;
 }
 
-// 定义默认博客文章类型（来自portfolioData）
-interface DefaultBlogPost {
-  title: string;
-  summary: string;
-  date: string;
-  readTime: string;
-  tags: Array<{
-    name: string;
-    color: string;
-  }>;
-}
+
 
 // 定义API响应中dataset项的接口
 interface ApiDatasetItem {
@@ -523,39 +512,11 @@ const Home = () => {
         setBlogPosts(formattedBlogData);
       } else {
         console.error("本地博客数据格式不正确");
-        // 如果本地数据格式不正确，回退到 portfolioData.blogs
-        const fallbackBlogs: BlogPost[] = portfolioData.blogs.map((blog: DefaultBlogPost, index: number) => ({
-          cid: index,
-          title: blog.title,
-          slug: `blog-${index}`,
-          created: Date.now(),
-          modified: Date.now(),
-          text: blog.summary,
-          summary: blog.summary,
-          date: blog.date,
-          readTime: blog.readTime,
-          categories: [],
-          tags: blog.tags
-        }));
-        setBlogPosts(fallbackBlogs);
+        setBlogPosts([]);
       }
     } catch (error) {
       console.error("加载博客数据时出错:", error);
-      // 发生错误时回退到 portfolioData.blogs
-      const fallbackBlogs: BlogPost[] = portfolioData.blogs.map((blog: DefaultBlogPost, index: number) => ({
-        cid: index,
-        title: blog.title,
-        slug: `blog-${index}`,
-        created: Date.now(),
-        modified: Date.now(),
-        text: blog.summary,
-        summary: blog.summary,
-        date: blog.date,
-        readTime: blog.readTime,
-        categories: [],
-        tags: blog.tags
-      }));
-      setBlogPosts(fallbackBlogs);
+      setBlogPosts([]);
     } finally {
       setLoading(false);
     }
@@ -1315,23 +1276,8 @@ const Home = () => {
                   ))}
                 </div>
               ) : (
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-2 px-3 py-2 h-full">
-                  {portfolioData.blogs.slice(0, 4).map((blog: DefaultBlogPost, index) => (
-                    <div key={index} className="dark:bg-gray-800/50 dark:hover:bg-gray-700/80 bg-gray-50/50 rounded-lg p-3 hover:bg-gray-50/80 transition-colors h-full flex flex-col">
-                      <h4 className="font-medium text-sm dark:text-gray-100 text-[#2c2c2e] truncate mb-2">{blog.title}</h4>
-                      <p className="text-xs dark:text-gray-400 text-gray-600 line-clamp-3 mb-auto">{blog.summary}</p>
-                      <div className="mt-3">
-                        <div className="flex gap-1 flex-wrap mb-2">
-                          {blog.tags.slice(0, 1).map((tag, tagIndex) => (
-                            <span key={tagIndex} className="px-1.5 py-0.5 text-xs rounded-md dark:bg-blue-900/30 dark:text-blue-400 bg-blue-50 text-blue-600">
-                              {tag.name}
-                            </span>
-                          ))}
-                        </div>
-                        <p className="text-xs dark:text-gray-500 text-gray-500 pt-2 dark:border-gray-700/50 border-t border-gray-100/50 w-full">{blog.date} · {blog.readTime}</p>
-                      </div>
-                    </div>
-                  ))}
+                <div className="flex items-center justify-center h-full px-3 py-2">
+                  <p className="text-sm dark:text-gray-400 text-gray-600">暂无博客数据</p>
                 </div>
               )}
             </div>
@@ -2095,22 +2041,9 @@ const Home = () => {
                         </div>
                       </div>
                     )) :
-                    portfolioData.blogs.slice(0, 4).map((blog: DefaultBlogPost, index) => (
-                      <div key={index} className="dark:bg-gray-800/50 dark:hover:bg-gray-700/80 bg-gray-50/50 rounded-lg p-3 hover:bg-gray-50/80 transition-colors h-full flex flex-col">
-                        <h4 className="font-medium text-sm dark:text-gray-100 text-[#2c2c2e] truncate mb-2">{blog.title}</h4>
-                        <p className="text-xs dark:text-gray-400 text-gray-600 line-clamp-3 mb-auto">{blog.summary}</p>
-                        <div className="mt-3">
-                          <div className="flex gap-1 flex-wrap mb-2">
-                            {blog.tags.slice(0, 1).map((tag, tagIndex) => (
-                              <span key={tagIndex} className="px-1.5 py-0.5 text-xs rounded-md dark:bg-blue-900/30 dark:text-blue-400 bg-blue-50 text-blue-600">
-                                {tag.name}
-                              </span>
-                            ))}
-                          </div>
-                          <p className="text-xs dark:text-gray-500 text-gray-500 pt-2 dark:border-gray-700/50 border-t border-gray-100/50 w-full">{blog.date} · {blog.readTime}</p>
-                        </div>
-                      </div>
-                    ))
+                    <div className="flex items-center justify-center h-full px-3 py-2">
+                      <p className="text-sm dark:text-gray-400 text-gray-600">暂无博客数据</p>
+                    </div>
                   }
                 </div>
               )}

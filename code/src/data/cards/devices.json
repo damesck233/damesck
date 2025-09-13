@@ -15,8 +15,8 @@
     ],
     "specs": {
       "purchaseDate": "2024年8月",
-      "warranty": "有效期内",
-      "condition": "全新",
+      "warranty": "过保",
+      "condition": "良好",
       "details": [
         "16英寸 Liquid Retina XDR 显示屏",
         "M3 Pro 芯片",
@@ -27,7 +27,7 @@
   },
   {
     "name": "OnePlus 12",
-    "description": "原神启动!",
+    "description": "被雪球摔坏后面板了",
     "image": "https://ocloud-staticfile-cn.heytapimage.com/find/icon/202307/fb7e1411592740babce0ef09c672f952.png",
     "tags": [
       {
@@ -42,7 +42,7 @@
     "specs": {
       "purchaseDate": "2024年1月",
       "warranty": "过保",
-      "condition": "良好",
+      "condition": "非常不好",
       "details": [
         "6.82英寸 2K LTPO AMOLED 屏幕",
         "骁龙8 Gen 3 处理器",
