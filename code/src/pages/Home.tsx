@@ -31,7 +31,6 @@ import learningProgress from '../data/cards/learningProgress.json';
 import devices from '../data/cards/devices.json';
 import countdown from '../data/cards/countdown.json';
 import socialLinks from '../data/cards/socialLinks.json';
-import {useBlog} from "../composables/useBlog";
 
 // 定义博客文章接口
 interface BlogPost {
