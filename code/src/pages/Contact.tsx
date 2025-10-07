@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence, stagger } from 'framer-motion';
+import FeishuWebhook from '../components/FeishuWebhook';
 
 // 定义联系方式数据类型
 interface ContactItem {
@@ -14,6 +15,7 @@ interface ContactItem {
   isEmail?: boolean;
   isLink?: boolean;
   link?: string;
+  isWebhook?: boolean;
 }
 
 // 联系方式数据
@@ -101,16 +103,30 @@ const contactData: ContactItem[] = [
     qrCode: true,
     qrCodeImage: 'https://data.klpbbs.com/file/tc/img/2025/04/25/680b70e38674c.jpg',
   },
+  {
+    id: 'feishu-webhook',
+    title: '推送到飞书',
+    icon: (
+      <svg className="w-6 h-6 text-[#00D6B9]" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
+      </svg>
+    ),
+    info: '快速消息推送',
+    description: '通过飞书机器人发送消息',
+    color: 'bg-[#00D6B9]/10 dark:bg-[#00D6B9]/20',
+    isWebhook: true,
+  },
 ];
 
 // 定义卡片组件的props类型
 interface ContactCardProps {
   contact: ContactItem;
   onViewQRCode: (contact: ContactItem) => void;
+  onWebhookClick?: () => void;
 }
 
 // 卡片组件
-const ContactCard: React.FC<ContactCardProps> = ({ contact, onViewQRCode }) => {
+const ContactCard: React.FC<ContactCardProps> = ({ contact, onViewQRCode, onWebhookClick }) => {
   // 友链卡片风格
   const cardStyle = {
     backgroundColor: 'var(--glass-bg)',
@@ -252,6 +268,21 @@ const ContactCard: React.FC<ContactCardProps> = ({ contact, onViewQRCode }) => {
                   </svg>
                 </button>
               </div>
+            )}
+
+            {contact.isWebhook && onWebhookClick && (
+              <button
+                onClick={() => {
+                  console.log('Feishu button clicked!'); // 调试信息
+                  onWebhookClick();
+                }}
+                className="inline-flex items-center px-2 sm:px-3 py-1 sm:py-1.5 rounded-full bg-[#00D6B9] dark:bg-[#00B5A0] text-white font-medium text-xs transition-all hover:bg-[#00B5A0] sm:whitespace-nowrap"
+              >
+                发送消息
+                <svg className="ml-1 w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                </svg>
+              </button>
             )}
           </div>
         </div>
@@ -425,6 +456,7 @@ const QRCodeModal: React.FC<QRCodeModalProps> = ({ contact, onClose }) => {
 
 const Contact: React.FC = () => {
   const [selectedContact, setSelectedContact] = useState<ContactItem | null>(null);
+  const [showFeishuWebhook, setShowFeishuWebhook] = useState(false);
 
   const handleViewQRCode = (contact: ContactItem): void => {
     setSelectedContact(contact);
@@ -438,6 +470,7 @@ const Contact: React.FC = () => {
   const socialContacts = contactData.filter(c => ['wechat', 'qq', 'feishu'].includes(c.id));
   const platformContacts = contactData.filter(c => ['github', 'bilibili'].includes(c.id));
   const emailContacts = contactData.filter(c => ['email'].includes(c.id));
+  const webhookContacts = contactData.filter(c => ['feishu-webhook'].includes(c.id));
 
   // 分类标题组件 - 更新为与朋友们页面一致的样式
   const SectionTitle = ({ icon, title, color = "blue" }: { icon: React.ReactNode, title: string, color?: string }) => {
@@ -556,6 +589,30 @@ const Contact: React.FC = () => {
             ))}
           </div>
         </div>
+
+        {/* 智能推送 */}
+        <div>
+          <SectionTitle
+            icon={
+              <svg className="w-full h-full" viewBox="0 0 20 20" fill="currentColor">
+                <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
+                <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
+              </svg>
+            }
+            title="站内联系"
+            color="red"
+          />
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {webhookContacts.map((contact) => (
+              <ContactCard
+                key={contact.id}
+                contact={contact}
+                onViewQRCode={handleViewQRCode}
+                onWebhookClick={() => setShowFeishuWebhook(true)}
+              />
+            ))}
+          </div>
+        </div>
       </motion.div>
 
       {/* 二维码弹窗 */}
@@ -567,8 +624,18 @@ const Contact: React.FC = () => {
           />
         )}
       </AnimatePresence>
+
+      {/* 飞书Webhook弹窗 */}
+      <AnimatePresence>
+        {showFeishuWebhook && (
+          <FeishuWebhook
+            isOpen={showFeishuWebhook}
+            onClose={() => setShowFeishuWebhook(false)}
+          />
+        )}
+      </AnimatePresence>
     </div>
   );
 };
 
-export default Contact; 
+export default Contact;

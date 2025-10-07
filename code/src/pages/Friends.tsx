@@ -1,7 +1,8 @@
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useState, useEffect, useCallback } from 'react';
 import { UserIcon, GlobeAltIcon, UserGroupIcon, ExclamationCircleIcon } from '@heroicons/react/24/outline';
 import StatusIndicator, { refreshAllStatusIndicators } from '../components/StatusIndicator';
+import FeishuWebhook from '../components/FeishuWebhook';
 
 // 友情链接数据接口
 interface Friend {
@@ -67,7 +68,7 @@ const Friends = () => {
       description: "M397749490.com"
     },
     {
-      name: "地球驿站",
+      name: "Mugzx's Blog",
       avatar: "https://www.mugzx.top/api/avatar.png",
       url: "https://blog.mugzx.top",
       description: "向上革命，向下实践。"
@@ -102,6 +103,9 @@ const Friends = () => {
   // 添加刷新状态
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [refreshCount, setRefreshCount] = useState(0);
+
+  // 飞书机器人状态管理
+  const [showFeishuWebhook, setShowFeishuWebhook] = useState(false);
 
   // 处理刷新按钮点击
   const handleRefresh = useCallback(() => {
@@ -616,19 +620,40 @@ const Friends = () => {
             }}>
             <h3 className="text-xl font-bold dark:text-white text-gray-900 mb-4 tracking-tight flex items-center">
               <svg className="w-5 h-5 mr-2 text-teal-600 dark:text-teal-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
-                <polyline points="22,6 12,13 2,6"></polyline>
+                <path d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
               </svg>
-              添加方式
+              智能推送
             </h3>
             <div className="h-0.5 bg-gradient-to-r from-teal-500/50 to-transparent mb-6"></div>
 
             <div className="space-y-4">
               <p className="text-base dark:text-gray-300 text-gray-700">
-                发送邮箱：<a href="mailto:Email@damesck.net" className="text-blue-600 dark:text-blue-400 hover:underline font-medium">Email@damesck.net</a>
+                使用飞书机器人快速提交友链申请，自动推送到管理员
               </p>
 
-              <p className="text-base dark:text-gray-300 text-gray-700 font-medium mt-4">发送内容：</p>
+              <div className="bg-white/10 dark:bg-gray-900/20 rounded-xl p-4 border border-gray-200/30 dark:border-gray-700/30">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center">
+                    <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center mr-3">
+                      <svg className="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                      </svg>
+                    </div>
+                    <div>
+                      <h4 className="font-medium dark:text-white text-gray-900">飞书机器人</h4>
+                      <p className="text-sm text-gray-500 dark:text-gray-400">快速提交友链申请</p>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => setShowFeishuWebhook(true)}
+                    className="px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all duration-200 font-medium text-sm shadow-md hover:shadow-lg transform hover:scale-105"
+                  >
+                    提交申请
+                  </button>
+                </div>
+              </div>
+
+              <p className="text-base dark:text-gray-300 text-gray-700 font-medium mt-4">需要提供的信息：</p>
               <div className="space-y-2.5">
                 <div className="flex items-center space-x-2">
                   <div className="w-2.5 h-2.5 rounded-full bg-blue-500"></div>
@@ -728,8 +753,19 @@ const Friends = () => {
           </div>
         </div>
       </motion.div>
+
+      {/* 飞书机器人弹窗 */}
+      <AnimatePresence>
+        {showFeishuWebhook && (
+          <FeishuWebhook
+            isOpen={showFeishuWebhook}
+            onClose={() => setShowFeishuWebhook(false)}
+            type="friend"
+          />
+        )}
+      </AnimatePresence>
     </div>
   );
 };
 
-export default Friends; 
+export default Friends;
