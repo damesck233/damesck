@@ -193,7 +193,7 @@ const FeishuWebhook: React.FC<FeishuWebhookProps> = ({ isOpen, onClose, type = '
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+        className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4 overflow-y-auto sm:p-6"
         onClick={handleClose}
       >
         <motion.div
@@ -206,11 +206,11 @@ const FeishuWebhook: React.FC<FeishuWebhookProps> = ({ isOpen, onClose, type = '
             stiffness: 300,
             duration: 0.4
           }}
-          className="bg-white/95 dark:bg-gray-800/95 backdrop-blur-md rounded-2xl p-6 max-w-md w-full mx-4 shadow-2xl border border-white/20 dark:border-gray-700/30"
+          className="bg-white/95 dark:bg-gray-800/95 backdrop-blur-md rounded-2xl max-w-md w-full mx-2 sm:mx-4 shadow-2xl border border-white/20 dark:border-gray-700/30 max-h-[90vh] sm:max-h-[85vh] flex flex-col my-auto"
           onClick={(e) => e.stopPropagation()}
         >
-          {/* 头部 */}
-          <div className="flex items-center justify-between mb-6">
+          {/* 头部 - 固定不滚动 */}
+          <div className="flex items-center justify-between p-4 sm:p-6 pb-2 sm:pb-4 flex-shrink-0">
             <div className="flex items-center">
               <div className="p-2 rounded-full bg-[#00D6B9]/10 dark:bg-[#00D6B9]/20 mr-3">
                 <svg className="w-6 h-6 text-[#00D6B9]" viewBox="0 0 24 24" fill="currentColor">
@@ -230,7 +230,9 @@ const FeishuWebhook: React.FC<FeishuWebhookProps> = ({ isOpen, onClose, type = '
             </button>
           </div>
 
-          {/* 成功状态 */}
+          {/* 内容区域 - 可滚动 */}
+          <div className="flex-1 overflow-y-auto px-4 sm:px-6 pb-4 sm:pb-6 min-h-0">
+            {/* 成功状态 */}
           {submitStatus === 'success' && (
             <motion.div
               initial={{ opacity: 0, y: 10 }}
@@ -522,6 +524,7 @@ const FeishuWebhook: React.FC<FeishuWebhookProps> = ({ isOpen, onClose, type = '
               </p>
             </div>
           )}
+          </div>
         </motion.div>
       </motion.div>
     </AnimatePresence>
