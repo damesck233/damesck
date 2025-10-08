@@ -622,14 +622,11 @@ const Friends = () => {
               <svg className="w-5 h-5 mr-2 text-teal-600 dark:text-teal-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
               </svg>
-              智能推送
+              提交申请
             </h3>
             <div className="h-0.5 bg-gradient-to-r from-teal-500/50 to-transparent mb-6"></div>
 
             <div className="space-y-4">
-              <p className="text-base dark:text-gray-300 text-gray-700">
-                使用飞书机器人快速提交友链申请，自动推送到管理员
-              </p>
 
               <div className="bg-white/10 dark:bg-gray-900/20 rounded-xl p-4 border border-gray-200/30 dark:border-gray-700/30">
                 <div className="flex items-center justify-between">
@@ -640,7 +637,7 @@ const Friends = () => {
                       </svg>
                     </div>
                     <div>
-                      <h4 className="font-medium dark:text-white text-gray-900">飞书机器人</h4>
+                      <h4 className="font-medium dark:text-white text-gray-900">站内提交</h4>
                       <p className="text-sm text-gray-500 dark:text-gray-400">快速提交友链申请</p>
                     </div>
                   </div>

@@ -26,6 +26,7 @@ const Friends = lazy(() => import('./pages/Friends'))
 const Travels = lazy(() => import('./pages/Travels'))
 import WebWalker from './components/WebWalker'
 import ThemeToggle from './components/ThemeToggle'
+import RestrictedAccess from './components/RestrictedAccess'
 import { preloadResourcesWithMinTime } from './utils/preloader'
 
 // 将背景图片组件分离，减少重渲染
@@ -170,7 +171,7 @@ const PageContent = memo(() => (
         <Route path="/blog" element={<Blog />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/friends" element={<Friends />} />
-        <Route path="/travels" element={<Travels />} />
+        <Route path="/travels" element={<RestrictedAccess />} />
       </Routes>
     </Suspense>
   </main>

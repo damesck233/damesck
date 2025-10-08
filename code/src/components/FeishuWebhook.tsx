@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import axios from 'axios';
+import { Turnstile } from '@marsidev/react-turnstile';
 
 interface FeishuWebhookProps {
   isOpen: boolean;
@@ -35,9 +36,11 @@ const FeishuWebhook: React.FC<FeishuWebhookProps> = ({ isOpen, onClose, type = '
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
   const [errorMessage, setErrorMessage] = useState('');
+  const [captchaToken, setCaptchaToken] = useState<string>('');
+  const [captchaError, setCaptchaError] = useState(false);
 
-  // 飞书机器人webhook URL (这里需要替换为实际的webhook地址)
-  const FEISHU_WEBHOOK_URL = '';
+  // 飞书机器人webhook URL (从环境变量读取)
+  const FEISHU_WEBHOOK_URL = import.meta.env.VITE_FEISHU_WEBHOOK_URL || '';
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -50,9 +53,18 @@ const FeishuWebhook: React.FC<FeishuWebhookProps> = ({ isOpen, onClose, type = '
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     console.log('Form submitted!', formData); // 调试信息
+    
+    // 验证码验证
+    if (!captchaToken) {
+      setCaptchaError(true);
+      setErrorMessage('请完成人机验证');
+      return;
+    }
+    
     setIsSubmitting(true);
     setSubmitStatus('idle');
     setErrorMessage('');
+    setCaptchaError(false);
 
     try {
       // 根据类型构建不同的飞书消息格式
@@ -143,6 +155,10 @@ const FeishuWebhook: React.FC<FeishuWebhookProps> = ({ isOpen, onClose, type = '
         avatar: '',
         description: ''
       });
+      
+      // 重置验证码
+      setCaptchaToken('');
+      setCaptchaError(false);
 
       // 3秒后自动关闭
       setTimeout(() => {
@@ -164,6 +180,8 @@ const FeishuWebhook: React.FC<FeishuWebhookProps> = ({ isOpen, onClose, type = '
       onClose();
       setSubmitStatus('idle');
       setErrorMessage('');
+      setCaptchaToken('');
+      setCaptchaError(false);
     }
   };
 
@@ -433,6 +451,35 @@ const FeishuWebhook: React.FC<FeishuWebhookProps> = ({ isOpen, onClose, type = '
                   </div>
                 </>
               )}
+
+              {/* Cloudflare Turnstile 验证码 */}
+              <div className="pt-4">
+                <div className="flex justify-center">
+                  <Turnstile
+                    siteKey={import.meta.env.VITE_TURNSTILE_SITE_KEY || "0x4AAAAAAAkqiE_JF_bJOhQr"}
+                    onSuccess={(token) => {
+                      setCaptchaToken(token);
+                      setCaptchaError(false);
+                    }}
+                    onError={() => {
+                      setCaptchaError(true);
+                      setCaptchaToken('');
+                    }}
+                    onExpire={() => {
+                      setCaptchaToken('');
+                    }}
+                    options={{
+                      theme: 'auto',
+                      size: 'normal'
+                    }}
+                  />
+                </div>
+                {captchaError && (
+                  <p className="text-red-500 text-sm mt-2 text-center">
+                    验证码验证失败，请重试
+                  </p>
+                )}
+              </div>
 
               <div className="flex space-x-3 pt-2">
                 <button
