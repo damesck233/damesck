@@ -229,50 +229,36 @@ const FeishuWebhook: React.FC<FeishuWebhookProps> = ({ isOpen, onClose, type = '
             {/* 成功状态 */}
             {submitStatus === 'success' && (
               <motion.div
-                initial={{ opacity: 0, scale: 0.8 }}
+                initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ 
                   type: "spring", 
-                  damping: 20, 
+                  damping: 25, 
                   stiffness: 300,
-                  duration: 0.6 
+                  duration: 0.5 
                 }}
                 className="text-center py-8 relative"
               >
-                {/* 背景光晕效果 */}
+                {/* 简化的背景效果 */}
                 <motion.div
-                  initial={{ scale: 0, opacity: 0 }}
-                  animate={{ scale: 1, opacity: 1 }}
-                  transition={{ delay: 0.2, duration: 0.8 }}
-                  className="absolute inset-0 bg-gradient-to-r from-green-400/10 via-emerald-400/10 to-teal-400/10 dark:from-green-400/5 dark:via-emerald-400/5 dark:to-teal-400/5 rounded-2xl blur-xl"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.2, duration: 0.6 }}
+                  className="absolute inset-0 bg-gradient-to-r from-green-50 via-emerald-50 to-teal-50 dark:from-green-900/20 dark:via-emerald-900/20 dark:to-teal-900/20 rounded-2xl"
                 />
                 
                 {/* 成功图标容器 */}
                 <motion.div
-                  initial={{ scale: 0, rotate: -180 }}
-                  animate={{ scale: 1, rotate: 0 }}
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
                   transition={{ 
                     type: "spring", 
-                    damping: 15, 
+                    damping: 20, 
                     stiffness: 400,
                     delay: 0.1 
                   }}
                   className="relative"
                 >
-                  {/* 脉冲背景 */}
-                  <motion.div
-                    animate={{ 
-                      scale: [1, 1.2, 1],
-                      opacity: [0.3, 0.1, 0.3]
-                    }}
-                    transition={{ 
-                      duration: 2,
-                      repeat: Infinity,
-                      ease: "easeInOut"
-                    }}
-                    className="absolute w-20 h-20 bg-green-400 dark:bg-green-500 rounded-full blur-md -top-2 -left-2"
-                  />
-                  
                   {/* 主图标背景 */}
                   <motion.div
                     initial={{ scale: 0 }}
@@ -281,7 +267,7 @@ const FeishuWebhook: React.FC<FeishuWebhookProps> = ({ isOpen, onClose, type = '
                       type: "spring", 
                       damping: 20, 
                       stiffness: 300,
-                      delay: 0.3 
+                      delay: 0.2 
                     }}
                     className="w-16 h-16 bg-gradient-to-br from-green-100 to-emerald-100 dark:from-green-900/40 dark:to-emerald-900/40 rounded-full flex items-center justify-center mx-auto mb-6 relative shadow-lg border border-green-200/50 dark:border-green-700/50"
                   >
@@ -294,8 +280,8 @@ const FeishuWebhook: React.FC<FeishuWebhookProps> = ({ isOpen, onClose, type = '
                       initial={{ pathLength: 0, opacity: 0 }}
                       animate={{ pathLength: 1, opacity: 1 }}
                       transition={{ 
-                        pathLength: { duration: 0.8, delay: 0.5 },
-                        opacity: { duration: 0.3, delay: 0.5 }
+                        pathLength: { duration: 0.6, delay: 0.4 },
+                        opacity: { duration: 0.2, delay: 0.4 }
                       }}
                     >
                       <motion.path 
@@ -305,33 +291,32 @@ const FeishuWebhook: React.FC<FeishuWebhookProps> = ({ isOpen, onClose, type = '
                         d="M5 13l4 4L19 7"
                         initial={{ pathLength: 0 }}
                         animate={{ pathLength: 1 }}
-                        transition={{ duration: 0.8, delay: 0.5, ease: "easeInOut" }}
+                        transition={{ duration: 0.6, delay: 0.4, ease: "easeInOut" }}
                       />
                     </motion.svg>
                     
-                    {/* 闪烁效果 */}
+                    {/* 简化的闪烁效果 */}
                     <motion.div
                       initial={{ scale: 0, opacity: 0 }}
-                      animate={{ scale: [0, 1.5, 0], opacity: [0, 0.6, 0] }}
+                      animate={{ scale: 1.2, opacity: 0.3 }}
                       transition={{ 
-                        duration: 1.2, 
-                        delay: 0.8,
+                        duration: 0.4, 
+                        delay: 0.7,
                         ease: "easeOut"
                       }}
-                      className="absolute inset-0 bg-white dark:bg-green-400 rounded-full"
+                      className="absolute inset-0 bg-green-200 dark:bg-green-600 rounded-full -z-10"
                     />
                   </motion.div>
                 </motion.div>
 
                 {/* 标题动画 */}
                 <motion.h4 
-                  initial={{ opacity: 0, y: 20 }}
+                  initial={{ opacity: 0, y: 15 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ 
-                    delay: 0.6, 
-                    duration: 0.5,
-                    type: "spring",
-                    damping: 25
+                    delay: 0.5, 
+                    duration: 0.4,
+                    ease: "easeOut"
                   }}
                   className="text-xl font-bold text-gray-900 dark:text-white mb-3 bg-gradient-to-r from-green-600 to-emerald-600 dark:from-green-400 dark:to-emerald-400 bg-clip-text text-transparent"
                 >
@@ -340,13 +325,12 @@ const FeishuWebhook: React.FC<FeishuWebhookProps> = ({ isOpen, onClose, type = '
                 
                 {/* 描述文字动画 */}
                 <motion.p 
-                  initial={{ opacity: 0, y: 15 }}
+                  initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ 
-                    delay: 0.8, 
-                    duration: 0.5,
-                    type: "spring",
-                    damping: 25
+                    delay: 0.6, 
+                    duration: 0.4,
+                    ease: "easeOut"
                   }}
                   className="text-gray-600 dark:text-gray-300 text-sm mb-8 leading-relaxed"
                 >
@@ -355,31 +339,26 @@ const FeishuWebhook: React.FC<FeishuWebhookProps> = ({ isOpen, onClose, type = '
                 
                 {/* 关闭按钮动画 */}
                 <motion.button
-                  initial={{ opacity: 0, scale: 0.8, y: 20 }}
-                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  initial={{ opacity: 0, y: 15 }}
+                  animate={{ opacity: 1, y: 0 }}
                   transition={{ 
-                    delay: 1.0, 
-                    duration: 0.4,
-                    type: "spring",
-                    damping: 20,
-                    stiffness: 300
+                    delay: 0.7, 
+                    duration: 0.3,
+                    ease: "easeOut"
                   }}
-                  whileHover={{ 
-                    scale: 1.05,
-                    boxShadow: "0 10px 25px rgba(0, 122, 255, 0.3)"
-                  }}
-                  whileTap={{ scale: 0.95 }}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
                   onClick={() => {
                     onClose();
                     setSubmitStatus('idle');
                   }}
-                  className="px-8 py-3 bg-gradient-to-r from-[#007AFF] to-[#0063CC] dark:from-[#0063CC] dark:to-[#004999] text-white rounded-xl text-sm font-semibold shadow-lg hover:shadow-xl transition-all duration-300 border border-blue-500/20"
+                  className="px-8 py-3 bg-gradient-to-r from-[#007AFF] to-[#0063CC] dark:from-[#0063CC] dark:to-[#004999] text-white rounded-xl text-sm font-semibold shadow-lg hover:shadow-xl transition-all duration-200 border border-blue-500/20"
                 >
                   完成
                 </motion.button>
 
-                {/* 装饰性粒子效果 */}
-                {[...Array(6)].map((_, i) => (
+                {/* 简化的装饰效果 */}
+                {[...Array(3)].map((_, i) => (
                   <motion.div
                     key={i}
                     initial={{ 
@@ -389,23 +368,23 @@ const FeishuWebhook: React.FC<FeishuWebhookProps> = ({ isOpen, onClose, type = '
                       y: 0
                     }}
                     animate={{ 
-                      scale: [0, 1, 0], 
-                      opacity: [0, 0.8, 0],
-                      x: [0, (Math.random() - 0.5) * 200],
-                      y: [0, (Math.random() - 0.5) * 200]
+                      scale: 1, 
+                      opacity: 0.6,
+                      x: (i - 1) * 60,
+                      y: -20
                     }}
                     transition={{ 
-                      duration: 2,
+                      duration: 0.8,
                       delay: 0.8 + i * 0.1,
                       ease: "easeOut"
                     }}
-                    className={`absolute w-2 h-2 rounded-full ${
-                      i % 3 === 0 ? 'bg-green-400' : 
-                      i % 3 === 1 ? 'bg-emerald-400' : 'bg-teal-400'
-                    } blur-sm`}
+                    className={`absolute w-1.5 h-1.5 rounded-full ${
+                      i === 0 ? 'bg-green-400' : 
+                      i === 1 ? 'bg-emerald-400' : 'bg-teal-400'
+                    }`}
                     style={{
                       left: '50%',
-                      top: '30%',
+                      top: '25%',
                     }}
                   />
                 ))}
