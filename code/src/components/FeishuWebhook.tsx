@@ -53,14 +53,14 @@ const FeishuWebhook: React.FC<FeishuWebhookProps> = ({ isOpen, onClose, type = '
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     console.log('Form submitted!', formData); // 调试信息
-    
+
     // 验证码验证
     if (!captchaToken) {
       setCaptchaError(true);
       setErrorMessage('请完成人机验证');
       return;
     }
-    
+
     setIsSubmitting(true);
     setSubmitStatus('idle');
     setErrorMessage('');
@@ -155,7 +155,7 @@ const FeishuWebhook: React.FC<FeishuWebhookProps> = ({ isOpen, onClose, type = '
         avatar: '',
         description: ''
       });
-      
+
       // 重置验证码
       setCaptchaToken('');
       setCaptchaError(false);
@@ -233,297 +233,311 @@ const FeishuWebhook: React.FC<FeishuWebhookProps> = ({ isOpen, onClose, type = '
           {/* 内容区域 - 可滚动 */}
           <div className="flex-1 overflow-y-auto px-4 sm:px-6 pb-4 sm:pb-6 min-h-0">
             {/* 成功状态 */}
-          {submitStatus === 'success' && (
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="text-center py-8"
-            >
-              <div className="w-16 h-16 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
-                <svg className="w-8 h-8 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
-                </svg>
-              </div>
-              <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">发送成功！</h4>
-              <p className="text-gray-600 dark:text-gray-300 text-sm">
-                您的消息已通过飞书机器人推送，我会尽快回复您。
-              </p>
-            </motion.div>
-          )}
-
-          {/* 错误状态 */}
-          {submitStatus === 'error' && (
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="text-center py-4"
-            >
-              <div className="w-16 h-16 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
-                <svg className="w-8 h-8 text-red-600 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </div>
-              <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">发送失败</h4>
-              <p className="text-red-600 dark:text-red-400 text-sm mb-4">{errorMessage}</p>
-              <button
-                onClick={() => setSubmitStatus('idle')}
-                className="px-4 py-2 bg-[#007AFF] dark:bg-[#0063CC] text-white rounded-lg text-sm font-medium hover:bg-[#0063CC] transition-colors"
+            {submitStatus === 'success' && (
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="text-center py-8"
               >
-                重新尝试
-              </button>
-            </motion.div>
-          )}
-
-          {/* 表单 */}
-          {submitStatus === 'idle' && (
-            <form onSubmit={handleSubmit} className="space-y-4">
-              {type === 'friend' ? (
-                // 朋友链接申请表单
-                <>
-                  <div>
-                    <label htmlFor="siteName" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                      站点名称 *
-                    </label>
-                    <input
-                      type="text"
-                      id="siteName"
-                      name="siteName"
-                      value={formData.siteName}
-                      onChange={handleInputChange}
-                      required
-                      disabled={isSubmitting}
-                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#007AFF] focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white disabled:opacity-50"
-                      placeholder="请输入您的站点名称"
-                    />
-                  </div>
-
-                  <div>
-                    <label htmlFor="siteUrl" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                      站点URL *
-                    </label>
-                    <input
-                      type="url"
-                      id="siteUrl"
-                      name="siteUrl"
-                      value={formData.siteUrl}
-                      onChange={handleInputChange}
-                      required
-                      disabled={isSubmitting}
-                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#007AFF] focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white disabled:opacity-50"
-                      placeholder="https://example.com"
-                    />
-                  </div>
-
-                  <div>
-                    <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                      站长姓名 *
-                    </label>
-                    <input
-                      type="text"
-                      id="name"
-                      name="name"
-                      value={formData.name}
-                      onChange={handleInputChange}
-                      required
-                      disabled={isSubmitting}
-                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#007AFF] focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white disabled:opacity-50"
-                      placeholder="请输入您的姓名"
-                    />
-                  </div>
-
-                  <div>
-                    <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                      联系邮箱 *
-                    </label>
-                    <input
-                      type="email"
-                      id="email"
-                      name="email"
-                      value={formData.email}
-                      onChange={handleInputChange}
-                      required
-                      disabled={isSubmitting}
-                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#007AFF] focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white disabled:opacity-50"
-                      placeholder="请输入您的邮箱地址"
-                    />
-                  </div>
-
-                  <div>
-                    <label htmlFor="avatar" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                      头像链接
-                    </label>
-                    <input
-                      type="url"
-                      id="avatar"
-                      name="avatar"
-                      value={formData.avatar}
-                      onChange={handleInputChange}
-                      disabled={isSubmitting}
-                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#007AFF] focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white disabled:opacity-50"
-                      placeholder="https://example.com/avatar.jpg"
-                    />
-                  </div>
-
-                  <div>
-                    <label htmlFor="description" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                      站点描述 *
-                    </label>
-                    <textarea
-                      id="description"
-                      name="description"
-                      value={formData.description}
-                      onChange={handleInputChange}
-                      required
-                      disabled={isSubmitting}
-                      rows={4}
-                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#007AFF] focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white disabled:opacity-50 resize-none"
-                      placeholder="请简要描述您的站点内容和特色"
-                    />
-                  </div>
-                </>
-              ) : (
-                // 联系表单
-                <>
-                  <div>
-                    <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                      姓名 *
-                    </label>
-                    <input
-                      type="text"
-                      id="name"
-                      name="name"
-                      value={formData.name}
-                      onChange={handleInputChange}
-                      required
-                      disabled={isSubmitting}
-                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#007AFF] focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white disabled:opacity-50"
-                      placeholder="请输入您的姓名"
-                    />
-                  </div>
-
-                  <div>
-                    <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                      邮箱 *
-                    </label>
-                    <input
-                      type="email"
-                      id="email"
-                      name="email"
-                      value={formData.email}
-                      onChange={handleInputChange}
-                      required
-                      disabled={isSubmitting}
-                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#007AFF] focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white disabled:opacity-50"
-                      placeholder="请输入您的邮箱地址"
-                    />
-                  </div>
-
-                  <div>
-                    <label htmlFor="subject" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                      主题 *
-                    </label>
-                    <input
-                      type="text"
-                      id="subject"
-                      name="subject"
-                      value={formData.subject}
-                      onChange={handleInputChange}
-                      required
-                      disabled={isSubmitting}
-                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#007AFF] focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white disabled:opacity-50"
-                      placeholder="请输入消息主题"
-                    />
-                  </div>
-
-                  <div>
-                    <label htmlFor="message" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                      消息内容 *
-                    </label>
-                    <textarea
-                      id="message"
-                      name="message"
-                      value={formData.message}
-                      onChange={handleInputChange}
-                      required
-                      disabled={isSubmitting}
-                      rows={4}
-                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#007AFF] focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white disabled:opacity-50 resize-none"
-                      placeholder="请输入您想要发送的消息内容..."
-                    />
-                  </div>
-                </>
-              )}
-
-              {/* Cloudflare Turnstile 验证码 */}
-              <div className="pt-4">
-                <div className="flex justify-center">
-                  <Turnstile
-                    siteKey={import.meta.env.VITE_TURNSTILE_SITE_KEY || "0x4AAAAAAAkqiE_JF_bJOhQr"}
-                    onSuccess={(token) => {
-                      setCaptchaToken(token);
-                      setCaptchaError(false);
-                    }}
-                    onError={() => {
-                      setCaptchaError(true);
-                      setCaptchaToken('');
-                    }}
-                    onExpire={() => {
-                      setCaptchaToken('');
-                    }}
-                    options={{
-                      theme: 'auto',
-                      size: 'normal'
-                    }}
-                  />
+                <div className="w-16 h-16 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <svg className="w-8 h-8 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
+                  </svg>
                 </div>
-                {captchaError && (
-                  <p className="text-red-500 text-sm mt-2 text-center">
-                    验证码验证失败，请重试
-                  </p>
+                <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">发送成功！</h4>
+                <p className="text-gray-600 dark:text-gray-300 text-sm">
+                  您的消息已通过飞书机器人推送，我会尽快回复您。
+                </p>
+              </motion.div>
+            )}
+
+            {/* 错误状态 */}
+            {submitStatus === 'error' && (
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="text-center py-4"
+              >
+                <div className="w-16 h-16 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <svg className="w-8 h-8 text-red-600 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </div>
+                <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">发送失败</h4>
+                <p className="text-red-600 dark:text-red-400 text-sm mb-4">{errorMessage}</p>
+                <button
+                  onClick={() => setSubmitStatus('idle')}
+                  className="px-4 py-2 bg-[#007AFF] dark:bg-[#0063CC] text-white rounded-lg text-sm font-medium hover:bg-[#0063CC] transition-colors"
+                >
+                  重新尝试
+                </button>
+              </motion.div>
+            )}
+
+            {/* 表单 */}
+            {submitStatus === 'idle' && (
+              <form onSubmit={handleSubmit} className="space-y-4">
+                {type === 'friend' ? (
+                  // 朋友链接申请表单
+                  <>
+                    <div>
+                      <label htmlFor="siteName" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                        站点名称 *
+                      </label>
+                      <input
+                        type="text"
+                        id="siteName"
+                        name="siteName"
+                        value={formData.siteName}
+                        onChange={handleInputChange}
+                        required
+                        disabled={isSubmitting}
+                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#007AFF] focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white disabled:opacity-50"
+                        placeholder="请输入您的站点名称"
+                      />
+                    </div>
+
+                    <div>
+                      <label htmlFor="siteUrl" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                        站点URL *
+                      </label>
+                      <input
+                        type="url"
+                        id="siteUrl"
+                        name="siteUrl"
+                        value={formData.siteUrl}
+                        onChange={handleInputChange}
+                        required
+                        disabled={isSubmitting}
+                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#007AFF] focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white disabled:opacity-50"
+                        placeholder="https://example.com"
+                      />
+                    </div>
+
+                    <div>
+                      <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                        站长姓名 *
+                      </label>
+                      <input
+                        type="text"
+                        id="name"
+                        name="name"
+                        value={formData.name}
+                        onChange={handleInputChange}
+                        required
+                        disabled={isSubmitting}
+                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#007AFF] focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white disabled:opacity-50"
+                        placeholder="请输入您的姓名"
+                      />
+                    </div>
+
+                    <div>
+                      <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                        联系邮箱 *
+                      </label>
+                      <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        value={formData.email}
+                        onChange={handleInputChange}
+                        required
+                        disabled={isSubmitting}
+                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#007AFF] focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white disabled:opacity-50"
+                        placeholder="请输入您的邮箱地址"
+                      />
+                    </div>
+
+                    <div>
+                      <label htmlFor="avatar" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                        头像链接
+                      </label>
+                      <input
+                        type="url"
+                        id="avatar"
+                        name="avatar"
+                        value={formData.avatar}
+                        onChange={handleInputChange}
+                        disabled={isSubmitting}
+                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#007AFF] focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white disabled:opacity-50"
+                        placeholder="https://example.com/avatar.jpg"
+                      />
+                    </div>
+
+                    <div>
+                      <label htmlFor="description" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                        站点描述 *
+                      </label>
+                      <textarea
+                        id="description"
+                        name="description"
+                        value={formData.description}
+                        onChange={handleInputChange}
+                        required
+                        disabled={isSubmitting}
+                        rows={4}
+                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#007AFF] focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white disabled:opacity-50 resize-none"
+                        placeholder="请简要描述您的站点内容和特色"
+                      />
+                    </div>
+                  </>
+                ) : (
+                  // 联系表单
+                  <>
+                    <div>
+                      <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                        姓名 *
+                      </label>
+                      <input
+                        type="text"
+                        id="name"
+                        name="name"
+                        value={formData.name}
+                        onChange={handleInputChange}
+                        required
+                        disabled={isSubmitting}
+                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#007AFF] focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white disabled:opacity-50"
+                        placeholder="请输入您的姓名"
+                      />
+                    </div>
+
+                    <div>
+                      <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                        邮箱 *
+                      </label>
+                      <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        value={formData.email}
+                        onChange={handleInputChange}
+                        required
+                        disabled={isSubmitting}
+                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#007AFF] focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white disabled:opacity-50"
+                        placeholder="请输入您的邮箱地址"
+                      />
+                    </div>
+
+                    <div>
+                      <label htmlFor="subject" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                        主题 *
+                      </label>
+                      <input
+                        type="text"
+                        id="subject"
+                        name="subject"
+                        value={formData.subject}
+                        onChange={handleInputChange}
+                        required
+                        disabled={isSubmitting}
+                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#007AFF] focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white disabled:opacity-50"
+                        placeholder="请输入消息主题"
+                      />
+                    </div>
+
+                    <div>
+                      <label htmlFor="message" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                        消息内容 *
+                      </label>
+                      <textarea
+                        id="message"
+                        name="message"
+                        value={formData.message}
+                        onChange={handleInputChange}
+                        required
+                        disabled={isSubmitting}
+                        rows={4}
+                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#007AFF] focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white disabled:opacity-50 resize-none"
+                        placeholder="请输入您想要发送的消息内容..."
+                      />
+                    </div>
+                  </>
                 )}
-              </div>
 
-              <div className="flex space-x-3 pt-2">
-                <button
-                  type="button"
-                  onClick={handleClose}
-                  disabled={isSubmitting}
-                  className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg font-medium hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors disabled:opacity-50"
-                >
-                  取消
-                </button>
-                <button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="flex-1 px-4 py-2 bg-[#00D6B9] hover:bg-[#00B8A3] text-white rounded-lg font-medium transition-colors disabled:opacity-50 flex items-center justify-center"
-                >
-                  {isSubmitting ? (
-                    <>
-                      <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                      </svg>
-                      发送中...
-                    </>
-                  ) : (
-                    '发送消息'
-                  )}
-                </button>
-              </div>
-            </form>
-          )}
+                {/* Cloudflare Turnstile 验证码 */}
+                <div className="pt-0">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    安全验证 *
+                  </label>
+                  <div className="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-4 border border-gray-200 dark:border-gray-600">
+                    <div className="flex justify-start">
+                      <div className="rounded-lg overflow-hidden shadow-sm">
+                        <Turnstile
+                          siteKey={import.meta.env.VITE_TURNSTILE_SITE_KEY || "0x4AAAAAAAkqiE_JF_bJOhQr"}
+                          onSuccess={(token) => {
+                            setCaptchaToken(token);
+                            setCaptchaError(false);
+                          }}
+                          onError={() => {
+                            setCaptchaError(true);
+                            setCaptchaToken('');
+                          }}
+                          onExpire={() => {
+                            setCaptchaToken('');
+                          }}
+                          options={{
+                            theme: 'auto',
+                            size: 'normal'
+                          }}
+                        />
+                      </div>
+                    </div>
+                    {captchaError && (
+                      <div className="mt-3 p-2 bg-red-50 dark:bg-red-900/20 rounded-lg border border-red-200 dark:border-red-800">
+                        <div className="flex items-center">
+                          <svg className="w-4 h-4 text-red-500 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                          </svg>
+                          <p className="text-red-600 dark:text-red-400 text-sm font-medium">
+                            验证失败，请重新验证
+                          </p>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
 
-          {/* 说明文字 */}
-          {submitStatus === 'idle' && (
-            <div className="mt-4 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
-              <p className="text-xs text-blue-600 dark:text-blue-400 flex items-start">
-                <svg className="w-4 h-4 mr-1 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
-                </svg>
-                您的消息将通过飞书机器人实时推送给我，这是最快速的联系方式。
-              </p>
-            </div>
-          )}
+                <div className="flex space-x-3 pt-2">
+                  <button
+                    type="button"
+                    onClick={handleClose}
+                    disabled={isSubmitting}
+                    className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg font-medium hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors disabled:opacity-50"
+                  >
+                    取消
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="flex-1 px-4 py-2 bg-[#00D6B9] hover:bg-[#00B8A3] text-white rounded-lg font-medium transition-colors disabled:opacity-50 flex items-center justify-center"
+                  >
+                    {isSubmitting ? (
+                      <>
+                        <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        发送中...
+                      </>
+                    ) : (
+                      '发送消息'
+                    )}
+                  </button>
+                </div>
+              </form>
+            )}
+
+            {/* 说明文字 */}
+            {submitStatus === 'idle' && (
+              <div className="mt-4 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                <p className="text-xs text-blue-600 dark:text-blue-400 flex items-start">
+                  <svg className="w-4 h-4 mr-1 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                  </svg>
+                  您的消息将通过飞书机器人实时推送给我，这是最快速的联系方式。
+                </p>
+              </div>
+            )}
           </div>
         </motion.div>
       </motion.div>
