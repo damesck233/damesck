@@ -41,6 +41,9 @@ const FeishuWebhook: React.FC<FeishuWebhookProps> = ({ isOpen, onClose, type = '
 
   // 飞书机器人webhook URL (从环境变量读取)
   const FEISHU_WEBHOOK_URL = import.meta.env.VITE_FEISHU_WEBHOOK_URL || '';
+  
+  // 验证码开关配置 (从环境变量读取)
+  const ENABLE_CAPTCHA = import.meta.env.VITE_ENABLE_CAPTCHA === 'true';
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -54,8 +57,8 @@ const FeishuWebhook: React.FC<FeishuWebhookProps> = ({ isOpen, onClose, type = '
     e.preventDefault();
     console.log('Form submitted!', formData); // 调试信息
 
-    // 验证码验证
-    if (!captchaToken) {
+    // 验证码验证 (仅在启用验证码时进行验证)
+    if (ENABLE_CAPTCHA && !captchaToken) {
       setCaptchaError(true);
       setErrorMessage('请完成人机验证');
       return;
@@ -239,13 +242,7 @@ const FeishuWebhook: React.FC<FeishuWebhookProps> = ({ isOpen, onClose, type = '
                 }}
                 className="text-center py-8 relative"
               >
-                {/* 简化的背景效果 */}
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.2, duration: 0.6 }}
-                  className="absolute inset-0 bg-gradient-to-r from-green-50 via-emerald-50 to-teal-50 dark:from-green-900/20 dark:via-emerald-900/20 dark:to-teal-900/20 rounded-2xl"
-                />
+
                 
                 {/* 成功图标容器 */}
                 <motion.div
@@ -257,7 +254,7 @@ const FeishuWebhook: React.FC<FeishuWebhookProps> = ({ isOpen, onClose, type = '
                     stiffness: 400,
                     delay: 0.1 
                   }}
-                  className="relative"
+                  className="relative z-20"
                 >
                   {/* 主图标背景 */}
                   <motion.div
@@ -277,10 +274,9 @@ const FeishuWebhook: React.FC<FeishuWebhookProps> = ({ isOpen, onClose, type = '
                       fill="none" 
                       stroke="currentColor" 
                       viewBox="0 0 24 24"
-                      initial={{ pathLength: 0, opacity: 0 }}
-                      animate={{ pathLength: 1, opacity: 1 }}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
                       transition={{ 
-                        pathLength: { duration: 0.6, delay: 0.4 },
                         opacity: { duration: 0.2, delay: 0.4 }
                       }}
                     >
@@ -318,7 +314,7 @@ const FeishuWebhook: React.FC<FeishuWebhookProps> = ({ isOpen, onClose, type = '
                     duration: 0.4,
                     ease: "easeOut"
                   }}
-                  className="text-xl font-bold text-gray-900 dark:text-white mb-3 bg-gradient-to-r from-green-600 to-emerald-600 dark:from-green-400 dark:to-emerald-400 bg-clip-text text-transparent"
+                  className="relative z-30 text-xl font-bold text-gray-900 dark:text-white mb-3 bg-gradient-to-r from-green-600 to-emerald-600 dark:from-green-400 dark:to-emerald-400 bg-clip-text text-transparent"
                 >
                   🎉 发送成功！
                 </motion.h4>
@@ -332,7 +328,7 @@ const FeishuWebhook: React.FC<FeishuWebhookProps> = ({ isOpen, onClose, type = '
                     duration: 0.4,
                     ease: "easeOut"
                   }}
-                  className="text-gray-600 dark:text-gray-300 text-sm mb-8 leading-relaxed"
+                  className="relative z-30 text-gray-600 dark:text-gray-300 text-sm mb-8 leading-relaxed"
                 >
                   您的消息已通过飞书机器人推送，我会尽快回复您。
                 </motion.p>
@@ -352,7 +348,7 @@ const FeishuWebhook: React.FC<FeishuWebhookProps> = ({ isOpen, onClose, type = '
                     onClose();
                     setSubmitStatus('idle');
                   }}
-                  className="px-8 py-3 bg-gradient-to-r from-[#007AFF] to-[#0063CC] dark:from-[#0063CC] dark:to-[#004999] text-white rounded-xl text-sm font-semibold shadow-lg hover:shadow-xl transition-all duration-200 border border-blue-500/20"
+                  className="relative z-30 px-8 py-3 bg-gradient-to-r from-[#007AFF] to-[#0063CC] dark:from-[#0063CC] dark:to-[#004999] text-white rounded-xl text-sm font-semibold shadow-lg hover:shadow-xl transition-all duration-200 border border-blue-500/20"
                 >
                   完成
                 </motion.button>
@@ -364,8 +360,8 @@ const FeishuWebhook: React.FC<FeishuWebhookProps> = ({ isOpen, onClose, type = '
                     initial={{ 
                       scale: 0, 
                       opacity: 0,
-                      x: 0,
-                      y: 0
+                      x: (i - 1) * 60,
+                      y: -20
                     }}
                     animate={{ 
                       scale: 1, 
@@ -378,13 +374,14 @@ const FeishuWebhook: React.FC<FeishuWebhookProps> = ({ isOpen, onClose, type = '
                       delay: 0.8 + i * 0.1,
                       ease: "easeOut"
                     }}
-                    className={`absolute w-1.5 h-1.5 rounded-full ${
+                    className={`absolute w-1.5 h-1.5 rounded-full pointer-events-none z-10 ${
                       i === 0 ? 'bg-green-400' : 
                       i === 1 ? 'bg-emerald-400' : 'bg-teal-400'
                     }`}
                     style={{
                       left: '50%',
                       top: '25%',
+                      transform: 'translate(-50%, -50%)'
                     }}
                   />
                 ))}
@@ -594,48 +591,50 @@ const FeishuWebhook: React.FC<FeishuWebhookProps> = ({ isOpen, onClose, type = '
                   </>
                 )}
 
-                {/* Cloudflare Turnstile 验证码 */}
-                <div className="pt-0">
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    安全验证 *
-                  </label>
-                  <div className="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-4 border border-gray-200 dark:border-gray-600">
-                    <div className="flex justify-start">
-                      <div className="rounded-lg overflow-hidden shadow-sm">
-                        <Turnstile
-                          siteKey={import.meta.env.VITE_TURNSTILE_SITE_KEY || "0x4AAAAAAAkqiE_JF_bJOhQr"}
-                          onSuccess={(token) => {
-                            setCaptchaToken(token);
-                            setCaptchaError(false);
-                          }}
-                          onError={() => {
-                            setCaptchaError(true);
-                            setCaptchaToken('');
-                          }}
-                          onExpire={() => {
-                            setCaptchaToken('');
-                          }}
-                          options={{
-                            theme: 'auto',
-                            size: 'normal'
-                          }}
-                        />
-                      </div>
-                    </div>
-                    {captchaError && (
-                      <div className="mt-3 p-2 bg-red-50 dark:bg-red-900/20 rounded-lg border border-red-200 dark:border-red-800">
-                        <div className="flex items-center">
-                          <svg className="w-4 h-4 text-red-500 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
-                          </svg>
-                          <p className="text-red-600 dark:text-red-400 text-sm font-medium">
-                            验证失败，请重新验证
-                          </p>
+                {/* Cloudflare Turnstile 验证码 - 仅在启用时显示 */}
+                {ENABLE_CAPTCHA && (
+                  <div className="pt-0">
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                      安全验证 *
+                    </label>
+                    <div className="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-4 border border-gray-200 dark:border-gray-600">
+                      <div className="flex justify-start">
+                        <div className="rounded-lg overflow-hidden shadow-sm">
+                          <Turnstile
+                            siteKey={import.meta.env.VITE_TURNSTILE_SITE_KEY || "0x4AAAAAAAkqiE_JF_bJOhQr"}
+                            onSuccess={(token) => {
+                              setCaptchaToken(token);
+                              setCaptchaError(false);
+                            }}
+                            onError={() => {
+                              setCaptchaError(true);
+                              setCaptchaToken('');
+                            }}
+                            onExpire={() => {
+                              setCaptchaToken('');
+                            }}
+                            options={{
+                              theme: 'auto',
+                              size: 'normal'
+                            }}
+                          />
                         </div>
                       </div>
-                    )}
+                      {captchaError && (
+                        <div className="mt-3 p-2 bg-red-50 dark:bg-red-900/20 rounded-lg border border-red-200 dark:border-red-800">
+                          <div className="flex items-center">
+                            <svg className="w-4 h-4 text-red-500 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                            </svg>
+                            <p className="text-red-600 dark:text-red-400 text-sm font-medium">
+                              验证失败，请重新验证
+                            </p>
+                          </div>
+                        </div>
+                      )}
+                    </div>
                   </div>
-                </div>
+                )}
 
                 <div className="flex space-x-3 pt-2">
                   <button
