@@ -177,6 +177,7 @@ const ContactCard: React.FC<ContactCardProps> = ({ contact, onViewQRCode, onWebh
         }
       }}
       className="h-full"
+      style={{ willChange: 'transform' }}
     >
       <div
         style={cardStyle}

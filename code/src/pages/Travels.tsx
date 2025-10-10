@@ -1289,6 +1289,7 @@ const Travels: React.FC = () => {
               transition={{ type: "spring", stiffness: 300, damping: 15 }}
               className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-lg rounded-xl overflow-hidden shadow-lg border border-white/20 dark:border-gray-700/30"
               onMouseEnter={() => preloadDestinationImages(destination.id)}
+              style={{ willChange: 'transform' }}
             >
               <div className="flex flex-col md:flex-row">
                 {/* 目的地信息区 */}
@@ -1353,4 +1354,4 @@ const Travels: React.FC = () => {
   );
 };
 
-export default Travels; 
+export default Travels;

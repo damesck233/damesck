@@ -374,6 +374,7 @@ const Friends = () => {
                 whileHover={{ scale: 1.02, y: -5 }}
                 transition={{ type: "spring", stiffness: 300, damping: 15 }}
                 className="block h-full"
+                style={{ willChange: 'transform' }}
               >
                 <div
                   style={cardStyle}
@@ -394,7 +395,8 @@ const Friends = () => {
                         <img
                           src={friend.avatar}
                           alt={friend.name}
-                          className="w-full h-full object-cover transform transition-transform duration-700 hover:scale-110"
+                          className="w-full h-full object-cover transform transition-transform duration-300 hover:scale-110"
+                          style={{ willChange: 'transform' }}
                           onError={() => handleAvatarError(friend.name)}
                         />
                       )}
@@ -440,6 +442,7 @@ const Friends = () => {
                 whileHover={{ scale: 1.02, y: -5 }}
                 transition={{ type: "spring", stiffness: 300, damping: 15 }}
                 className="block h-full"
+                style={{ willChange: 'transform' }}
               >
                 <div
                   style={cardStyle}
@@ -460,7 +463,8 @@ const Friends = () => {
                         <img
                           src={friend.avatar}
                           alt={friend.name}
-                          className="w-full h-full object-cover transform transition-transform duration-700 hover:scale-110"
+                          className="w-full h-full object-cover transform transition-transform duration-300 hover:scale-110"
+                          style={{ willChange: 'transform' }}
                           onError={() => handleAvatarError(friend.name)}
                         />
                       )}
@@ -616,7 +620,8 @@ const Friends = () => {
                         shadow-sm h-full transform hover:scale-[1.01] transition-all duration-300"
             style={{
               backdropFilter: 'blur(12px)',
-              WebkitBackdropFilter: 'blur(12px)'
+              WebkitBackdropFilter: 'blur(12px)',
+              willChange: 'transform'
             }}>
             <h3 className="text-xl font-bold dark:text-white text-gray-900 mb-4 tracking-tight flex items-center">
               <svg className="w-5 h-5 mr-2 text-teal-600 dark:text-teal-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -644,6 +649,7 @@ const Friends = () => {
                   <button
                     onClick={() => setShowFeishuWebhook(true)}
                     className="px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all duration-200 font-medium text-sm shadow-md hover:shadow-lg transform hover:scale-105"
+                    style={{ willChange: 'transform' }}
                   >
                     提交申请
                   </button>
