@@ -607,30 +607,91 @@ const Home = () => {
     switch (iconName) {
       case 'book':
         return (
-          <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 text-gray-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
-            <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+          <svg className="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
+            <defs>
+              <linearGradient id="blogGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="rgba(255,255,255,0.95)" />
+                <stop offset="50%" stopColor="rgba(255,255,255,0.9)" />
+                <stop offset="100%" stopColor="rgba(255,255,255,0.8)" />
+              </linearGradient>
+              <linearGradient id="blogAccent" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="rgba(255,255,255,0.8)" />
+                <stop offset="100%" stopColor="rgba(255,255,255,0.6)" />
+              </linearGradient>
+            </defs>
+            {/* 主要文档背景 */}
+            <path 
+              d="M6 2C4.9 2 4 2.9 4 4v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6H6z"
+              fill="url(#blogGradient)"
+            />
+            {/* 文档折角 */}
+            <path 
+              d="M14 2v6h6"
+              fill="url(#blogAccent)"
+              opacity="0.7"
+            />
+            {/* 博客内容线条 */}
+            <rect x="7" y="11" width="8" height="1" rx="0.5" fill="rgba(255,255,255,0.8)" />
+            <rect x="7" y="13" width="6" height="1" rx="0.5" fill="rgba(255,255,255,0.7)" />
+            <rect x="7" y="15" width="7" height="1" rx="0.5" fill="rgba(255,255,255,0.7)" />
+            <rect x="7" y="17" width="5" height="1" rx="0.5" fill="rgba(255,255,255,0.6)" />
+            {/* 装饰性元素 - 博客图标 */}
+            <circle cx="8.5" cy="6.5" r="1.5" fill="rgba(255,255,255,0.8)" />
+            <path 
+              d="M8.5 5.5c0.55 0 1 0.45 1 1s-0.45 1-1 1-1-0.45-1-1 0.45-1 1-1m0 0.3c-0.38 0-0.7 0.32-0.7 0.7s0.32 0.7 0.7 0.7 0.7-0.32 0.7-0.7-0.32-0.7-0.7-0.7"
+              fill="rgba(255,255,255,0.9)"
+            />
+            {/* 小装饰点 */}
+            <circle cx="16" cy="12" r="0.5" fill="rgba(255,255,255,0.6)" />
+            <circle cx="15" cy="16" r="0.5" fill="rgba(255,255,255,0.5)" />
           </svg>
         );
       case 'github':
         return (
-          <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 text-gray-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+          <svg className="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
+            <defs>
+              <linearGradient id="githubGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="rgba(255,255,255,0.95)" />
+                <stop offset="100%" stopColor="rgba(255,255,255,0.8)" />
+              </linearGradient>
+            </defs>
+            <path 
+              d="M12 0C5.374 0 0 5.373 0 12 0 17.302 3.438 21.8 8.207 23.387c.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"
+              fill="url(#githubGradient)"
+            />
           </svg>
         );
       case 'chat':
         return (
-          <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 text-gray-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M6 9v5a1 1 0 001 1h1l3 3v-3h2a1 1 0 001-1v-5a1 1 0 00-1-1h-6a1 1 0 00-1 1z"></path>
-            <path d="M16 9.36V9a1 1 0 00-1-1H9a1 1 0 00-1 1v5a1 1 0 001 1h1.5"></path>
-            <circle cx="16.5" cy="15.5" r="2.5"></circle>
+          <svg className="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
+            <defs>
+              <linearGradient id="chatGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="rgba(255,255,255,0.95)" />
+                <stop offset="100%" stopColor="rgba(255,255,255,0.8)" />
+              </linearGradient>
+            </defs>
+            <path 
+              d="M20 2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h4l4 4 4-4h4c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"
+              fill="url(#chatGradient)"
+            />
+            <circle cx="8" cy="10" r="1.5" fill="rgba(255,255,255,0.7)" />
+            <circle cx="12" cy="10" r="1.5" fill="rgba(255,255,255,0.7)" />
+            <circle cx="16" cy="10" r="1.5" fill="rgba(255,255,255,0.7)" />
           </svg>
         );
       default:
         return (
-          <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 text-gray-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
-            <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+          <svg className="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
+            <defs>
+              <linearGradient id="defaultGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="rgba(255,255,255,0.95)" />
+                <stop offset="100%" stopColor="rgba(255,255,255,0.8)" />
+              </linearGradient>
+            </defs>
+            <path 
+              d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H6.5A2.5 2.5 0 0 0 4 4.5v15ZM6.5 4H20v11H6.5a4.5 4.5 0 0 0-1.5.26V4.5A.5.5 0 0 1 6.5 4Z"
+              fill="url(#defaultGradient)"
+            />
           </svg>
         );
     }
@@ -1748,40 +1809,72 @@ const Home = () => {
                         </h4>
                         <div className="space-y-3">
                           {mySocialLinks.map((link, index) => (
-                            <motion.a
+                            <motion.div
                               key={index}
-                              href={link.url}
-                              whileHover={{ scale: 1.02, x: 4 }}
+                              whileHover={{ scale: 1.02, y: -2 }}
                               whileTap={{ scale: 0.98 }}
-                              className="flex items-center p-3 rounded-xl bg-white/50 dark:bg-gray-700/50 backdrop-blur-sm border border-gray-200/50 dark:border-gray-600/50 hover:bg-white/80 dark:hover:bg-gray-700/80 transition-all duration-200 group"
-                              target="_blank"
-                              rel="noopener noreferrer"
+                              transition={{ type: "spring", stiffness: 300, damping: 15 }}
+                              className="block h-full"
                               style={{ willChange: 'transform' }}
                             >
-                              <div className="w-10 h-10 rounded-full flex items-center justify-center mr-3 shadow-md"
+                              <div
                                 style={{
-                                  background: index === 0 ? '#3B82F6' :
-                                    index === 1 ? '#EC4899' :
-                                      index === 2 ? '#10B981' :
-                                        '#6B7280'
+                                  backgroundColor: 'var(--glass-bg)',
+                                  borderRadius: '18px',
+                                  boxShadow: '0 5px 15px var(--glass-shadow), 0 2px 5px rgba(0,0,0,0.05)',
+                                  overflow: 'hidden',
+                                  transition: 'all 0.35s cubic-bezier(0.25, 1, 0.5, 1)',
+                                  border: '1px solid var(--glass-border)',
+                                  backdropFilter: 'blur(12px)',
+                                  WebkitBackdropFilter: 'blur(12px)'
                                 }}
+                                className={`h-full bg-gradient-to-br ${
+                                  index === 0 ? 'from-blue-400/15 to-blue-600/15 dark:from-blue-700/25 dark:to-blue-900/25 border-blue-200/40 dark:border-blue-700/40' :
+                                  index === 1 ? 'from-pink-400/15 to-pink-600/15 dark:from-pink-700/25 dark:to-pink-900/25 border-pink-200/40 dark:border-pink-700/40' :
+                                  index === 2 ? 'from-green-400/15 to-green-600/15 dark:from-green-700/25 dark:to-green-900/25 border-green-200/40 dark:border-green-700/40' :
+                                  'from-gray-400/15 to-gray-600/15 dark:from-gray-700/25 dark:to-gray-900/25 border-gray-200/40 dark:border-gray-700/40'
+                                } backdrop-blur-xl`}
                               >
-                                <div className="text-white">
-                                  {getSocialIcon(link.icon)}
-                                </div>
-                              </div>
+                                <a
+                                  href={link.url}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="p-4 flex items-center h-full group relative"
+                                >
+                                  <div className="flex items-center flex-grow min-w-0">
+                                    <div className="flex-shrink-0 w-12 h-12 rounded-full overflow-hidden border-2 border-white dark:border-gray-700 shadow-md flex items-center justify-center mr-4"
+                                      style={{
+                                        background: index === 0 ? '#3B82F6' :
+                                          index === 1 ? '#EC4899' :
+                                            index === 2 ? '#10B981' :
+                                              '#6B7280'
+                                      }}
+                                    >
+                                      <div className="text-white">
+                                        {getSocialIcon(link.icon)}
+                                      </div>
+                                    </div>
+                                    <div className="flex-grow min-w-0">
+                                      <div className="flex items-center justify-between">
+                                        <div className="min-w-0 flex-grow">
+                                          <h3 className="font-semibold text-[#3c3c3e] dark:text-gray-200 truncate">
+                                            {link.name}
+                                          </h3>
+                                          <p className="text-xs sm:text-sm font-medium text-[#3c3c3e] dark:text-gray-200 mt-0.5 truncate max-w-[180px]">
+                                            {link.url.replace(/^https?:\/\//, '').replace(/\/$/, '')}
+                                          </p>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
 
-                              <div className="flex-grow min-w-0">
-                                <div className="font-medium text-gray-900 dark:text-white truncate">
-                                  {link.name}
-                                </div>
-                                <div className="text-xs text-gray-500 dark:text-gray-400 truncate">
-                                  {link.url.replace(/^https?:\/\//, '').replace(/\/$/, '')}
-                                </div>
+                                  {/* 卡片右下角装饰 - 减小并降低透明度 */}
+                                  <div className="absolute top-1/2 right-0 -translate-y-1/2 w-12 h-12 opacity-[0.04]">
+                                    {getSocialIcon(link.icon)}
+                                  </div>
+                                </a>
                               </div>
-
-                              <ArrowRightIcon className="w-4 h-4 text-gray-400 group-hover:text-gray-600 dark:group-hover:text-gray-300 group-hover:translate-x-1 transition-all duration-200" />
-                            </motion.a>
+                            </motion.div>
                           ))}
                         </div>
                       </div>
@@ -1810,37 +1903,6 @@ const Home = () => {
                       </h2>
 
                       <div className="space-y-6">
-                        <div className="flex items-center space-x-4">
-                          <motion.div
-                            initial={{ scale: 0.8, opacity: 0 }}
-                            animate={{ scale: 1, opacity: 1 }}
-                            transition={{ delay: 0.2, duration: 0.4 }}
-                            className="relative"
-                          >
-                            <div
-                              className="w-20 h-20 rounded-full overflow-hidden"
-                              style={{
-                                background: '#3B82F6',
-                                padding: '3px',
-                                boxShadow: '0 8px 24px rgba(59, 130, 246, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2)'
-                              }}
-                            >
-                              <div className="w-full h-full bg-gray-200 dark:bg-gray-700 rounded-full flex items-center justify-center text-2xl font-bold text-gray-600 dark:text-gray-300">
-                                D
-                              </div>
-                            </div>
-                            <div
-                              className="absolute -bottom-1 -right-1 w-6 h-6 bg-green-500 rounded-full border-2 border-white dark:border-gray-800"
-                              style={{
-                                boxShadow: '0 2px 8px rgba(34, 197, 94, 0.4)'
-                              }}
-                            ></div>
-                          </motion.div>
-                          <div>
-                            <h3 className="text-xl font-semibold text-gray-900 dark:text-white">damesck</h3>
-                            <p className="text-sm text-gray-500 dark:text-gray-400">Student & Developer</p>
-                          </div>
-                        </div>
                         <div>
                           <h3 className="text-lg font-medium mb-3 text-gray-800 dark:text-gray-200">自我介绍</h3>
                           <p className="text-gray-700 dark:text-gray-300 leading-relaxed text-sm">

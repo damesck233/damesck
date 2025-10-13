@@ -40,7 +40,8 @@ const BackgroundImage = memo(({ bgUrl }: { bgUrl: string }) => (
       backgroundRepeat: 'no-repeat'
     }}
   >
-    <div className="absolute inset-0 bg-gradient-to-br dark:from-blue-900/40 dark:to-blue-800/40 from-blue-400/30 to-blue-600/30"></div>
+    {/* 亮色模式使用粉色遮罩，暗色模式使用深蓝色遮罩 */}
+    <div className="absolute inset-0 bg-pink-200/30 dark:bg-slate-900/60"></div>
   </div>
 ));
 
