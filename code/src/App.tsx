@@ -278,7 +278,7 @@ function App() {
     if (!themeInitialized) return; // 等待主题初始化
 
     // 预缓存背景图片 URL
-    const bgUrl = 'https://www.loliapi.com/acg/';
+    const bgUrl = 'https://nb-data.klpbbs.com/file/tc/2025/10/13/68ec708943c46_1760325769.jpg';
     setBgImageUrl(bgUrl);
   }, [themeInitialized]); // 依赖于主题初始化
 
