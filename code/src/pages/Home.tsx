@@ -28,6 +28,8 @@ import learningProgress from '../data/cards/learningProgress.json';
 import devices from '../data/cards/devices.json';
 import countdown from '../data/cards/countdown.json';
 import socialLinks from '../data/cards/socialLinks.json';
+import ProfileCard from '../components/home/ProfileCard';
+import ProfileModal from '../components/home/modals/ProfileModal';
 
 // 定义博客文章接口
 interface BlogPost {
@@ -142,50 +144,9 @@ const appleColors = {
   yellow: { start: '#FFCC00', end: '#FFCC00', shadow: 'rgba(255, 204, 0, 0.25)' },
   gray: { start: '#8E8E93', end: '#8E8E93', shadow: 'rgba(142, 142, 147, 0.25)' }, // 新增灰色选项
 };
+// 现代化的主题颜色 - 单色设计，减少渐变和紫色
 
-// 添加Apple风格的图标组件
-const AppleStyleIcon = ({
-  children,
-  colorScheme = 'blue',
-  customColors = null,
-  size = 'md'
-}: {
-  children: React.ReactNode;
-  colorScheme?: keyof typeof appleColors | 'custom';
-  customColors?: { start: string; end: string; shadow: string } | null;
-  size?: 'sm' | 'md' | 'lg';
-}) => {
-  const colors = colorScheme === 'custom' && customColors
-    ? customColors
-    : appleColors[colorScheme as keyof typeof appleColors];
-
-  const sizeClasses = {
-    sm: 'w-6 h-6',
-    md: 'w-8 h-8',
-    lg: 'w-10 h-10'
-  };
-
-  const iconSizeClasses = {
-    sm: 'w-3.5 h-3.5',
-    md: 'w-5 h-5',
-    lg: 'w-6 h-6'
-  };
-
-  return (
-    <div
-      className={`relative ${sizeClasses[size]} rounded-xl flex items-center justify-center`}
-      style={{
-        backgroundColor: colors.start, // 使用纯色背景，不再使用渐变
-        boxShadow: `0 2px 8px ${colors.shadow}`, // 减少阴影强度
-      }}
-    >
-      {/* 移除渐变光泽效果，保持简洁的现代风格 */}
-      <div className={`${iconSizeClasses[size]} text-white`}>
-        {children}
-      </div>
-    </div>
-  );
-};
+import { AppleStyleIcon } from '../components/ui/AppleIcons';
 
 // 自定义Apple风格图标组件
 const AppleSkillIcon = ({ className }: { className?: string }) => (
@@ -620,12 +581,12 @@ const Home = () => {
               </linearGradient>
             </defs>
             {/* 主要文档背景 */}
-            <path 
+            <path
               d="M6 2C4.9 2 4 2.9 4 4v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6H6z"
               fill="url(#blogGradient)"
             />
             {/* 文档折角 */}
-            <path 
+            <path
               d="M14 2v6h6"
               fill="url(#blogAccent)"
               opacity="0.7"
@@ -637,7 +598,7 @@ const Home = () => {
             <rect x="7" y="17" width="5" height="1" rx="0.5" fill="rgba(255,255,255,0.6)" />
             {/* 装饰性元素 - 博客图标 */}
             <circle cx="8.5" cy="6.5" r="1.5" fill="rgba(255,255,255,0.8)" />
-            <path 
+            <path
               d="M8.5 5.5c0.55 0 1 0.45 1 1s-0.45 1-1 1-1-0.45-1-1 0.45-1 1-1m0 0.3c-0.38 0-0.7 0.32-0.7 0.7s0.32 0.7 0.7 0.7 0.7-0.32 0.7-0.7-0.32-0.7-0.7-0.7"
               fill="rgba(255,255,255,0.9)"
             />
@@ -655,7 +616,7 @@ const Home = () => {
                 <stop offset="100%" stopColor="rgba(255,255,255,0.8)" />
               </linearGradient>
             </defs>
-            <path 
+            <path
               d="M12 0C5.374 0 0 5.373 0 12 0 17.302 3.438 21.8 8.207 23.387c.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"
               fill="url(#githubGradient)"
             />
@@ -670,7 +631,7 @@ const Home = () => {
                 <stop offset="100%" stopColor="rgba(255,255,255,0.8)" />
               </linearGradient>
             </defs>
-            <path 
+            <path
               d="M20 2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h4l4 4 4-4h4c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"
               fill="url(#chatGradient)"
             />
@@ -688,7 +649,7 @@ const Home = () => {
                 <stop offset="100%" stopColor="rgba(255,255,255,0.8)" />
               </linearGradient>
             </defs>
-            <path 
+            <path
               d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H6.5A2.5 2.5 0 0 0 4 4.5v15ZM6.5 4H20v11H6.5a4.5 4.5 0 0 0-1.5.26V4.5A.5.5 0 0 1 6.5 4Z"
               fill="url(#defaultGradient)"
             />
@@ -747,59 +708,8 @@ const Home = () => {
       transition={{ duration: 0.3 }}
     >
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-        {/* 个人信息卡片 - 使用新数据 */}
-        <motion.div
-          variants={fadeIn}
-          custom={0}
-          initial="hidden"
-          animate="visible"
-          className="aspect-square cursor-pointer card-container floating-element"
-          onMouseEnter={() => handleMouseEnter('personal')}
-          onMouseLeave={() => handleMouseLeave('personal')}
-          onClick={() => openModal('personal')}
-        >
-          <div
-            className="h-full backdrop-blur-md relative overflow-hidden"
-            style={{
-              borderRadius: '20px',
-              boxShadow: '0 4px 16px var(--glass-shadow), 0 2px 4px rgba(0,0,0,0.04)',
-              transition: 'all 0.3s ease-out',
-              border: '1px solid var(--card-border)',
-              background: 'linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(168, 85, 247, 0.08) 50%, rgba(236, 72, 153, 0.06) 100%)',
-              ...(hoveredCards.personal ? hoverStyle : {})
-            }}
-          >
-            {/* 背景装饰元素 */}
-            <div className="absolute -top-4 -right-4 w-24 h-24 bg-gradient-to-br from-indigo-400/20 to-purple-500/15 rounded-full blur-xl pointer-events-none dark:from-indigo-400/10 dark:to-purple-500/8"></div>
-            <div className="absolute -bottom-6 -left-6 w-32 h-32 bg-gradient-to-tr from-pink-400/15 to-rose-500/10 rounded-full blur-2xl pointer-events-none dark:from-pink-400/8 dark:to-rose-500/5"></div>
-
-            {/* 毛玻璃背景层 */}
-            <div className="absolute inset-0 bg-white/70 dark:bg-gray-900/70 backdrop-blur-sm"></div>
-
-            <div className="relative z-10 flex flex-col items-center justify-center h-full p-8">
-              <div className="w-28 h-28 rounded-full overflow-hidden border-4 border-white/80 dark:border-gray-700/80 shadow-xl mb-6 relative">
-                {/* 头像光环效果 */}
-                <div className="absolute -inset-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-full opacity-20 blur-sm"></div>
-                <img
-                  src={personalInfo.avatar}
-                  alt="个人头像"
-                  className="w-full h-full object-cover relative z-10"
-                />
-              </div>
-
-              <h2 className="text-2xl font-bold bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 dark:from-white dark:via-gray-100 dark:to-white bg-clip-text text-transparent mb-2">
-                {personalInfo.name}
-              </h2>
-
-              <p className="text-base text-gray-600/90 dark:text-gray-300/90 font-medium">
-                {personalInfo.email}
-              </p>
-
-              {/* 底部装饰线 */}
-              <div className="mt-4 w-16 h-0.5 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-full opacity-60"></div>
-            </div>
-          </div>
-        </motion.div>
+        {/* 个人信息卡片 - 使用新组件 */}
+        <ProfileCard onClick={() => openModal('personal')} hidden={modalOpen.personal} />
 
         {/* 技能展示卡片 - 使用新数据 */}
         <motion.div
@@ -1600,445 +1510,10 @@ const Home = () => {
       </AnimatePresence>
 
       {/* 模态框 - 个人资料 */}
-      <AnimatePresence>
-        {modalOpen.personal && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/50 dark:bg-black/70 backdrop-blur-md flex items-center justify-center z-[1000]"
-            onClick={() => closeModal('personal')}
-          >
-            <motion.div
-              initial={{ scale: 0.9, opacity: 0, y: 20 }}
-              animate={{ scale: 1, opacity: 1, y: 0 }}
-              exit={{ scale: 0.9, opacity: 0, y: 20 }}
-              transition={{
-                type: "spring",
-                damping: 25,
-                stiffness: 300,
-                mass: 0.6
-              }}
-              style={{
-                maxWidth: '900px',
-                maxHeight: '90vh',
-                margin: '20px',
-                borderRadius: '16px',
-                boxShadow: '0 8px 32px rgba(0, 0, 0, 0.12), 0 2px 16px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.6)',
-                backdropFilter: 'blur(40px) saturate(180%)',
-                border: '1px solid rgba(255, 255, 255, 0.18)',
-                willChange: 'transform, opacity',
-                position: 'relative' as const,
-                overflow: 'hidden'
-              }}
-              className="relative overflow-hidden bg-gray-100/70 dark:bg-gray-800/70 dark:border-gray-600/20"
-              onClick={(e) => e.stopPropagation()}
-            >
-              {/* Windows 11 云母效果背景层 */}
-              <div
-                className="absolute inset-0"
-                style={{
-                  background: `
-                    radial-gradient(circle at 20% 20%, rgba(120, 119, 198, 0.15) 0%, transparent 50%),
-                    radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
-                    radial-gradient(circle at 40% 40%, rgba(120, 119, 198, 0.08) 0%, transparent 50%)
-                  `,
-                  filter: 'blur(1px)'
-                }}
-              ></div>
-
-              {/* 云母噪点纹理 */}
-              <div
-                className="absolute inset-0 opacity-30 dark:opacity-20"
-                style={{
-                  backgroundImage: `
-                    radial-gradient(circle at 1px 1px, rgba(255,255,255,0.15) 1px, transparent 0),
-                    radial-gradient(circle at 3px 3px, rgba(0,0,0,0.05) 1px, transparent 0)
-                  `,
-                  backgroundSize: '20px 20px, 40px 40px'
-                }}
-              ></div>
-
-              {/* 动态光影效果 */}
-              <div
-                className="absolute top-0 left-0 right-0 h-px"
-                style={{
-                  background: 'linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.8), transparent)',
-                  filter: 'blur(0.5px)'
-                }}
-              ></div>
-
-              {/* 边缘高光 */}
-              <div
-                className="absolute inset-0 rounded-2xl"
-                style={{
-                  background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, transparent 50%, rgba(255, 255, 255, 0.1) 100%)',
-                  mask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
-                  maskComposite: 'xor',
-                  padding: '1px'
-                }}
-              ></div>
-
-              {/* 头部区域 */}
-              <motion.div
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.05, duration: 0.3, ease: "easeOut" }}
-                className="relative z-10 border-b border-white/10 dark:border-gray-600/20 p-6 bg-white/40 dark:bg-gray-800/60"
-                style={{
-                  borderTopLeftRadius: '16px',
-                  borderTopRightRadius: '16px',
-                  backdropFilter: 'blur(20px) saturate(180%)',
-                  boxShadow: 'inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 1px 3px rgba(0, 0, 0, 0.05)',
-                  willChange: 'transform, opacity'
-                }}
-              >
-                <div className="flex justify-between items-center">
-                  <div className="flex items-center space-x-4">
-                    <motion.div
-                      initial={{ scale: 0, rotate: -180 }}
-                      animate={{ scale: 1, rotate: 0 }}
-                      transition={{ delay: 0.2, duration: 0.5, type: "spring", stiffness: 200 }}
-                      className="relative"
-                    >
-                      <AppleStyleIcon
-                        colorScheme="blue"
-                        size="lg"
-                      >
-                        <ChatBubbleLeftRightIcon className="w-6 h-6 text-white" />
-                      </AppleStyleIcon>
-                      <motion.div
-                        initial={{ scale: 0 }}
-                        animate={{ scale: 1 }}
-                        transition={{ delay: 0.5, duration: 0.3, type: "spring" }}
-                        className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-white dark:border-gray-900"
-                      ></motion.div>
-                    </motion.div>
-                    <motion.div
-                      initial={{ opacity: 0, x: -20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: 0.3, duration: 0.4 }}
-                    >
-                      <h2 className="text-2xl font-semibold text-gray-800 dark:text-gray-100">
-                        个人资料详情
-                      </h2>
-                      <p className="text-sm text-gray-600 dark:text-gray-400 mt-1 font-medium">Personal Profile</p>
-                    </motion.div>
-                  </div>
-                  <motion.button
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{
-                      delay: 0.2,
-                      duration: 0.2,
-                      ease: "easeOut"
-                    }}
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    className="w-9 h-9 rounded-full flex items-center justify-center transition-all duration-200"
-                    style={{
-                      background: 'rgba(120, 120, 128, 0.18)',
-                      backdropFilter: 'blur(10px)',
-                      border: '0.5px solid rgba(255, 255, 255, 0.25)',
-                      boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
-                      willChange: 'transform'
-                    }}
-                    onClick={() => closeModal('personal')}
-                  >
-                    <XMarkIcon className="w-5 h-5 text-gray-700 dark:text-gray-200" />
-                  </motion.button>
-                </div>
-              </motion.div>
-
-              {/* 内容区域 */}
-              <div
-                className="relative z-10 p-6 overflow-y-auto max-h-[calc(90vh-120px)] bg-white/20 dark:bg-gray-800/40"
-                style={{
-                  backdropFilter: 'blur(15px) saturate(150%)',
-                  borderBottomLeftRadius: '16px',
-                  borderBottomRightRadius: '16px'
-                }}
-              >
-
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                  {/* 左侧个人信息卡片 */}
-                  <div className="lg:col-span-1">
-                    <motion.div
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.2, duration: 0.5 }}
-                      className="backdrop-blur-2xl rounded-2xl p-6 border shadow-2xl bg-white/30 dark:bg-gray-800/50 border-white/15 dark:border-gray-600/30"
-                      style={{
-                        borderRadius: '16px',
-                        boxShadow: '0 4px 16px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.3)',
-                        backdropFilter: 'blur(25px) saturate(180%)'
-                      }}
-                    >
-                      {/* 头像和基本信息 */}
-                      <div className="text-center mb-6">
-                        <div className="relative inline-block mb-4">
-                          <div className="w-32 h-32 rounded-full overflow-hidden border-4 border-white dark:border-gray-700 shadow-xl">
-                            <img
-                              src={personalInfo.avatar}
-                              alt="个人头像"
-                              className="w-full h-full object-cover"
-                            />
-                          </div>
-                          <div className="absolute -bottom-2 -right-2 w-8 h-8 bg-green-500 rounded-full border-4 border-white dark:border-gray-800 flex items-center justify-center">
-                            <div className="w-3 h-3 bg-white rounded-full"></div>
-                          </div>
-                        </div>
-
-                        <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
-                          {personalInfo.name}
-                        </h3>
-                        <p className="text-gray-600 dark:text-gray-300 mb-3">
-                          {personalInfo.email}
-                        </p>
-                        <div className="inline-flex items-center px-4 py-2 bg-blue-500 rounded-full text-white text-sm font-medium shadow-lg">
-                          <div className="w-2 h-2 bg-white rounded-full mr-2 animate-pulse"></div>
-                          damesck.net
-                        </div>
-                      </div>
-
-                      {/* 社交链接 */}
-                      <div>
-                        <h4 className="text-lg font-semibold mb-4 text-gray-900 dark:text-white flex items-center">
-                          <div className="w-2 h-2 bg-blue-500 rounded-full mr-2"></div>
-                          社交链接
-                        </h4>
-                        <div className="space-y-3">
-                          {mySocialLinks.map((link, index) => (
-                            <motion.div
-                              key={index}
-                              whileHover={{ scale: 1.02, y: -2 }}
-                              whileTap={{ scale: 0.98 }}
-                              transition={{ type: "spring", stiffness: 300, damping: 15 }}
-                              className="block h-full"
-                              style={{ willChange: 'transform' }}
-                            >
-                              <div
-                                style={{
-                                  backgroundColor: 'var(--glass-bg)',
-                                  borderRadius: '18px',
-                                  boxShadow: '0 5px 15px var(--glass-shadow), 0 2px 5px rgba(0,0,0,0.05)',
-                                  overflow: 'hidden',
-                                  transition: 'all 0.35s cubic-bezier(0.25, 1, 0.5, 1)',
-                                  border: '1px solid var(--glass-border)',
-                                  backdropFilter: 'blur(12px)',
-                                  WebkitBackdropFilter: 'blur(12px)'
-                                }}
-                                className={`h-full bg-gradient-to-br ${
-                                  index === 0 ? 'from-blue-400/15 to-blue-600/15 dark:from-blue-700/25 dark:to-blue-900/25 border-blue-200/40 dark:border-blue-700/40' :
-                                  index === 1 ? 'from-pink-400/15 to-pink-600/15 dark:from-pink-700/25 dark:to-pink-900/25 border-pink-200/40 dark:border-pink-700/40' :
-                                  index === 2 ? 'from-green-400/15 to-green-600/15 dark:from-green-700/25 dark:to-green-900/25 border-green-200/40 dark:border-green-700/40' :
-                                  'from-gray-400/15 to-gray-600/15 dark:from-gray-700/25 dark:to-gray-900/25 border-gray-200/40 dark:border-gray-700/40'
-                                } backdrop-blur-xl`}
-                              >
-                                <a
-                                  href={link.url}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  className="p-4 flex items-center h-full group relative"
-                                >
-                                  <div className="flex items-center flex-grow min-w-0">
-                                    <div className="flex-shrink-0 w-12 h-12 rounded-full overflow-hidden border-2 border-white dark:border-gray-700 shadow-md flex items-center justify-center mr-4"
-                                      style={{
-                                        background: index === 0 ? '#3B82F6' :
-                                          index === 1 ? '#EC4899' :
-                                            index === 2 ? '#10B981' :
-                                              '#6B7280'
-                                      }}
-                                    >
-                                      <div className="text-white">
-                                        {getSocialIcon(link.icon)}
-                                      </div>
-                                    </div>
-                                    <div className="flex-grow min-w-0">
-                                      <div className="flex items-center justify-between">
-                                        <div className="min-w-0 flex-grow">
-                                          <h3 className="font-semibold text-[#3c3c3e] dark:text-gray-200 truncate">
-                                            {link.name}
-                                          </h3>
-                                          <p className="text-xs sm:text-sm font-medium text-[#3c3c3e] dark:text-gray-200 mt-0.5 truncate max-w-[180px]">
-                                            {link.url.replace(/^https?:\/\//, '').replace(/\/$/, '')}
-                                          </p>
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </div>
-
-                                  {/* 卡片右下角装饰 - 减小并降低透明度 */}
-                                  <div className="absolute top-1/2 right-0 -translate-y-1/2 w-12 h-12 opacity-[0.04]">
-                                    {getSocialIcon(link.icon)}
-                                  </div>
-                                </a>
-                              </div>
-                            </motion.div>
-                          ))}
-                        </div>
-                      </div>
-                    </motion.div>
-                  </div>
-
-                  {/* 右侧详细信息 */}
-                  <div className="lg:col-span-2 space-y-6">
-                    {/* 自我介绍卡片 */}
-                    <motion.div
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      transition={{ delay: 0.1, duration: 0.2 }}
-                      className="rounded-2xl p-6 shadow-lg bg-white/30 dark:bg-gray-800/30 border border-white/15 dark:border-gray-600/15"
-                      style={{
-                        backdropFilter: 'blur(25px) saturate(180%)',
-                        boxShadow: '0 4px 16px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.3)',
-                        willChange: 'opacity'
-                      }}
-                    >
-                      <h2 className="text-2xl font-bold mb-4 text-gray-800 dark:text-gray-100 flex items-center">
-                        <div className="w-6 h-6 bg-blue-500 rounded-lg mr-3 flex items-center justify-center">
-                          <div className="w-3 h-3 bg-white rounded-sm"></div>
-                        </div>
-                        Me
-                      </h2>
-
-                      <div className="space-y-6">
-                        <div>
-                          <h3 className="text-lg font-medium mb-3 text-gray-800 dark:text-gray-200">自我介绍</h3>
-                          <p className="text-gray-700 dark:text-gray-300 leading-relaxed text-sm">
-                            我是 damesck，是一名热爱计算机硬件，网络，软件，编程(<span className="line-through text-gray-500">学不会</span>)的一名学生<span className="line-through text-gray-500"></span>
-                          </p>
-                        </div>
-                      </div>
-                    </motion.div>
-
-                    {/* 贡献经历卡片 */}
-                    <motion.div
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      transition={{ delay: 0.2, duration: 0.2 }}
-                      className="rounded-2xl p-6 shadow-lg bg-white/75 dark:bg-gray-800/75 border border-white/25 dark:border-gray-600/25"
-                      style={{
-                        backdropFilter: 'blur(12px)',
-                        boxShadow: '0 4px 16px rgba(0, 0, 0, 0.08)',
-                        willChange: 'opacity'
-                      }}
-                    >
-                      <h2 className="text-xl font-semibold mb-4 text-gray-800 dark:text-gray-100 flex items-center">
-                        <div className="w-5 h-5 bg-orange-500 rounded-lg mr-3 flex items-center justify-center">
-                          <div className="w-2.5 h-2.5 bg-white rounded-sm"></div>
-                        </div>
-                        Contributions
-                      </h2>
-
-                      <div className="space-y-4">
-                        <div className="flex items-start p-4 rounded-xl bg-orange-50 dark:bg-orange-900/20 border border-orange-200/50 dark:border-orange-700/50">
-                          <div className="w-3 h-3 rounded-full bg-orange-500 mt-2 mr-4 flex-shrink-0"></div>
-                          <div>
-                            <h4 className="font-medium text-gray-800 dark:text-gray-100">程游ucyclub | 程游社区联合创始人</h4>
-                          </div>
-                        </div>
-                        <div className="flex items-start p-4 rounded-xl bg-blue-50 dark:bg-blue-900/20 border border-blue-200/50 dark:border-blue-700/50">
-                          <div className="w-3 h-3 rounded-full bg-blue-500 mt-2 mr-4 flex-shrink-0"></div>
-                          <div>
-                            <h4 className="font-medium text-gray-800 dark:text-gray-100">Vastsea瀚海 | 成员</h4>
-                          </div>
-                        </div>
-                      </div>
-                    </motion.div>
-
-                    {/* 职位经历卡片 */}
-                    <motion.div
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      transition={{ delay: 0.25, duration: 0.2 }}
-                      className="rounded-2xl p-6 shadow-lg"
-                      style={{
-                        background: 'rgba(255, 255, 255, 0.3)',
-                        backdropFilter: 'blur(25px) saturate(180%)',
-                        border: '1px solid rgba(255, 255, 255, 0.15)',
-                        boxShadow: '0 4px 16px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.3)',
-                        willChange: 'opacity'
-                      }}
-                    >
-                      <h2 className="text-xl font-semibold mb-4 text-gray-800 dark:text-gray-100 flex items-center">
-                        <div className="w-5 h-5 bg-green-500 rounded-lg mr-3 flex items-center justify-center">
-                          <div className="w-2.5 h-2.5 bg-white rounded-sm"></div>
-                        </div>
-                        Positions
-                      </h2>
-
-                      <div className="space-y-4">
-                        <div className="flex items-start p-4 rounded-xl bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200/50 dark:border-yellow-700/50">
-                          <div className="w-3 h-3 rounded-full bg-yellow-500 mt-2 mr-4 flex-shrink-0"></div>
-                          <div>
-                            <h4 className="font-medium text-gray-800 dark:text-gray-100">苦力怕论坛 | 超级版主</h4>
-                          </div>
-                        </div>
-                        <div className="flex items-start p-4 rounded-xl bg-blue-50 dark:bg-blue-900/20 border border-blue-200/50 dark:border-blue-700/50">
-                          <div className="w-3 h-3 rounded-full bg-blue-500 mt-2 mr-4 flex-shrink-0"></div>
-                          <div>
-                            <h4 className="font-medium text-gray-800 dark:text-gray-100">程游社区 | 联合创始人</h4>
-                          </div>
-                        </div>
-                        <div className="flex items-start p-4 rounded-xl bg-gray-50 dark:bg-gray-900/20 border border-gray-200/50 dark:border-gray-700/50">
-                          <div className="w-3 h-3 rounded-full bg-gray-500 mt-2 mr-4 flex-shrink-0"></div>
-                          <div>
-                            <h4 className="font-medium text-gray-800 dark:text-gray-100">鄂尔多斯市达拉特旗第十中学 | 网络运维与机房运维管理</h4>
-                          </div>
-                        </div>
-                      </div>
-                    </motion.div>
-
-                    {/* 兴趣爱好卡片 */}
-                    <motion.div
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      transition={{ delay: 0.3, duration: 0.2 }}
-                      className="rounded-2xl p-6 shadow-lg bg-white/30 dark:bg-gray-800/30 border border-white/15 dark:border-gray-600/15"
-                      style={{
-                        backdropFilter: 'blur(25px) saturate(180%)',
-                        boxShadow: '0 4px 16px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.3)',
-                        willChange: 'opacity'
-                      }}
-                    >
-                      <h2 className="text-xl font-semibold mb-4 text-gray-800 dark:text-gray-100 flex items-center">
-                        <div className="w-5 h-5 bg-indigo-500 rounded-lg mr-3 flex items-center justify-center">
-                          <div className="w-2.5 h-2.5 bg-white rounded-sm"></div>
-                        </div>
-                        Interest
-                      </h2>
-
-                      <div className="flex flex-wrap gap-3">
-                        {['计算机网络', '计算机硬件', '轨道交通', '旅行', '吃'].map((interest, index) => (
-                          <motion.span
-                            key={index}
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            transition={{ delay: 0.05 * index, duration: 0.2 }}
-                            whileHover={{ scale: 1.02 }}
-                            whileTap={{ scale: 0.98 }}
-                            className="px-5 py-2.5 text-indigo-700 dark:text-indigo-300 rounded-full text-sm font-medium cursor-pointer transition-all duration-200"
-                            style={{
-                              background: 'rgba(94, 92, 230, 0.12)',
-                              backdropFilter: 'blur(8px)',
-                              border: '1px solid rgba(94, 92, 230, 0.2)',
-                              boxShadow: '0 1px 4px rgba(94, 92, 230, 0.1)',
-                              willChange: 'transform'
-                            }}
-                          >
-                            {interest}
-                          </motion.span>
-                        ))}
-                      </div>
-                    </motion.div>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      <ProfileModal
+        isOpen={modalOpen.personal}
+        onClose={() => closeModal('personal')}
+      />
 
       {/* 模态框 - 学习进度 */}
       <AnimatePresence>
