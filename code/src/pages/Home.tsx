@@ -22,12 +22,13 @@ import {
 import { blogData } from '../data/blog/data';
 
 // 导入卡片数据
-import personalInfo from '../data/cards/personalInfo.json';
 import skills from '../data/cards/skills.json';
 import learningProgress from '../data/cards/learningProgress.json';
 import devices from '../data/cards/devices.json';
 import countdown from '../data/cards/countdown.json';
-import socialLinks from '../data/cards/socialLinks.json';
+import myData from '../data/my/data.json';
+
+const { personalInfo, socialLinks } = myData;
 import ProfileCard from '../components/home/ProfileCard';
 import ProfileModal from '../components/home/modals/ProfileModal';
 

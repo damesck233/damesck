@@ -1,8 +1,10 @@
 import { motion, AnimatePresence } from 'framer-motion';
-import { XMarkIcon, ChatBubbleLeftRightIcon } from '@heroicons/react/24/outline';
+import { XMarkIcon, ChatBubbleLeftRightIcon, MinusIcon, ArrowTopRightOnSquareIcon } from '@heroicons/react/24/outline';
 import { AppleStyleIcon } from '../../ui/AppleIcons';
-import personalInfo from '../../../data/cards/personalInfo.json';
-import socialLinks from '../../../data/cards/socialLinks.json';
+import myData from '../../../data/my/data.json';
+import { useEffect } from 'react';
+
+const { personalInfo, socialLinks } = myData;
 
 interface ProfileModalProps {
     isOpen: boolean;
@@ -33,6 +35,21 @@ const getSocialIcon = (iconName: string) => {
 };
 
 const ProfileModal = ({ isOpen, onClose, layoutId = 'profile-card' }: ProfileModalProps) => {
+    // 锁定背景滚动
+    useEffect(() => {
+        if (isOpen) {
+            document.body.style.overflow = 'hidden';
+            // 添加padding-right以防止滚动条消失导致的布局跳动 (可选，简单起见先不加)
+        } else {
+            document.body.style.overflow = 'unset';
+        }
+
+        // 清理函数
+        return () => {
+            document.body.style.overflow = 'unset';
+        };
+    }, [isOpen]);
+
     return (
         <AnimatePresence>
             {isOpen && (
@@ -57,26 +74,45 @@ const ProfileModal = ({ isOpen, onClose, layoutId = 'profile-card' }: ProfileMod
                             }}
                             transition={{
                                 type: "spring",
-                                stiffness: 200,
-                                damping: 30,
-                                mass: 1
+                                stiffness: 180,
+                                damping: 20,
+                                mass: 1.0
                             }}
                         >
-                            {/* Header */}
-                            <div className="flex-shrink-0 h-[60px] flex items-center justify-between px-6 border-b border-black/5 dark:border-white/10 bg-white/50 dark:bg-[#2c2c2e]/50 backdrop-blur-xl z-20 sticky top-0">
-                                <div className="flex items-center gap-3">
-                                    <AppleStyleIcon colorScheme="blue" size="sm">
-                                        <ChatBubbleLeftRightIcon className="w-4 h-4 text-white" />
-                                    </AppleStyleIcon>
-                                    <span className="font-semibold text-[17px] text-[#1d1d1f] dark:text-white">Profile Details</span>
+                            {/* Header - Mac Traffic Lights (Left Aligned) */}
+                            <div className="flex-shrink-0 h-[60px] flex items-center justify-start gap-6 px-5 z-20 sticky top-0">
+                                {/* Left: Traffic Lights */}
+                                <div className="flex items-center gap-2.5">
+                                    <button
+                                        onClick={onClose}
+                                        className="w-4 h-4 rounded-full bg-[#ff5f56] border-[0.5px] border-[#e0443e] hover:brightness-90 transition-all flex items-center justify-center group"
+                                        aria-label="Close"
+                                    >
+                                        <XMarkIcon className="w-2.5 h-2.5 text-black/50 opacity-0 group-hover:opacity-100" />
+                                    </button>
+                                    <button
+                                        onClick={onClose}
+                                        className="w-4 h-4 rounded-full bg-[#ffbd2e] border-[0.5px] border-[#dea123] hover:brightness-90 transition-all flex items-center justify-center group"
+                                        aria-label="Minimize"
+                                    >
+                                        <MinusIcon className="w-2.5 h-2.5 text-black/50 opacity-0 group-hover:opacity-100" />
+                                    </button>
+                                    <a
+                                        href="https://me.damesck.net"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="w-4 h-4 rounded-full bg-[#27c93f] border-[0.5px] border-[#1aab29] hover:brightness-90 transition-all flex items-center justify-center group"
+                                        aria-label="Maximize"
+                                    >
+                                        <ArrowTopRightOnSquareIcon className="w-2.5 h-2.5 text-black/50 opacity-0 group-hover:opacity-100" />
+                                    </a>
                                 </div>
 
-                                <button
-                                    onClick={onClose}
-                                    className="w-8 h-8 rounded-full bg-[#e5e5ea] dark:bg-[#3a3a3c] flex items-center justify-center text-[#8e8e93] hover:text-[#1d1d1f] dark:hover:text-white transition-colors"
-                                >
-                                    <XMarkIcon className="w-5 h-5 font-bold" strokeWidth={2.5} />
-                                </button>
+                                {/* Title (Left Aligned) */}
+                                <div className="flex items-center gap-2 opacity-90">
+                                    <ChatBubbleLeftRightIcon className="w-4 h-4 text-[#1d1d1f] dark:text-white" />
+                                    <span className="font-semibold text-[15px] text-[#1d1d1f] dark:text-white tracking-wide">Profile Details</span>
+                                </div>
                             </div>
 
                             {/* Content */}
@@ -126,6 +162,7 @@ const ProfileModal = ({ isOpen, onClose, layoutId = 'profile-card' }: ProfileMod
                                         </motion.div>
                                     </div>
 
+
                                     {/* Right Column */}
                                     <div className="lg:col-span-8 space-y-6">
 
@@ -137,10 +174,10 @@ const ProfileModal = ({ isOpen, onClose, layoutId = 'profile-card' }: ProfileMod
                                             transition={{ delay: 0.4 }}
                                         >
                                             <h3 className="text-[20px] font-bold text-[#1d1d1f] dark:text-white mb-4 flex items-center gap-2">
-                                                <span className="text-[#007aff]"></span> About Me
+                                                <span className="text-[#007aff]"></span> {myData.about.title}
                                             </h3>
                                             <p className="text-[16px] leading-relaxed text-[#1d1d1f]/80 dark:text-white/80 font-normal">
-                                                我是 damesck，是一名热爱计算机硬件，网络，软件，编程的一名学生。热衷于探索数字世界的每一个角落，从底层的硬件架构到上层的软件交互，都让我着迷。
+                                                {myData.about.description}
                                             </p>
                                         </motion.div>
 
@@ -156,14 +193,12 @@ const ProfileModal = ({ isOpen, onClose, layoutId = 'profile-card' }: ProfileMod
                                                     <div className="w-2 h-2 rounded-full bg-[#ff9500]"></div> Contributions
                                                 </h4>
                                                 <ul className="space-y-4">
-                                                    <li className="flex gap-3 items-start">
-                                                        <div className="w-1.5 h-1.5 rounded-full bg-[#ff9500] mt-2 flex-shrink-0 opacity-60"></div>
-                                                        <span className="text-[15px] text-[#1d1d1f] dark:text-white/90">程游ucyclub | 联合创始人</span>
-                                                    </li>
-                                                    <li className="flex gap-3 items-start">
-                                                        <div className="w-1.5 h-1.5 rounded-full bg-[#ff9500] mt-2 flex-shrink-0 opacity-60"></div>
-                                                        <span className="text-[15px] text-[#1d1d1f] dark:text-white/90">Vastsea瀚海 | 成员</span>
-                                                    </li>
+                                                    {myData.contributions.map((item, i) => (
+                                                        <li key={i} className="flex gap-3 items-start">
+                                                            <div className="w-1.5 h-1.5 rounded-full bg-[#ff9500] mt-2 flex-shrink-0 opacity-60"></div>
+                                                            <span className="text-[15px] text-[#1d1d1f] dark:text-white/90">{item}</span>
+                                                        </li>
+                                                    ))}
                                                 </ul>
                                             </motion.div>
 
@@ -177,14 +212,12 @@ const ProfileModal = ({ isOpen, onClose, layoutId = 'profile-card' }: ProfileMod
                                                     <div className="w-2 h-2 rounded-full bg-[#007aff]"></div> Positions
                                                 </h4>
                                                 <ul className="space-y-4">
-                                                    <li className="flex gap-3 items-start">
-                                                        <div className="w-1.5 h-1.5 rounded-full bg-[#007aff] mt-2 flex-shrink-0 opacity-60"></div>
-                                                        <span className="text-[15px] text-[#1d1d1f] dark:text-white/90">苦力怕论坛 | 超级版主</span>
-                                                    </li>
-                                                    <li className="flex gap-3 items-start">
-                                                        <div className="w-1.5 h-1.5 rounded-full bg-[#007aff] mt-2 flex-shrink-0 opacity-60"></div>
-                                                        <span className="text-[15px] text-[#1d1d1f] dark:text-white/90">学校网络运维管理</span>
-                                                    </li>
+                                                    {myData.positions.map((item, i) => (
+                                                        <li key={i} className="flex gap-3 items-start">
+                                                            <div className="w-1.5 h-1.5 rounded-full bg-[#007aff] mt-2 flex-shrink-0 opacity-60"></div>
+                                                            <span className="text-[15px] text-[#1d1d1f] dark:text-white/90">{item}</span>
+                                                        </li>
+                                                    ))}
                                                 </ul>
                                             </motion.div>
                                         </div>
@@ -200,7 +233,7 @@ const ProfileModal = ({ isOpen, onClose, layoutId = 'profile-card' }: ProfileMod
                                                 Interest
                                             </h4>
                                             <div className="flex flex-wrap gap-2">
-                                                {['计算机网络', '硬件', '轨道交通', '旅行', '吃货', 'Switch', '摄影'].map((tag, i) => (
+                                                {myData.interests.map((tag, i) => (
                                                     <span key={i} className="px-4 py-1.5 rounded-full bg-[#af52de]/10 text-[#af52de] text-[14px] font-medium hover:bg-[#af52de]/20 transition-colors cursor-default">
                                                         {tag}
                                                     </span>
