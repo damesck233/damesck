@@ -715,14 +715,16 @@ const Home = () => {
         <ProfileCard onClick={() => openModal('personal')} hidden={modalOpen.personal} />
 
         {/* Activity Card (Replaces Skills & Learning) */}
+        {/* Activity Card (Replaces Skills & Learning) */}
         <ActivityCard
-          skills={skills}
-          learningProgress={myLearningProgress}
+          // skills={skills} // Deprecated
+          // learningProgress={myLearningProgress} // Deprecated
+          timelineEvents={myData.timelineEvents}
           onClick={() => openModal('skills')}
           isHovered={hoveredCards.skills}
           onMouseEnter={() => handleMouseEnter('skills')}
           onMouseLeave={() => handleMouseLeave('skills')}
-          variants={fadeIn}
+          // variants={fadeIn} // Removed per previous fix
           custom={1}
           hidden={modalOpen.skills}
           layoutId="activity-card"
@@ -1053,8 +1055,7 @@ const Home = () => {
       <ActivityModal
         isOpen={modalOpen.skills}
         onClose={() => closeModal('skills')}
-        skills={skills}
-        learningProgress={myLearningProgress}
+        timelineEvents={myData.timelineEvents}
         layoutId="activity-card"
       />
 

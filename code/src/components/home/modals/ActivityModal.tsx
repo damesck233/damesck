@@ -3,85 +3,84 @@ import {
     XMarkIcon,
     MinusIcon,
     ArrowTopRightOnSquareIcon,
-    ChartBarIcon,
+    SparklesIcon,
+    GiftIcon,
     AcademicCapIcon,
-    CommandLineIcon,
-    CpuChipIcon,
-    GlobeAltIcon,
-    SwatchIcon
+    RocketLaunchIcon
 } from '@heroicons/react/24/outline';
-import { AppleStyleIcon } from '../../ui/AppleIcons';
 import { useEffect } from 'react';
 import { useScrollLock } from '../../../hooks/useScrollLock';
 
-// Reusing interfaces for consistency
-interface Skill {
-    name: string;
+// Reusing TimelineEvent Interface
+export interface TimelineEvent {
+    date: string;
+    title: string;
+    description: string;
     icon: string;
     color: string;
-    level: number;
-}
-
-interface LearningItem {
-    name: string;
-    value: string;
-    total: string;
-    color: string;
-    description: string;
 }
 
 interface ActivityModalProps {
     isOpen: boolean;
     onClose: () => void;
-    skills: { [key: string]: Skill[] };
-    learningProgress: LearningItem[];
+    timelineEvents: TimelineEvent[];
     layoutId?: string;
 }
 
 const ActivityModal: React.FC<ActivityModalProps> = ({
     isOpen,
     onClose,
-    skills,
-    learningProgress,
+    timelineEvents,
     layoutId = 'activity-card'
 }) => {
 
-    // Lock body scroll
-    // Use custom hook for scroll locking with layout shift prevention
     const { lockScroll, unlockScroll } = useScrollLock();
 
     useEffect(() => {
         if (isOpen) {
             lockScroll();
         }
-        // Don't unlock immediately on close, wait for animation
         return () => {
-            // Safety cleanup
             if (!isOpen) unlockScroll();
         };
     }, [isOpen, lockScroll, unlockScroll]);
 
-    // Helper to get category icon
-    const getCategoryIcon = (category: string) => {
-        switch (category) {
-            case 'Languages': return <CommandLineIcon className="w-5 h-5 text-blue-500" />;
-            case 'Frontend': return <GlobeAltIcon className="w-5 h-5 text-green-500" />;
-            case 'Backend': return <CpuChipIcon className="w-5 h-5 text-purple-500" />;
-            case 'Design': return <SwatchIcon className="w-5 h-5 text-pink-500" />;
-            default: return <ChartBarIcon className="w-5 h-5 text-gray-500" />;
+    // Helper to get icon component
+    const getIcon = (iconName: string) => {
+        if (iconName.startsWith('http')) {
+            return <img src={iconName} alt="icon" className="w-full h-full object-cover rounded-full border-2 border-transparent" />;
+        }
+        switch (iconName) {
+            case 'sparkles': return <SparklesIcon className="w-5 h-5 text-white" />;
+            case 'gift': return <GiftIcon className="w-5 h-5 text-white" />;
+            case 'academic': return <AcademicCapIcon className="w-5 h-5 text-white" />;
+            case 'rocket': return <RocketLaunchIcon className="w-5 h-5 text-white" />;
+            default: return <SparklesIcon className="w-5 h-5 text-white" />;
         }
     };
+
+    // Helper for background color of icon
+    const getIconBgColor = (color: string) => {
+        switch (color) {
+            case 'blue': return 'bg-blue-500';
+            case 'red': return 'bg-red-500';
+            case 'purple': return 'bg-purple-500';
+            case 'green': return 'bg-green-500';
+            default: return 'bg-gray-500';
+        }
+    };
+
 
     return (
         <AnimatePresence onExitComplete={unlockScroll}>
             {isOpen && (
                 <>
-                    {/* Backdrop Blur Overlay */}
+                    {/* Backdrop */}
                     <motion.div
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
-                        transition={{ duration: 0.3 }}
+                        transition={{ duration: 0.5 }}
                         className="fixed inset-0 bg-black/40 dark:bg-black/60 backdrop-blur-md z-[999]"
                         onClick={onClose}
                     />
@@ -101,11 +100,14 @@ const ActivityModal: React.FC<ActivityModalProps> = ({
                                 mass: 1.0
                             }}
                         >
-                            {/* Sidebar (Navigation / Summary) */}
-                            <div className="w-full md:w-[280px] flex-shrink-0 bg-white/60 dark:bg-white/5 backdrop-blur-xl rounded-[24px] shadow-sm flex flex-col relative overflow-hidden border-b md:border-b-0 md:border-r border-[#FEF9F1] dark:border-white/5 z-20">
+                            {/* Sidebar */}
+                            <div className="w-full md:w-[320px] flex-shrink-0 bg-white/60 dark:bg-white/5 backdrop-blur-xl rounded-[24px] shadow-sm flex flex-col relative overflow-hidden border-b md:border-b-0 md:border-r border-[#FEF9F1] dark:border-white/5 z-20">
 
                                 {/* Header - Traffic Lights */}
-                                <div className="flex-shrink-0 h-[44px] md:h-[60px] flex items-center justify-between px-5">
+                                <motion.div
+                                    className="flex-shrink-0 h-[44px] md:h-[60px] flex items-center justify-between px-5"
+                                    exit={{ opacity: 0, transition: { duration: 0.1 } }}
+                                >
                                     <div className="flex items-center gap-2.5">
                                         <button onClick={onClose} className="w-4 h-4 rounded-full bg-[#ff5f56] border-[0.5px] border-[#e0443e] hover:brightness-90 transition-all flex items-center justify-center group">
                                             <XMarkIcon className="w-2.5 h-2.5 text-black/50 opacity-0 group-hover:opacity-100" />
@@ -117,7 +119,7 @@ const ActivityModal: React.FC<ActivityModalProps> = ({
                                             <ArrowTopRightOnSquareIcon className="w-2.5 h-2.5 text-black/50 opacity-0 group-hover:opacity-100" />
                                         </button>
                                     </div>
-                                </div>
+                                </motion.div>
 
                                 {/* Sidebar Content */}
                                 <div className="flex-1 p-6 flex flex-col">
@@ -126,151 +128,91 @@ const ActivityModal: React.FC<ActivityModalProps> = ({
                                             layoutId={`${layoutId}-icon-box`}
                                             className="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white shadow-lg mb-4"
                                         >
-                                            <ChartBarIcon className="w-8 h-8" />
+                                            <SparklesIcon className="w-8 h-8" />
                                         </motion.div>
                                         <motion.h2
                                             layoutId={`${layoutId}-title`}
                                             className="text-2xl font-bold text-[#1d1d1f] dark:text-white mb-1"
                                         >
-                                            技能与活动
+                                            最近发生的事
                                         </motion.h2>
                                         <motion.p
                                             layoutId={`${layoutId}-subtitle`}
                                             className="text-[#86868b] dark:text-gray-400 text-sm"
                                         >
-                                            技术栈概览与当前学习进度
+                                            Timeline & Updates
                                         </motion.p>
                                     </div>
 
-                                    {/* Fade-in container for non-morphing content */}
+                                    {/* Simple Stats for Timeline */}
                                     <motion.div
-                                        className="flex-1 flex flex-col"
+                                        className="mt-auto"
                                         initial={{ opacity: 0 }}
                                         animate={{ opacity: 1 }}
+                                        exit={{ opacity: 0, transition: { duration: 0.1 } }}
                                         transition={{ delay: 0.2, duration: 0.3 }}
                                     >
-                                        <div className="space-y-1">
-                                            <div className="px-3 py-2 rounded-lg bg-black/5 dark:bg-white/10 text-sm font-medium text-gray-900 dark:text-white">
-                                                全部概览
-                                            </div>
-                                            {/* Potential future navigation items */}
-                                        </div>
-
-                                        <div className="mt-auto">
-                                            <div className="p-4 rounded-xl bg-white/50 dark:bg-white/5 border border-white/20 dark:border-white/5 backdrop-blur-sm">
-                                                <div className="text-xs text-gray-500 dark:text-gray-400 uppercase mb-2">Total Skills</div>
-                                                <div className="text-3xl font-bold text-gray-900 dark:text-white">
-                                                    {Object.values(skills).flat().length}
-                                                </div>
+                                        <div className="p-4 rounded-xl bg-white/50 dark:bg-white/5 border border-white/20 dark:border-white/5 backdrop-blur-sm">
+                                            <div className="text-xs text-gray-500 dark:text-gray-400 uppercase mb-2">Total Events</div>
+                                            <div className="text-3xl font-bold text-gray-900 dark:text-white">
+                                                {timelineEvents ? timelineEvents.length : 0}
                                             </div>
                                         </div>
                                     </motion.div>
+
                                 </div>
                             </div>
 
 
-                            {/* Main Content Area */}
-                            <div className="flex-1 h-full overflow-y-auto overflow-x-hidden p-6 md:p-8 custom-scrollbar">
-                                <div className="max-w-[800px] mx-auto space-y-8">
+                            {/* Main Content Area: Vertical Timeline */}
+                            <motion.div
+                                className="flex-1 h-full overflow-y-auto overflow-x-hidden p-6 md:p-8 custom-scrollbar"
+                                exit={{ opacity: 0, transition: { duration: 0.1 } }}
+                            >
+                                <div className="max-w-[800px] mx-auto relative pt-4">
 
-                                    {/* Learning Progress Section */}
-                                    <motion.section
-                                        initial={{ opacity: 0 }}
-                                        animate={{ opacity: 1 }}
-                                        transition={{ delay: 0.25 }}
-                                    >
-                                        <h3 className="text-xl font-bold text-[#1d1d1f] dark:text-white mb-4 flex items-center gap-2">
-                                            <AcademicCapIcon className="w-6 h-6 text-indigo-500" />
-                                            正在学习
-                                        </h3>
-                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                            {learningProgress.map((item, idx) => (
-                                                <div key={idx} className="bg-white dark:bg-[#2c2c2e] p-5 rounded-[20px] shadow-sm border border-black/5 dark:border-white/5 hover:scale-[1.02] transition-transform duration-300">
-                                                    <div className="flex justify-between items-start mb-3">
-                                                        <div>
-                                                            <h4 className="font-semibold text-gray-900 dark:text-white">{item.name}</h4>
-                                                            <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">{item.description}</p>
-                                                        </div>
-                                                        <div className="px-2 py-1 rounded-full text-xs font-semibold bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400">
-                                                            {item.value}%
-                                                        </div>
-                                                    </div>
-                                                    <div className="h-2 w-full bg-gray-100 dark:bg-gray-700/50 rounded-full overflow-hidden">
-                                                        <motion.div
-                                                            initial={{ width: 0 }}
-                                                            animate={{ width: `${item.value}%` }}
-                                                            transition={{ duration: 0.8, delay: 0.3 + (idx * 0.1) }}
-                                                            className="h-full rounded-full"
-                                                            style={{
-                                                                backgroundColor: item.color === 'blue' ? '#3B82F6' : '#8B5CF6'
-                                                            }}
-                                                        />
-                                                    </div>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    </motion.section>
+                                    {/* Vertical Line */}
+                                    <div className="absolute left-[27px] top-0 bottom-0 w-[2px] bg-gray-200 dark:bg-white/10"></div>
 
-                                    <div className="w-full h-px bg-gray-200 dark:bg-gray-700/50"></div>
-
-                                    {/* Skills Section */}
-                                    <motion.section
-                                        initial={{ opacity: 0 }}
-                                        animate={{ opacity: 1 }}
-                                        transition={{ delay: 0.3 }}
-                                    >
-                                        <h3 className="text-xl font-bold text-[#1d1d1f] dark:text-white mb-6 flex items-center gap-2">
-                                            <ChartBarIcon className="w-6 h-6 text-blue-500" />
-                                            技能详情
-                                        </h3>
-
-                                        <div className="space-y-8">
-                                            {Object.entries(skills).map(([category, items], catIdx) => (
-                                                <div key={category}>
-                                                    <div className="flex items-center gap-2 mb-4">
-                                                        <div className="p-1.5 rounded-lg bg-gray-100 dark:bg-gray-800">
-                                                            {getCategoryIcon(category)}
-                                                        </div>
-                                                        <h4 className="font-semibold text-gray-700 dark:text-gray-200">{category}</h4>
+                                    <div className="space-y-12">
+                                        {timelineEvents && timelineEvents.map((event, idx) => {
+                                            const isImage = event.icon.startsWith('http');
+                                            return (
+                                                <motion.div
+                                                    key={idx}
+                                                    initial={{ opacity: 0, x: -20 }}
+                                                    animate={{ opacity: 1, x: 0 }}
+                                                    transition={{ delay: 0.2 + (idx * 0.1) }}
+                                                    className="relative pl-20"
+                                                >
+                                                    {/* Timeline Node */}
+                                                    <div className={`absolute left-0 w-14 h-14 rounded-full ${isImage ? 'bg-transparent overflow-hidden' : getIconBgColor(event.color)} flex items-center justify-center shadow-lg border-4 border-[#f5f5f7] dark:border-[#1c1c1e] z-10`}>
+                                                        {getIcon(event.icon)}
                                                     </div>
 
-                                                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
-                                                        {items.map((skill, idx) => (
-                                                            <motion.div
-                                                                key={idx}
-                                                                whileHover={{ scale: 1.05 }}
-                                                                className="bg-white dark:bg-[#2c2c2e] p-3 rounded-xl border border-black/5 dark:border-white/5 shadow-sm flex flex-col items-center text-center gap-2 group"
-                                                            >
-                                                                <div className="text-2xl mb-1 filter drop-shadow-sm">{skill.icon}</div>
-                                                                <span className="text-sm font-medium text-gray-900 dark:text-white">{skill.name}</span>
-
-                                                                {/* Skill Dots */}
-                                                                <div className="flex gap-0.5 mt-auto">
-                                                                    {[...Array(5)].map((_, i) => (
-                                                                        <div
-                                                                            key={i}
-                                                                            className={`w-1 h-3 rounded-full transition-colors ${i < skill.level
-                                                                                ? 'bg-blue-500 dark:bg-blue-400'
-                                                                                : 'bg-gray-200 dark:bg-gray-700'
-                                                                                }`}
-                                                                        />
-                                                                    ))}
-                                                                </div>
-                                                            </motion.div>
-                                                        ))}
+                                                    {/* Date Tag */}
+                                                    <div className="absolute left-20 top-[-25px] inline-block px-3 py-1 rounded-full bg-white dark:bg-white/10 text-xs font-semibold text-gray-500 dark:text-gray-300 shadow-sm border border-gray-100 dark:border-white/5">
+                                                        {event.date}
                                                     </div>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    </motion.section>
 
-                                    {/* Footer */}
-                                    <div className="pt-8 pb-4 text-center text-gray-400 text-xs">
-                                        Continuous Learning & Improvement
+                                                    {/* Card Body */}
+                                                    <div className="bg-white dark:bg-[#2c2c2e] p-6 rounded-2xl shadow-sm border border-black/5 dark:border-white/5 hover:transform hover:scale-[1.01] transition-all duration-300">
+                                                        <h3 className="text-lg font-bold text-[#1d1d1f] dark:text-white mb-2">
+                                                            {event.title}
+                                                        </h3>
+                                                        <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed">
+                                                            {event.description}
+                                                        </p>
+                                                    </div>
+                                                </motion.div>
+                                            );
+                                        })}
                                     </div>
 
+                                    <div className="h-16"></div> {/* Spacer */}
+
                                 </div>
-                            </div>
+                            </motion.div>
                         </motion.div >
                     </div >
                 </>
