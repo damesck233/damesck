@@ -67,7 +67,7 @@ const ProfileModal = ({ isOpen, onClose, layoutId = 'profile-card' }: ProfileMod
                     <div className="fixed inset-0 flex items-center justify-center z-[1000] pointer-events-none p-4">
                         <motion.div
                             layoutId={layoutId}
-                            className="w-full max-w-[900px] max-h-[85vh] bg-white/90 dark:bg-[#1c1c1e]/90 rounded-[32px] shadow-2xl overflow-hidden pointer-events-auto flex flex-col relative"
+                            className="w-full md:max-w-[1000px] h-[90vh] md:h-[750px] bg-[#f5f5f7] dark:bg-[#1c1c1e] rounded-[32px] shadow-2xl overflow-hidden pointer-events-auto flex flex-col md:flex-row relative p-2"
                             style={{
                                 backdropFilter: 'blur(50px) saturate(180%)',
                                 WebkitBackdropFilter: 'blur(50px) saturate(180%)',
@@ -79,174 +79,168 @@ const ProfileModal = ({ isOpen, onClose, layoutId = 'profile-card' }: ProfileMod
                                 mass: 1.0
                             }}
                         >
-                            {/* Header - Mac Traffic Lights (Left Aligned) */}
-                            <div className="flex-shrink-0 h-[60px] flex items-center justify-start gap-6 px-5 z-20 sticky top-0">
-                                {/* Left: Traffic Lights */}
-                                <div className="flex items-center gap-2.5">
-                                    <button
-                                        onClick={onClose}
-                                        className="w-4 h-4 rounded-full bg-[#ff5f56] border-[0.5px] border-[#e0443e] hover:brightness-90 transition-all flex items-center justify-center group"
-                                        aria-label="Close"
-                                    >
-                                        <XMarkIcon className="w-2.5 h-2.5 text-black/50 opacity-0 group-hover:opacity-100" />
-                                    </button>
-                                    <button
-                                        onClick={onClose}
-                                        className="w-4 h-4 rounded-full bg-[#ffbd2e] border-[0.5px] border-[#dea123] hover:brightness-90 transition-all flex items-center justify-center group"
-                                        aria-label="Minimize"
-                                    >
-                                        <MinusIcon className="w-2.5 h-2.5 text-black/50 opacity-0 group-hover:opacity-100" />
-                                    </button>
-                                    <a
-                                        href="https://me.damesck.net"
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="w-4 h-4 rounded-full bg-[#27c93f] border-[0.5px] border-[#1aab29] hover:brightness-90 transition-all flex items-center justify-center group"
-                                        aria-label="Maximize"
-                                    >
-                                        <ArrowTopRightOnSquareIcon className="w-2.5 h-2.5 text-black/50 opacity-0 group-hover:opacity-100" />
-                                    </a>
-                                </div>
-
-                                {/* Title (Left Aligned) */}
-                                <div className="flex items-center gap-2 opacity-90">
-                                    <ChatBubbleLeftRightIcon className="w-4 h-4 text-[#1d1d1f] dark:text-white" />
-                                    <span className="font-semibold text-[15px] text-[#1d1d1f] dark:text-white tracking-wide">Profile Details</span>
-                                </div>
-                            </div>
-
-                            {/* Content */}
-                            <div className="flex-1 overflow-y-auto overflow-x-hidden p-6 md:p-8">
-                                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-
-                                    {/* Left Column */}
-                                    <div className="lg:col-span-4 space-y-6">
-                                        <motion.div
-                                            className="flex flex-col items-center bg-white dark:bg-[#2c2c2e] rounded-[24px] p-8 shadow-sm border border-black/5 dark:border-white/5"
-                                            initial={{ opacity: 0, y: 20 }}
-                                            animate={{ opacity: 1, y: 0 }}
-                                            transition={{ delay: 0.35, duration: 0.4 }}
+                            {/* Left Sidebar (Floating Look) */}
+                            <div className="w-full md:w-[300px] flex-shrink-0 bg-white/60 dark:bg-white/5 backdrop-blur-xl rounded-[24px] shadow-sm flex flex-col relative overflow-hidden border-b md:border-b-0 md:border-r border-[#FEF9F1] dark:border-white/5 z-20">
+                                {/* Header - Mac Traffic Lights (Inside Sidebar) */}
+                                <div className="flex-shrink-0 h-[44px] md:h-[60px] flex items-center justify-between px-5">
+                                    <div className="flex items-center gap-2.5">
+                                        <button
+                                            onClick={onClose}
+                                            className="w-4 h-4 rounded-full bg-[#ff5f56] border-[0.5px] border-[#e0443e] hover:brightness-90 transition-all flex items-center justify-center group"
+                                            aria-label="Close"
                                         >
-                                            <div className="w-32 h-32 mb-5 relative group">
-                                                <div className="w-full h-full rounded-full overflow-hidden border-[4px] border-white dark:border-[#3a3a3c] shadow-lg">
-                                                    <img src={personalInfo.avatar} alt="Avatar" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
-                                                </div>
-                                                <div className="absolute bottom-1 right-1 w-6 h-6 bg-[#34c759] rounded-full border-[3px] border-white dark:border-[#2c2c2e] z-10"></div>
-                                            </div>
-
-                                            <h2 className="text-2xl font-bold text-[#1d1d1f] dark:text-white mb-1 text-center">{personalInfo.name}</h2>
-                                            <p className="text-[#86868b] dark:text-[#98989d] text-[15px] font-medium mb-6 text-center">{personalInfo.email}</p>
-
-                                            <div className="w-full h-[1px] bg-black/5 dark:bg-white/10 mb-6"></div>
-
-                                            <div className="w-full space-y-3">
-                                                {socialLinks.map((link: SocialLink, idx: number) => (
-                                                    <a
-                                                        key={idx}
-                                                        href={link.url}
-                                                        target="_blank"
-                                                        rel="noreferrer"
-                                                        className="flex items-center gap-3 p-3 rounded-2xl hover:bg-[#f2f2f7] dark:hover:bg-[#3a3a3c] transition-colors group"
-                                                    >
-                                                        <div className={`w-10 h-10 rounded-[12px] flex items-center justify-center text-white shadow-sm transition-transform group-hover:scale-105
-                                ${idx === 0 ? 'bg-[#007aff]' : idx === 1 ? 'bg-[#ff2d55]' : 'bg-[#34c759]'}`}>
-                                                            {getSocialIcon(link.icon)}
-                                                        </div>
-                                                        <div className="flex-1 min-w-0">
-                                                            <div className="text-[15px] font-semibold text-[#1d1d1f] dark:text-white truncate">{link.name}</div>
-                                                            <div className="text-[13px] text-[#86868b] dark:text-[#98989d] truncate opacity-80">{link.url.replace(/^https?:\/\//, '')}</div>
-                                                        </div>
-                                                    </a>
-                                                ))}
-                                            </div>
-                                        </motion.div>
+                                            <XMarkIcon className="w-2.5 h-2.5 text-black/50 opacity-0 group-hover:opacity-100" />
+                                        </button>
+                                        <button
+                                            onClick={onClose}
+                                            className="w-4 h-4 rounded-full bg-[#ffbd2e] border-[0.5px] border-[#dea123] hover:brightness-90 transition-all flex items-center justify-center group"
+                                            aria-label="Minimize"
+                                        >
+                                            <MinusIcon className="w-2.5 h-2.5 text-black/50 opacity-0 group-hover:opacity-100" />
+                                        </button>
+                                        <a
+                                            href="https://me.damesck.net"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="w-4 h-4 rounded-full bg-[#27c93f] border-[0.5px] border-[#1aab29] hover:brightness-90 transition-all flex items-center justify-center group"
+                                            aria-label="Maximize"
+                                        >
+                                            <ArrowTopRightOnSquareIcon className="w-2.5 h-2.5 text-black/50 opacity-0 group-hover:opacity-100" />
+                                        </a>
                                     </div>
+                                </div>
 
-
-                                    {/* Right Column */}
-                                    <div className="lg:col-span-8 space-y-6">
-
-                                        {/* About Me */}
-                                        <motion.div
-                                            className="bg-white dark:bg-[#2c2c2e] rounded-[24px] p-8 shadow-sm border border-black/5 dark:border-white/5"
-                                            initial={{ opacity: 0, y: 20 }}
-                                            animate={{ opacity: 1, y: 0 }}
-                                            transition={{ delay: 0.4 }}
-                                        >
-                                            <h3 className="text-[20px] font-bold text-[#1d1d1f] dark:text-white mb-4 flex items-center gap-2">
-                                                <span className="text-[#007aff]"></span> {myData.about.title}
-                                            </h3>
-                                            <p className="text-[16px] leading-relaxed text-[#1d1d1f]/80 dark:text-white/80 font-normal">
-                                                {myData.about.description}
-                                            </p>
-                                        </motion.div>
-
-                                        {/* Contributions & Positions */}
-                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                            <motion.div
-                                                className="bg-[#fff9f0] dark:bg-[#2c2c2e] rounded-[24px] p-6 border border-orange-100 dark:border-white/5"
-                                                initial={{ opacity: 0, y: 20 }}
-                                                animate={{ opacity: 1, y: 0 }}
-                                                transition={{ delay: 0.45 }}
-                                            >
-                                                <h4 className="text-[17px] font-bold text-[#ff9500] mb-4 flex items-center gap-2">
-                                                    <div className="w-2 h-2 rounded-full bg-[#ff9500]"></div> Contributions
-                                                </h4>
-                                                <ul className="space-y-4">
-                                                    {myData.contributions.map((item, i) => (
-                                                        <li key={i} className="flex gap-3 items-start">
-                                                            <div className="w-1.5 h-1.5 rounded-full bg-[#ff9500] mt-2 flex-shrink-0 opacity-60"></div>
-                                                            <span className="text-[15px] text-[#1d1d1f] dark:text-white/90">{item}</span>
-                                                        </li>
-                                                    ))}
-                                                </ul>
-                                            </motion.div>
-
-                                            <motion.div
-                                                className="bg-[#f0f9ff] dark:bg-[#2c2c2e] rounded-[24px] p-6 border border-blue-100 dark:border-white/5"
-                                                initial={{ opacity: 0, y: 20 }}
-                                                animate={{ opacity: 1, y: 0 }}
-                                                transition={{ delay: 0.5 }}
-                                            >
-                                                <h4 className="text-[17px] font-bold text-[#007aff] mb-4 flex items-center gap-2">
-                                                    <div className="w-2 h-2 rounded-full bg-[#007aff]"></div> Positions
-                                                </h4>
-                                                <ul className="space-y-4">
-                                                    {myData.positions.map((item, i) => (
-                                                        <li key={i} className="flex gap-3 items-start">
-                                                            <div className="w-1.5 h-1.5 rounded-full bg-[#007aff] mt-2 flex-shrink-0 opacity-60"></div>
-                                                            <span className="text-[15px] text-[#1d1d1f] dark:text-white/90">{item}</span>
-                                                        </li>
-                                                    ))}
-                                                </ul>
-                                            </motion.div>
+                                {/* Sidebar Content: Avatar & Socials */}
+                                <motion.div
+                                    className="flex-1 overflow-y-auto px-5 pb-5 md:px-6 md:pb-6 flex flex-col items-start"
+                                    initial={{ opacity: 0, y: 10 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: 0.2, duration: 0.4 }}
+                                >
+                                    <div className="flex flex-row md:flex-col items-center md:items-start w-full gap-5 md:gap-0 mb-6 md:mb-0">
+                                        <div className="w-16 h-16 md:w-32 md:h-32 flex-shrink-0 relative md:mt-4 md:mb-5">
+                                            <div className="w-full h-full rounded-full overflow-hidden shadow-lg">
+                                                <img src={personalInfo.avatar} alt="Avatar" className="w-full h-full object-cover" />
+                                            </div>
+                                            <div className="absolute bottom-1 right-1 w-3.5 h-3.5 md:w-6 md:h-6 bg-[#34c759] rounded-full border-[2px] md:border-[3px] border-white dark:border-[#2c2c2e] z-10"></div>
                                         </div>
 
-                                        {/* Interests */}
+                                        <div className="flex flex-col">
+                                            <h2 className="text-xl md:text-2xl font-bold text-[#1d1d1f] dark:text-white mb-0.5 md:mb-1">{personalInfo.name}</h2>
+                                            <p className="text-[#86868b] dark:text-[#98989d] text-[13px] md:text-[14px] font-medium md:mb-6">{personalInfo.email}</p>
+                                        </div>
+                                    </div>
+
+
+
+                                    <div className="w-full grid grid-cols-3 gap-3 md:flex md:flex-col md:space-y-3">
+                                        {socialLinks.map((link: SocialLink, idx: number) => (
+                                            <a
+                                                key={idx}
+                                                href={link.url}
+                                                target="_blank"
+                                                rel="noreferrer"
+                                                className="flex flex-col md:flex-row items-center justify-center md:justify-start gap-1.5 md:gap-3 p-2 md:p-3 rounded-2xl bg-white/50 dark:bg-[#3a3a3c]/50 hover:bg-white dark:hover:bg-[#48484a] transition-all shadow-sm group"
+                                            >
+                                                <div className={`w-8 h-8 md:w-8 md:h-8 rounded-[10px] flex items-center justify-center text-white shadow-sm transition-transform group-hover:scale-105
+                        ${idx === 0 ? 'bg-[#007aff]' : idx === 1 ? 'bg-[#ff2d55]' : 'bg-[#34c759]'}`}>
+                                                    {getSocialIcon(link.icon)}
+                                                </div>
+                                                <div className="flex-1 min-w-0 flex justify-center md:justify-start">
+                                                    <div className="text-[10px] md:text-[14px] font-semibold text-[#1d1d1f] dark:text-white truncate text-center md:text-left leading-tight">{link.name}</div>
+                                                </div>
+                                            </a>
+                                        ))}
+                                    </div>
+
+                                    <div className="flex-1"></div>
+
+                                    {/* Footer */}
+                                    <div className="mt-8 text-center text-[#86868b] text-[12px] opacity-60">
+                                        Designed by damesck<br />with Apple aesthetic
+                                    </div>
+                                </motion.div>
+                            </div>
+
+                            {/* Right Content Area */}
+                            <div className="flex-1 h-full overflow-y-auto overflow-x-hidden p-6 md:p-8">
+                                <div className="space-y-6 max-w-[800px] mx-auto">
+
+                                    {/* About Me */}
+                                    <motion.div
+                                        className="bg-white dark:bg-[#2c2c2e] rounded-[24px] p-8 shadow-sm border border-black/5 dark:border-white/5"
+                                        initial={{ opacity: 0, y: 10 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        transition={{ delay: 0.1 }}
+                                    >
+                                        <h3 className="text-[20px] font-bold text-[#1d1d1f] dark:text-white mb-4 flex items-center gap-2">
+                                            <span className="text-[#007aff]"></span> {myData.about.title}
+                                        </h3>
+                                        <p className="text-[16px] leading-relaxed text-[#1d1d1f]/80 dark:text-white/80 font-normal">
+                                            {myData.about.description}
+                                        </p>
+                                    </motion.div>
+
+                                    {/* Contributions & Positions */}
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                         <motion.div
-                                            className="bg-white dark:bg-[#2c2c2e] rounded-[24px] p-6 border border-black/5 dark:border-white/5"
-                                            initial={{ opacity: 0, y: 20 }}
+                                            className="bg-[#fff9f0] dark:bg-[#2c2c2e] rounded-[24px] p-6 border border-orange-100 dark:border-white/5"
+                                            initial={{ opacity: 0, y: 10 }}
                                             animate={{ opacity: 1, y: 0 }}
-                                            transition={{ delay: 0.55 }}
+                                            transition={{ delay: 0.2 }}
                                         >
-                                            <h4 className="text-[17px] font-bold text-[#af52de] mb-4 flex items-center gap-2">
-                                                Interest
+                                            <h4 className="text-[17px] font-bold text-[#ff9500] mb-4 flex items-center gap-2">
+                                                <div className="w-2 h-2 rounded-full bg-[#ff9500]"></div> Contributions
                                             </h4>
-                                            <div className="flex flex-wrap gap-2">
-                                                {myData.interests.map((tag, i) => (
-                                                    <span key={i} className="px-4 py-1.5 rounded-full bg-[#af52de]/10 text-[#af52de] text-[14px] font-medium hover:bg-[#af52de]/20 transition-colors cursor-default">
-                                                        {tag}
-                                                    </span>
+                                            <ul className="space-y-4">
+                                                {myData.contributions.map((item, i) => (
+                                                    <li key={i} className="flex gap-3 items-start">
+                                                        <div className="w-1.5 h-1.5 rounded-full bg-[#ff9500] mt-2 flex-shrink-0 opacity-60"></div>
+                                                        <span className="text-[15px] text-[#1d1d1f] dark:text-white/90">{item}</span>
+                                                    </li>
                                                 ))}
-                                            </div>
+                                            </ul>
                                         </motion.div>
 
+                                        <motion.div
+                                            className="bg-[#f0f9ff] dark:bg-[#2c2c2e] rounded-[24px] p-6 border border-blue-100 dark:border-white/5"
+                                            initial={{ opacity: 0, y: 10 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                            transition={{ delay: 0.3 }}
+                                        >
+                                            <h4 className="text-[17px] font-bold text-[#007aff] mb-4 flex items-center gap-2">
+                                                <div className="w-2 h-2 rounded-full bg-[#007aff]"></div> Positions
+                                            </h4>
+                                            <ul className="space-y-4">
+                                                {myData.positions.map((item, i) => (
+                                                    <li key={i} className="flex gap-3 items-start">
+                                                        <div className="w-1.5 h-1.5 rounded-full bg-[#007aff] mt-2 flex-shrink-0 opacity-60"></div>
+                                                        <span className="text-[15px] text-[#1d1d1f] dark:text-white/90">{item}</span>
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        </motion.div>
                                     </div>
-                                </div>
 
-                                {/* Footer */}
-                                <div className="mt-8 text-center text-[#86868b] text-sm">
-                                    Designed by damesck with Apple aesthetic
+                                    {/* Interests */}
+                                    <motion.div
+                                        className="bg-white dark:bg-[#2c2c2e] rounded-[24px] p-6 border border-black/5 dark:border-white/5"
+                                        initial={{ opacity: 0, y: 10 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        transition={{ delay: 0.4 }}
+                                    >
+                                        <h4 className="text-[17px] font-bold text-[#af52de] mb-4 flex items-center gap-2">
+                                            Interest
+                                        </h4>
+                                        <div className="flex flex-wrap gap-2">
+                                            {myData.interests.map((tag, i) => (
+                                                <span key={i} className="px-4 py-1.5 rounded-full bg-[#af52de]/10 text-[#af52de] text-[14px] font-medium hover:bg-[#af52de]/20 transition-colors cursor-default">
+                                                    {tag}
+                                                </span>
+                                            ))}
+                                        </div>
+                                    </motion.div>
+
                                 </div>
                             </div>
                         </motion.div>

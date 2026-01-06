@@ -1,109 +1,38 @@
 [
-  {
-    "name": "MacBook Pro M3 Pro",
-    "description": "太爱 mac 了",
-    "image": "https://statici.icloud.com.cn/fmipmobile/deviceImages-9.0/MacBookPro/Mac15,7-spaceblack/online-infobox__2x.png",
-    "tags": [
-      {
-        "name": "Apple",
-        "color": "gray"
-      },
-      {
-        "name": "太爱了",
-        "color": "blue"
-      }
-    ],
-    "specs": {
-      "purchaseDate": "2024年8月",
-      "warranty": "过保",
-      "condition": "良好",
-      "details": [
-        "16英寸 Liquid Retina XDR 显示屏",
-        "M3 Pro 芯片",
-        "36GB 统一内存",
-        "1TB SSD存储"
-      ]
+    {
+        "name": "MacBook Pro 16\"",
+        "image": "https://images.unsplash.com/photo-1517336714731-489689fd1ca4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80",
+        "description": "主要生产力工具，用于代码编写、设计和视频剪辑。M1 Pro 芯片带来强大的性能表现。",
+        "tags": [
+            {
+                "name": "主力机"
+            },
+            {
+                "name": "开发"
+            }
+        ],
+        "specs": {
+            "purchaseDate": "2021-11",
+            "warranty": "已过保",
+            "condition": "良好"
+        }
+    },
+    {
+        "name": "iPhone 15 Pro",
+        "image": "https://images.unsplash.com/photo-1695048133142-1a20484d2569?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80",
+        "description": "日常主力手机，用于通讯、摄影和轻办公。A17 Pro 芯片性能强劲。",
+        "tags": [
+            {
+                "name": "通讯"
+            },
+            {
+                "name": "摄影"
+            }
+        ],
+        "specs": {
+            "purchaseDate": "2023-09",
+            "warranty": "保修中",
+            "condition": "良好"
+        }
     }
-  },
-  {
-    "name": "OnePlus 12",
-    "description": "被雪球摔坏后面板了",
-    "image": "https://ocloud-staticfile-cn.heytapimage.com/find/icon/202307/fb7e1411592740babce0ef09c672f952.png",
-    "tags": [
-      {
-        "name": "安卓",
-        "color": "green"
-      },
-      {
-        "name": "主力机",
-        "color": "red"
-      }
-    ],
-    "specs": {
-      "purchaseDate": "2024年1月",
-      "warranty": "过保",
-      "condition": "非常不好",
-      "details": [
-        "6.82英寸 2K LTPO AMOLED 屏幕",
-        "骁龙8 Gen 3 处理器",
-        "24GB LPDDR5X RAM",
-        "512GB UFS 4.0存储",
-        "5400mAh 电池"
-      ]
-    }
-  },
-  {
-    "name": "OPPO Watch 2 26mm",
-    "description": "当时为了做一个核酸🐎展示的结果疫情结束了,",
-    "image": "https://data.klpbbs.com/file/tc/img/2025/05/01/68133644ac29b.png",
-    "tags": [
-      {
-        "name": "智能手表",
-        "color": "purple"
-      },
-      {
-        "name": "吃灰",
-        "color": "indigo"
-      }
-    ],
-    "specs": {
-      "purchaseDate": "2022年11月",
-      "warranty": "过保",
-      "condition": "良好",
-      "details": [
-        "1.91英寸 AMOLED 屏幕",
-        "高通骁龙Wear 4100处理器",
-        "1GB RAM + 8GB ROM",
-        "510mAh 电池",
-        "支持NFC和独立通话"
-      ]
-    }
-  },
-  {
-    "name": "Xbox 无线控制器",
-    "description": "成都旅游冲动消费(",
-    "image": "https://assets.account.microsoft.com/devices/compassassets/91cdc82e-b5b0-4f23-b670-b40aee4f0efa.png?n=XboxWirelessController.png%202",
-    "tags": [
-      {
-        "name": "游戏",
-        "color": "green"
-      },
-      {
-        "name": "冲动消费",
-        "color": "yellow"
-      }
-    ],
-    "specs": {
-      "purchaseDate": "2024年6月",
-      "warranty": "有效期内 (至2025年6月12日)",
-      "condition": "全新",
-      "details": [
-        "官方Xbox Series X|S 无线控制器",
-        "蓝牙连接，兼容PC/移动设备",
-        "可自定义按键映射",
-        "内置充电电池",
-        "精准摇杆与触感反馈"
-      ]
-    }
-  }
 ]

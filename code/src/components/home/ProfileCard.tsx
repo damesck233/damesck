@@ -39,7 +39,7 @@ const ProfileCard = ({ onClick, layoutId = 'profile-card', hidden = false }: Pro
                 <div className="relative mt-4">
                     {/* Ring/Halo effect around avatar to match the 'cloud' look */}
                     <div className="w-32 h-32 rounded-full bg-white/50 dark:bg-white/10 absolute -top-2 -left-2 blur-sm transition-colors duration-300"></div>
-                    <div className="w-28 h-28 rounded-full border-[4px] border-white dark:border-[#2c2c2e] shadow-lg overflow-hidden relative z-10 bg-white dark:bg-[#2c2c2e] transition-colors duration-300">
+                    <div className="w-28 h-28 rounded-full shadow-lg overflow-hidden relative z-10 transition-colors duration-300">
                         <img src={personalInfo.avatar} alt="Avatar" className="w-full h-full object-cover" />
                     </div>
                 </div>
@@ -53,7 +53,7 @@ const ProfileCard = ({ onClick, layoutId = 'profile-card', hidden = false }: Pro
                         {personalInfo.email}
                     </p>
                     <div className="mt-3 text-[14px] font-bold flex items-center gap-1">
-                        damesck<span className="text-[16px] relative -top-[1px]">+</span>
+                        致不完美的明天<span className="text-[16px] relative -top-[1px]">_</span>
                     </div>
                 </div>
             </div>
