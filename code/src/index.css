@@ -335,26 +335,7 @@
     @apply transition-all duration-150 ease-out;
   }
 
-  /* 滚动条美化 - 只在桌面设备上启用 */
-  @media (min-width: 768px) {
-    ::-webkit-scrollbar {
-      width: 8px;
-      height: 8px;
-    }
 
-    ::-webkit-scrollbar-track {
-      @apply bg-transparent;
-    }
-
-    ::-webkit-scrollbar-thumb {
-      background-color: var(--scrollbar-thumb);
-      @apply rounded-full;
-    }
-
-    ::-webkit-scrollbar-thumb:hover {
-      background-color: var(--scrollbar-thumb-hover);
-    }
-  }
 
   /* 数据可视化元素 */
   .progress-bar {
@@ -399,4 +380,17 @@
       animation-iteration-count: 1 !important;
     }
   }
+}
+
+/* Custom OverlayScrollbars Theme */
+.os-theme-dark {
+  --os-size: 10px;
+  --os-padding-perpendicular: 2px;
+  --os-padding-axis: 2px;
+  --os-track-border-radius: 10px;
+  --os-handle-bg: var(--scrollbar-thumb);
+  --os-handle-bg-hover: var(--scrollbar-thumb-hover);
+  --os-handle-bg-active: var(--scrollbar-thumb-hover);
+  --os-handle-border-radius: 10px;
+  --os-handle-interactive-area-offset: 4px;
 }

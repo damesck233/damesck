@@ -1,28 +1,56 @@
-[
-  {
-    "category": "Network",
-    "color": "blue",
-    "items": [
-      "综合布线",
-      "思科路由交换",
-      "华为部分路由交换",
-      "网络架构规划"
-    ]
-  },
-  {
-    "category": "设计工具",
-    "color": "purple",
-    "items": [
-      "Figma",
-      "PPT OS("
-    ]
-  },
-  {
-    "category": "运维技能",
-    "color": "green",
-    "items": [
-      "Linux",
-      "Docker"
-    ]
-  }
-]
+{
+  "Network": [
+    {
+      "name": "综合布线",
+      "icon": "🔌",
+      "color": "blue",
+      "level": 4
+    },
+    {
+      "name": "思科路由交换",
+      "icon": "🌐",
+      "color": "blue",
+      "level": 3
+    },
+    {
+      "name": "华为路由交换",
+      "icon": "📡",
+      "color": "red",
+      "level": 3
+    },
+    {
+      "name": "网络架构规划",
+      "icon": "🏗️",
+      "color": "indigo",
+      "level": 4
+    }
+  ],
+  "设计工具": [
+    {
+      "name": "Figma",
+      "icon": "🎨",
+      "color": "purple",
+      "level": 4
+    },
+    {
+      "name": "PPT OS",
+      "icon": "📊",
+      "color": "orange",
+      "level": 5
+    }
+  ],
+  "运维技能": [
+    {
+      "name": "Linux",
+      "icon": "🐧",
+      "color": "green",
+      "level": 3
+    },
+    {
+      "name": "Docker",
+      "icon": "🐳",
+      "color": "blue",
+      "level": 3
+    }
+  ]
+}

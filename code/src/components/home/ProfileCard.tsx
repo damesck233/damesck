@@ -17,7 +17,7 @@ const ProfileCard = ({ onClick, layoutId = 'profile-card', hidden = false }: Pro
             onClick={onClick}
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
-            transition={{ type: "spring", stiffness: 180, damping: 20, mass: 1.0 }}
+            transition={{ type: "spring", stiffness: 250, damping: 25, mass: 1.0 }}
         >
             {/* Background - Glassmorphism Restored */}
             <div className="absolute inset-0 bg-white/40 dark:bg-[#1c1c1e]/60 backdrop-blur-xl z-0 transition-colors duration-300"></div>

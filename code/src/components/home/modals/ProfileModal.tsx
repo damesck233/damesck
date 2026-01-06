@@ -3,6 +3,7 @@ import { XMarkIcon, ChatBubbleLeftRightIcon, MinusIcon, ArrowTopRightOnSquareIco
 import { AppleStyleIcon } from '../../ui/AppleIcons';
 import myData from '../../../data/my/data.json';
 import { useEffect } from 'react';
+import { useScrollLock } from '../../../hooks/useScrollLock';
 
 const { personalInfo, socialLinks } = myData;
 
@@ -36,19 +37,19 @@ const getSocialIcon = (iconName: string) => {
 
 const ProfileModal = ({ isOpen, onClose, layoutId = 'profile-card' }: ProfileModalProps) => {
     // 锁定背景滚动
+    // Use custom hook for scroll locking with layout shift prevention
+    const { lockScroll, unlockScroll } = useScrollLock();
+
     useEffect(() => {
         if (isOpen) {
-            document.body.style.overflow = 'hidden';
-            // 添加padding-right以防止滚动条消失导致的布局跳动 (可选，简单起见先不加)
+            lockScroll();
         } else {
-            document.body.style.overflow = 'unset';
+            unlockScroll();
         }
-
-        // 清理函数
         return () => {
-            document.body.style.overflow = 'unset';
+            unlockScroll();
         };
-    }, [isOpen]);
+    }, [isOpen, lockScroll, unlockScroll]);
 
     return (
         <AnimatePresence>
@@ -74,8 +75,8 @@ const ProfileModal = ({ isOpen, onClose, layoutId = 'profile-card' }: ProfileMod
                             }}
                             transition={{
                                 type: "spring",
-                                stiffness: 180,
-                                damping: 20,
+                                stiffness: 250,
+                                damping: 25,
                                 mass: 1.0
                             }}
                         >

@@ -1,38 +1,56 @@
 [
     {
-        "name": "MacBook Pro 16\"",
-        "image": "https://images.unsplash.com/photo-1517336714731-489689fd1ca4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80",
-        "description": "主要生产力工具，用于代码编写、设计和视频剪辑。M1 Pro 芯片带来强大的性能表现。",
+        "name": "MacBook Pro 14\"",
+        "image": "https://img1.imgtp.com/2023/08/23/Example.png",
+        "description": "主力开发机，M1 Pro 芯片，32GB 内存。",
+        "specs": {
+            "condition": "良好",
+            "purchaseDate": "2021-11",
+            "warranty": "已过保"
+        },
         "tags": [
             {
-                "name": "主力机"
+                "name": "主力"
             },
             {
                 "name": "开发"
             }
-        ],
-        "specs": {
-            "purchaseDate": "2021-11",
-            "warranty": "已过保",
-            "condition": "良好"
-        }
+        ]
     },
     {
-        "name": "iPhone 15 Pro",
-        "image": "https://images.unsplash.com/photo-1695048133142-1a20484d2569?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80",
-        "description": "日常主力手机，用于通讯、摄影和轻办公。A17 Pro 芯片性能强劲。",
+        "name": "iPhone 13 Pro",
+        "image": "https://img1.imgtp.com/2023/08/23/Example2.png",
+        "description": "日常主力手机，远峰蓝。",
+        "specs": {
+            "condition": "良好",
+            "purchaseDate": "2021-10",
+            "warranty": "已过保"
+        },
         "tags": [
             {
-                "name": "通讯"
+                "name": "移动"
             },
             {
-                "name": "摄影"
+                "name": "通讯"
             }
-        ],
+        ]
+    },
+    {
+        "name": "iPad Pro 11\"",
+        "image": "https://img1.imgtp.com/2023/08/23/Example3.png",
+        "description": "娱乐与阅读工具，配备 Apple Pencil。",
         "specs": {
-            "purchaseDate": "2023-09",
-            "warranty": "保修中",
-            "condition": "良好"
-        }
+            "condition": "一般",
+            "purchaseDate": "2020-05",
+            "warranty": "已过保"
+        },
+        "tags": [
+            {
+                "name": "娱乐"
+            },
+            {
+                "name": "绘画"
+            }
+        ]
     }
 ]
