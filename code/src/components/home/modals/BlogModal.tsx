@@ -7,7 +7,7 @@ import {
     CalendarIcon,
     ClockIcon
 } from '@heroicons/react/24/outline';
-import { BlogPost } from '../../types';
+import { BlogPost } from '../../../types';
 import { useState, useEffect } from 'react';
 import { useScrollLock } from '../../../hooks/useScrollLock';
 
