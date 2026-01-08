@@ -1,119 +1,110 @@
-import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { ClockIcon } from '@heroicons/react/24/outline';
-import { AppleStyleIcon } from '../ui/AppleIcons';
-import countdownDataRaw from '../../data/cards/countdown.json';
-import { iosCardStyle, cardHeaderStyle, cardBodyStyle, hoverStyle, fadeIn } from './CardStyles';
-import { calculateDaysLeft, calculateProgress, getMainCountdown } from '../../utils/dateUtils';
-import { CountdownItem } from '../../types';
+import { ClockIcon, CalendarIcon } from '@heroicons/react/24/outline';
+import { useEffect, useState } from 'react';
 
-interface CountdownCardProps {
-    onClick: () => void;
-    custom?: number;
+export interface CountdownEvent {
+    title: string;
+    Startdate: string;
+    targetDate: string;
+    totalDays: number; // Seems to be "duration" or manual override? I'll re-calc for precision if needed.
+    top: boolean;
 }
 
-const CountdownCard = ({ onClick, custom = 4 }: CountdownCardProps) => {
-    const countdownData = countdownDataRaw as CountdownItem[];
+interface CountdownCardProps {
+    events: CountdownEvent[];
+    onClick: () => void;
+    onMouseEnter: () => void;
+    onMouseLeave: () => void;
+    layoutId?: string;
+    hidden?: boolean;
+}
 
-    // 实时倒计时状态
-    const [daysLeft, setDaysLeft] = useState(() => {
-        const mainCountdown = getMainCountdown(countdownData);
-        return calculateDaysLeft(mainCountdown.targetDate);
-    });
+const CountdownCard: React.FC<CountdownCardProps> = ({
+    events,
+    onClick,
+    onMouseEnter,
+    onMouseLeave,
+    layoutId = 'countdown-card',
+    hidden = false
+}) => {
+    // Find top event or nearest event
+    const topEvent = events.find(e => e.top) || events[0];
 
-    // 每天更新倒计时
-    useEffect(() => {
-        const updateDaysLeft = () => {
-            const main = getMainCountdown(countdownData);
-            if (main) {
-                setDaysLeft(calculateDaysLeft(main.targetDate));
-            }
-        };
+    // Calculate days left
+    const calculateDaysLeft = (target: string) => {
+        const today = new Date();
+        const tgt = new Date(target);
+        today.setHours(0, 0, 0, 0);
+        tgt.setHours(0, 0, 0, 0);
+        const diff = tgt.getTime() - today.getTime();
+        return Math.ceil(diff / (1000 * 60 * 60 * 24));
+    };
 
-        const timer = setInterval(updateDaysLeft, 86400000); // 每24小时更新一次
-        return () => clearInterval(timer);
-    }, [countdownData]);
-
-    const mainCountdown = getMainCountdown(countdownData);
+    const days = calculateDaysLeft(topEvent.targetDate);
+    const isPast = days < 0;
 
     return (
         <motion.div
-            variants={fadeIn}
-            custom={custom}
-            initial="hidden"
-            animate="visible"
-            className="cursor-pointer card-container floating-element"
+            layoutId={layoutId}
+            className={`md:col-span-1 cursor-pointer group relative z-10 overflow-hidden rounded-[32px] duration-200 aspect-square md:h-full bg-white/40 dark:bg-[#1c1c1e]/60 backdrop-blur-xl transition-colors duration-300 ${hidden ? 'pointer-events-none' : ''}`}
+            animate={{ opacity: hidden ? 0 : 1 }}
+            onMouseEnter={onMouseEnter}
+            onMouseLeave={onMouseLeave}
             onClick={onClick}
-            whileHover={hoverStyle}
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            transition={{ type: "spring", stiffness: 250, damping: 25, mass: 1.0 }}
         >
-            <div
-                className="h-full"
-                style={iosCardStyle}
-            >
-                <div style={cardHeaderStyle}>
-                    <div className="flex items-center">
-                        <AppleStyleIcon colorScheme="teal" size="md">
-                            <ClockIcon className="w-5 h-5 text-white" />
-                        </AppleStyleIcon>
-                        <div className="ml-3">
-                            <h3 className="text-base font-semibold dark:text-gray-100 text-[#2c2c2e]">倒计日</h3>
-                            <p className="text-xs dark:text-gray-400 text-gray-500 mt-0.5">剩余天数</p>
-                        </div>
-                    </div>
-                    <div className="w-6 h-6 flex items-center justify-center rounded-full dark:bg-gray-700 bg-gray-100">
-                        <span className="text-blue-500 font-semibold text-sm">{countdownData.length}</span>
-                    </div>
-                </div>
-                <div style={cardBodyStyle} className="h-[calc(100%-64px)]">
-                    <div className="h-full flex flex-col p-4 relative">
-                        {/* 背景装饰 */}
-                        <div className="absolute -top-1 -right-1 w-24 h-24 bg-gradient-to-br from-blue-400/10 to-purple-500/10 rounded-full blur-xl pointer-events-none dark:from-blue-400/5 dark:to-purple-500/5"></div>
-                        <div className="absolute -bottom-4 -left-4 w-20 h-20 bg-gradient-to-tr from-green-400/10 to-yellow-500/10 rounded-full blur-lg pointer-events-none dark:from-green-400/5 dark:to-yellow-500/5"></div>
+            {/* Gradient Overlay (Teal/Blue to match "Time" vibe) */}
+            <div className="absolute inset-0 bg-gradient-to-br from-teal-50/50 to-blue-50/50 dark:from-teal-900/20 dark:to-blue-900/20 z-0 opacity-80"></div>
 
-                        {/* 主倒计时 */}
-                        <div className="flex justify-between items-start mb-3 relative z-10">
-                            <h4 className="font-medium text-lg dark:text-gray-100 text-[#2c2c2e]">{mainCountdown.title}</h4>
-                            <span className="text-xs py-0.5 px-2 rounded-full font-medium dark:bg-blue-500/20 dark:text-blue-400 bg-blue-100 text-blue-600">主要</span>
-                        </div>
+            {/* Content */}
+            <div className="relative z-10 w-full h-full p-6 flex flex-col justify-between">
 
-                        <div className="relative z-10 mb-3 flex items-center">
-                            <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 dark:from-blue-600 dark:to-blue-700 flex items-center justify-center text-white shadow-md">
-                                <div className="text-3xl font-bold">{daysLeft}</div>
-                            </div>
-                            <div className="ml-3">
-                                <div className="text-sm dark:text-gray-400 text-gray-500 mb-1">距离目标日期</div>
-                                <div className="text-sm font-medium dark:text-gray-300 text-gray-700">{mainCountdown.targetDate.replace(/-/g, '年') + '日'}</div>
-                            </div>
-                        </div>
+                {/* Header */}
+                <div className="flex justify-between items-start">
+                    <motion.div
+                        layoutId={`${layoutId}-icon-box`}
+                        className="w-10 h-10 rounded-full bg-teal-500/10 dark:bg-teal-400/10 flex items-center justify-center backdrop-blur-md"
+                    >
+                        <motion.div layoutId={`${layoutId}-icon`}>
+                            <ClockIcon className="w-5 h-5 text-teal-600 dark:text-teal-400" />
+                        </motion.div>
+                    </motion.div>
 
-                        <div className="h-1.5 w-full dark:bg-gray-700 bg-gray-100 rounded-full overflow-hidden shadow-inner mb-3 relative z-10">
-                            <div
-                                className="h-full dark:bg-blue-500 bg-blue-500 rounded-full transition-all duration-600"
-                                style={{ width: `${calculateProgress(mainCountdown)}%` }}
-                            ></div>
-                        </div>
-
-                        {/* 更紧凑的其他倒计时列表 */}
-                        <div className="relative z-10 flex-1 overflow-hidden">
-                            <h5 className="text-xs uppercase dark:text-gray-400 text-gray-500 mb-1.5 font-medium tracking-wider">其他倒计时</h5>
-                            <div className="space-y-1.5">
-                                {countdownData.filter(item => !item.top).slice(0, 2).map((item, index) => (
-                                    <div key={index} className="flex items-center justify-between">
-                                        <div className="flex items-center">
-                                            <div className="w-2 h-2 rounded-full mr-1.5"
-                                                style={{
-                                                    backgroundColor: index === 0 ? '#22C55E' : '#F97316'
-                                                }}
-                                            ></div>
-                                            <span className="text-xs dark:text-gray-300 text-gray-700">{item.title}</span>
-                                        </div>
-                                        <span className="text-xs font-medium dark:text-gray-300 text-gray-700">{calculateDaysLeft(item.targetDate)}天</span>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
+                    <div className="px-2 py-1 rounded-full bg-white/40 dark:bg-white/10 border border-white/20 text-[10px] font-medium text-gray-500 dark:text-gray-400 backdrop-blur-sm">
+                        {events.length} Events
                     </div>
                 </div>
+
+                {/* Main Number */}
+                <div className="flex flex-col items-center justify-center flex-1 my-2">
+                    <span className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">
+                        Distance to {topEvent.title}
+                    </span>
+                    <div className="text-6xl font-bold text-[#1d1d1f] dark:text-white tracking-tighter flex items-end leading-none">
+                        {Math.abs(days)}
+                        <span className="text-lg font-medium text-gray-400 ml-1 mb-1.5">
+                            {isPast ? 'Days Ago' : 'Days'}
+                        </span>
+                    </div>
+                </div>
+
+                {/* Footer Info */}
+                <div className="space-y-1">
+                    <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400">
+                        <span className="flex items-center gap-1">
+                            <CalendarIcon className="w-3 h-3" />
+                            {topEvent.targetDate}
+                        </span>
+                    </div>
+                    {/* Mini Progress Bar if needed, or just a decorative line */}
+                    <div className="w-full h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden mt-2">
+                        <div className="h-full bg-teal-500 rounded-full w-[60%] opacity-80" />
+                        {/* TODO: Calculate real percentage for creating a sense of urgency */}
+                    </div>
+                </div>
+
             </div>
         </motion.div>
     );
