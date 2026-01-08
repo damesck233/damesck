@@ -1,11 +1,11 @@
 [
     {
-        "name": "MacBook Pro 14\"",
+        "name": "MacBookk Pro 16\"",
         "image": "https://img1.imgtp.com/2023/08/23/Example.png",
-        "description": "主力开发机，M1 Pro 芯片，32GB 内存。",
+        "description": "主力开发机，M3 Pro 芯片，36GB 内存。",
         "specs": {
             "condition": "良好",
-            "purchaseDate": "2021-11",
+            "purchaseDate": "2024-9",
             "warranty": "已过保"
         },
         "tags": [
@@ -18,11 +18,11 @@
         ]
     },
     {
-        "name": "iPhone 13 Pro",
+        "name": "OnePlus 12",
         "image": "https://img1.imgtp.com/2023/08/23/Example2.png",
-        "description": "日常主力手机，远峰蓝。",
+        "description": "日常主力手机，坏后面板了",
         "specs": {
-            "condition": "良好",
+            "condition": "💩",
             "purchaseDate": "2021-10",
             "warranty": "已过保"
         },

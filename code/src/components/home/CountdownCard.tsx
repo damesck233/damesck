@@ -24,7 +24,7 @@ const CountdownCard: React.FC<CountdownCardProps> = ({
     onClick,
     onMouseEnter,
     onMouseLeave,
-    layoutId = 'countdown-card',
+    layoutId,
     hidden = false
 }) => {
     // Find top event or nearest event

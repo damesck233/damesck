@@ -10,6 +10,7 @@ interface BlogCardProps {
     onMouseEnter: () => void;
     onMouseLeave: () => void;
     hidden?: boolean;
+    layoutId?: string;
 }
 
 const BlogCard: React.FC<BlogCardProps> = ({
@@ -19,7 +20,8 @@ const BlogCard: React.FC<BlogCardProps> = ({
     onClick,
     onMouseEnter,
     onMouseLeave,
-    hidden = false
+    hidden = false,
+    layoutId
 }) => {
     // Get latest 3 posts
     const latestPosts = blogPosts.slice(0, 3);
@@ -28,8 +30,8 @@ const BlogCard: React.FC<BlogCardProps> = ({
 
     return (
         <motion.div
-            className={`md:col-span-3 cursor-pointer group relative z-10 overflow-hidden rounded-[32px] bg-white/40 dark:bg-[#1c1c1e]/60 backdrop-blur-xl transition-all duration-500 hover:shadow-2xl hover:shadow-pink-500/5 border border-white/20 dark:border-white/5 ${hidden ? 'pointer-events-none opacity-0' : ''}`}
-            style={{ height: '320px' }}
+            layoutId={layoutId}
+            className={`md:col-span-3 cursor-pointer group relative z-10 overflow-hidden rounded-[32px] bg-white/40 dark:bg-[#1c1c1e]/60 backdrop-blur-xl transition-all duration-500 hover:shadow-2xl hover:shadow-pink-500/5 border border-white/20 dark:border-white/5 ${hidden ? 'pointer-events-none opacity-0' : ''} h-auto md:h-[320px]`}
             onMouseEnter={onMouseEnter}
             onMouseLeave={onMouseLeave}
             onClick={onClick}
@@ -42,10 +44,10 @@ const BlogCard: React.FC<BlogCardProps> = ({
             {/* Gradient Overlay */}
             <div className="absolute inset-0 bg-gradient-to-br from-pink-50/40 via-transparent to-rose-50/40 dark:from-pink-900/10 dark:to-transparent pointer-events-none" />
 
-            <div className="flex h-full p-6 gap-6 relative z-10">
+            <div className="flex flex-col md:flex-row h-full p-6 gap-6 relative z-10">
 
                 {/* Left: Featured Post (40%) */}
-                <div className="flex-[2] flex flex-col relative group/featured">
+                <div className="w-full md:flex-[2] flex flex-col relative group/featured">
                     {loading ? (
                         <div className="flex-1 bg-white/30 dark:bg-white/5 rounded-2xl animate-pulse"></div>
                     ) : featuredPost ? (
@@ -75,7 +77,7 @@ const BlogCard: React.FC<BlogCardProps> = ({
                 </div>
 
                 {/* Right: List & Header (60%) */}
-                <div className="flex-[3] flex flex-col">
+                <div className="w-full md:flex-[3] flex flex-col">
                     {/* Header */}
                     <div className="flex items-center justify-between mb-4 pb-2">
                         <div className="flex items-center gap-3">

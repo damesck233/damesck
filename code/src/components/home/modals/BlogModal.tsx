@@ -9,6 +9,7 @@ import {
 } from '@heroicons/react/24/outline';
 import { BlogPost } from '../../types';
 import { useState, useEffect } from 'react';
+import { useScrollLock } from '../../../hooks/useScrollLock';
 
 interface BlogModalProps {
     isOpen: boolean;
@@ -21,21 +22,23 @@ interface BlogModalProps {
 const BlogModal: React.FC<BlogModalProps> = ({
     isOpen,
     onClose,
-    blogPosts
+    blogPosts,
+    layoutId
 }) => {
     const [selectedCategory, setSelectedCategory] = useState<string>('All');
+    const { lockScroll, unlockScroll } = useScrollLock();
 
     // Lock body scroll when modal is open
     useEffect(() => {
         if (isOpen) {
-            document.body.style.overflow = 'hidden';
+            lockScroll();
         } else {
-            document.body.style.overflow = 'unset';
+            unlockScroll();
         }
         return () => {
-            document.body.style.overflow = 'unset';
+            unlockScroll();
         };
-    }, [isOpen]);
+    }, [isOpen, lockScroll, unlockScroll]);
 
     // Extract categories
     const categories = ['All', ...Array.from(new Set(blogPosts.flatMap(p => p.categories?.map(c => c.name) || [])))];
@@ -53,7 +56,7 @@ const BlogModal: React.FC<BlogModalProps> = ({
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
-                        transition={{ duration: 0.3 }}
+                        transition={{ duration: layoutId ? 0.3 : 0.2 }}
                         className="fixed inset-0 bg-black/40 dark:bg-black/60 backdrop-blur-md z-[999]"
                         onClick={onClose}
                     />
@@ -63,8 +66,8 @@ const BlogModal: React.FC<BlogModalProps> = ({
                             initial={{ opacity: 0, scale: 0.95, y: 20 }}
                             animate={{ opacity: 1, scale: 1, y: 0 }}
                             exit={{ opacity: 0, scale: 0.95, y: 20 }}
-                            transition={{ type: "spring", duration: 0.5, bounce: 0.3 }}
-                            className="w-full md:max-w-[1100px] h-[90vh] md:h-[750px] bg-white/95 dark:bg-[#1c1c1e]/95 backdrop-blur-2xl rounded-[32px] shadow-2xl overflow-hidden pointer-events-auto flex flex-col md:flex-row relative"
+                            transition={layoutId ? { type: "spring", duration: 0.5, bounce: 0.3 } : { duration: 0.2, ease: "easeOut" }}
+                            className="w-full md:max-w-[1100px] h-[90vh] md:h-[750px] bg-white/95 dark:bg-[#1c1c1e]/95 backdrop-blur-2xl rounded-[32px] shadow-2xl overflow-y-auto md:overflow-hidden pointer-events-auto flex flex-col md:flex-row relative"
                             onClick={(e) => e.stopPropagation()}
                         >
                             {/* Sidebar */}
@@ -158,14 +161,14 @@ const BlogModal: React.FC<BlogModalProps> = ({
 
                             {/* Main Content */}
                             <motion.div
-                                className="flex-1 flex flex-col h-full overflow-hidden relative"
+                                className="flex-none md:flex-1 flex flex-col h-auto md:h-full overflow-visible md:overflow-hidden relative"
                                 initial={{ opacity: 0, y: 10 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ delay: 0.2 }}
                                 exit={{ opacity: 0, transition: { duration: 0.1 } }} // Fast exit
                             >
                                 {/* Content Area */}
-                                <div className="flex-1 overflow-y-auto p-6 md:p-8 custom-scrollbar">
+                                <div className="flex-1 overflow-visible md:overflow-y-auto p-6 md:p-8 custom-scrollbar">
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                         {filteredPosts.map((post, index) => (
                                             <motion.a

@@ -8,7 +8,7 @@ interface ProfileCardProps {
     hidden?: boolean;
 }
 
-const ProfileCard = ({ onClick, layoutId = 'profile-card', hidden = false }: ProfileCardProps) => {
+const ProfileCard = ({ onClick, layoutId, hidden = false }: ProfileCardProps) => {
     return (
         <motion.div
             layoutId={layoutId} // 启用布局动画，实现无缝过渡

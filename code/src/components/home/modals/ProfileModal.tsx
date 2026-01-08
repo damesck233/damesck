@@ -35,7 +35,7 @@ const getSocialIcon = (iconName: string) => {
     return <svg {...commonProps}><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H6.5A2.5 2.5 0 0 0 4 4.5v15ZM6.5 4H20v11H6.5a4.5 4.5 0 0 0-1.5.26V4.5A.5.5 0 0 1 6.5 4Z" /></svg>;
 };
 
-const ProfileModal = ({ isOpen, onClose, layoutId = 'profile-card' }: ProfileModalProps) => {
+const ProfileModal = ({ isOpen, onClose, layoutId }: ProfileModalProps) => {
     // 锁定背景滚动
     // Use custom hook for scroll locking with layout shift prevention
     const { lockScroll, unlockScroll } = useScrollLock();
@@ -60,7 +60,7 @@ const ProfileModal = ({ isOpen, onClose, layoutId = 'profile-card' }: ProfileMod
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
-                        transition={{ duration: 0.3 }}
+                        transition={{ duration: layoutId ? 0.3 : 0.2 }}
                         className="fixed inset-0 bg-black/40 dark:bg-black/60 backdrop-blur-md z-[999]"
                         onClick={onClose}
                     />
@@ -68,12 +68,18 @@ const ProfileModal = ({ isOpen, onClose, layoutId = 'profile-card' }: ProfileMod
                     <div className="fixed inset-0 flex items-center justify-center z-[1000] pointer-events-none p-4">
                         <motion.div
                             layoutId={layoutId}
-                            className="w-full md:max-w-[1000px] h-[90vh] md:h-[750px] bg-white/95 dark:bg-[#1c1c1e]/95 backdrop-blur-2xl rounded-[32px] shadow-2xl overflow-hidden pointer-events-auto flex flex-col md:flex-row relative p-2"
-                            transition={{
+                            initial={!layoutId ? { opacity: 0, scale: 0.95 } : undefined}
+                            animate={!layoutId ? { opacity: 1, scale: 1 } : undefined}
+                            exit={!layoutId ? { opacity: 0, scale: 0.95 } : undefined}
+                            className="w-full md:max-w-[1000px] h-[90vh] md:h-[750px] bg-white/95 dark:bg-[#1c1c1e]/95 backdrop-blur-2xl rounded-[32px] shadow-2xl overflow-y-auto md:overflow-hidden pointer-events-auto flex flex-col md:flex-row relative p-2"
+                            transition={layoutId ? {
                                 type: "spring",
                                 stiffness: 250,
                                 damping: 25,
                                 mass: 1.0
+                            } : {
+                                duration: 0.2,
+                                ease: "easeOut"
                             }}
                         >
                             {/* Left Sidebar (Floating Look) */}
@@ -160,7 +166,7 @@ const ProfileModal = ({ isOpen, onClose, layoutId = 'profile-card' }: ProfileMod
                             </div>
 
                             {/* Right Content Area */}
-                            <div className="flex-1 h-full overflow-y-auto overflow-x-hidden p-6 md:p-8">
+                            <div className="flex-none md:flex-1 h-auto md:h-full overflow-visible md:overflow-y-auto overflow-x-hidden p-6 md:p-8">
                                 <div className="space-y-6 max-w-[800px] mx-auto">
 
                                     {/* About Me */}

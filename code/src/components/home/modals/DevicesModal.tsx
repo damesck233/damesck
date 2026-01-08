@@ -23,7 +23,7 @@ const DevicesModal: React.FC<DevicesModalProps> = ({
     isOpen,
     onClose,
     devices,
-    layoutId = 'devices-card'
+    layoutId
 }) => {
     const { lockScroll, unlockScroll } = useScrollLock();
 
@@ -52,7 +52,7 @@ const DevicesModal: React.FC<DevicesModalProps> = ({
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
-                        transition={{ duration: 0.5 }}
+                        transition={{ duration: layoutId ? 0.3 : 0.2 }}
                         className="fixed inset-0 bg-black/40 dark:bg-black/60 backdrop-blur-md z-[999]"
                         onClick={onClose}
                     />
@@ -60,18 +60,24 @@ const DevicesModal: React.FC<DevicesModalProps> = ({
                     <div className="fixed inset-0 flex items-center justify-center z-[1000] pointer-events-none p-4">
                         <motion.div
                             layoutId={layoutId} // Shared layout ID
-                            className="w-full md:max-w-[1000px] h-[90vh] md:h-[750px] bg-white/95 dark:bg-[#1c1c1e]/95 backdrop-blur-2xl rounded-[32px] shadow-2xl overflow-hidden pointer-events-auto flex flex-col md:flex-row relative p-2"
-                            transition={{
+                            initial={!layoutId ? { opacity: 0, scale: 0.95 } : undefined}
+                            animate={!layoutId ? { opacity: 1, scale: 1 } : undefined}
+                            exit={!layoutId ? { opacity: 0, scale: 0.95 } : undefined}
+                            className="w-full md:max-w-[1000px] h-[90vh] md:h-[750px] bg-white/95 dark:bg-[#1c1c1e]/95 backdrop-blur-2xl rounded-[32px] shadow-2xl overflow-y-auto md:overflow-hidden pointer-events-auto flex flex-col md:flex-row relative p-2"
+                            transition={layoutId ? {
                                 type: "spring",
                                 stiffness: 250,
                                 damping: 25,
                                 mass: 1.0
+                            } : {
+                                duration: 0.2,
+                                ease: "easeOut"
                             }}
                         >
 
 
                             {/* Sidebar */}
-                            <div className="w-full md:w-[320px] flex-shrink-0 bg-white/60 dark:bg-white/5 backdrop-blur-xl rounded-[24px] shadow-sm flex flex-col relative overflow-hidden border-b md:border-b-0 md:border-r border-[#FEF9F1] dark:border-white/5 z-20">
+                            <div className="w-full md:w-[320px] flex-shrink-0 bg-white/60 dark:bg-white/5 backdrop-blur-xl rounded-[24px] shadow-sm flex flex-col relative overflow-visible md:overflow-hidden border-b md:border-b-0 md:border-r border-[#FEF9F1] dark:border-white/5 z-20">
 
                                 {/* Header - Traffic Lights */}
                                 <motion.div
@@ -136,7 +142,7 @@ const DevicesModal: React.FC<DevicesModalProps> = ({
 
                             {/* Main Content Area: Device Grid */}
                             <motion.div
-                                className="flex-1 h-full overflow-y-auto overflow-x-hidden p-6 md:p-8 custom-scrollbar z-10"
+                                className="flex-none md:flex-1 h-auto md:h-full overflow-visible md:overflow-y-auto overflow-x-hidden p-6 md:p-8 custom-scrollbar z-10"
                                 exit={{ opacity: 0, transition: { duration: 0.1 } }}
                             >
                                 <div className="max-w-[800px] mx-auto grid grid-cols-1 gap-6">

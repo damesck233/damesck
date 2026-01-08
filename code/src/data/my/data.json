@@ -24,7 +24,7 @@
     ],
     "about": {
         "title": "About Me",
-        "description": "我是 damesck，是一名热爱计算机硬件，网络，软件，编程的一名学生。热衷于探索数字世界的每一个角落，从底层的硬件架构到上层的软件交互，都让我着迷。"
+        "description": "我是 damesck，是一名热爱计算机硬件，网络，软件的一名学生。"
     },
     "contributions": [
         "程游ucyclub | 联合创始人",
@@ -45,37 +45,37 @@
     ],
     "timelineEvents": [
         {
-            "date": "2025-01-06",
-            "title": "网站交互优化",
+            "date": "2026-01-08",
+            "title": "New UI",
             "description": "优化了卡片与模态框的展开动画，实现了从图标到内容的无缝 Morphing 过渡效果。",
             "icon": "sparkles",
             "color": "blue"
         },
         {
             "date": "2026-01-07",
-            "title": "Maimai DX",
-            "description": "沉迷舞萌 DX，不仅是音乐游戏，更是节奏与身体的律动。",
-            "icon": "https://nb-data.klpbbs.com/file/tc/2026/01/07/695d517bcce5e_1767723387.jpg",
-            "color": "blue"
-        },
-        {
-            "date": "2024-12-25",
-            "title": "Christmas Update",
-            "description": "个人网站 v2.0 上线，采用全新 macOS 风格设计。",
+            "title": "获得成就！",
+            "description": "20岁",
             "icon": "gift",
             "color": "red"
         },
         {
-            "date": "2024-11-20",
-            "title": "获得新的认证",
-            "description": "通过了相关的技术认证考试，获得证书。",
-            "icon": "academic",
+            "date": "2026-01-03",
+            "title": "舞萌DX",
+            "description": "达成W0",
+            "icon": "https://nb-data.klpbbs.com/file/tc/2026/01/07/695d517bcce5e_1767723387.jpg",
             "color": "purple"
         },
         {
-            "date": "2024-10-01",
-            "title": "开启新项目",
-            "description": "开始着手开发 AI 网络模拟器项目。",
+            "date": "2026-01-03",
+            "title": "获得成就！",
+            "description": "？？？",
+            "icon": "gift",
+            "color": "red"
+        },
+        {
+            "date": "2026-01-01",
+            "title": "获得成就！",
+            "description": "2026",
             "icon": "rocket",
             "color": "green"
         }

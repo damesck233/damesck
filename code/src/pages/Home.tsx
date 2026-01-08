@@ -29,6 +29,7 @@ import learningProgress from '../data/cards/learningProgress.json';
 import devices from '../data/cards/devices.json';
 import countdown from '../data/cards/countdown.json';
 import myData from '../data/my/data.json';
+import { usePerformanceMotion } from '../hooks/usePerformanceMotion';
 
 const { personalInfo, socialLinks } = myData;
 import ProfileCard from '../components/home/ProfileCard';
@@ -395,6 +396,7 @@ const getMainCountdown = (countdownData: CountdownItem[]): CountdownItem => {
 
 
 const Home = () => {
+  const { enableMorph } = usePerformanceMotion();
   // 从JSON转换为正确类型
   const countdownData = countdown as CountdownItem[];
   // 使用新的数据文件替换旧数据
@@ -731,7 +733,11 @@ const Home = () => {
     >
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         {/* 个人信息卡片 - 使用新组件 */}
-        <ProfileCard onClick={() => openModal('personal')} hidden={modalOpen.personal} />
+        <ProfileCard
+          onClick={() => openModal('personal')}
+          hidden={modalOpen.personal}
+          layoutId={enableMorph ? 'profile-card' : undefined}
+        />
 
         {/* Activity Card (Replaces Skills & Learning) */}
         {/* Activity Card (Replaces Skills & Learning) */}
@@ -746,7 +752,7 @@ const Home = () => {
           // variants={fadeIn} // Removed per previous fix
           custom={1}
           hidden={modalOpen.skills}
-          layoutId="activity-card"
+          layoutId={enableMorph ? 'activity-card' : undefined}
         />
 
 
@@ -756,7 +762,7 @@ const Home = () => {
           onClick={() => openModal('devices')}
           onMouseEnter={() => handleMouseEnter('devices')}
           onMouseLeave={() => handleMouseLeave('devices')}
-          layoutId="devices-card"
+          layoutId={enableMorph ? 'devices-card' : undefined}
           hidden={modalOpen.devices}
         />
 
@@ -766,7 +772,7 @@ const Home = () => {
           onClick={() => openModal('countdown')}
           onMouseEnter={() => handleMouseEnter('countdown')}
           onMouseLeave={() => handleMouseLeave('countdown')}
-          layoutId="countdown-card"
+          layoutId={enableMorph ? 'countdown-card' : undefined}
           hidden={modalOpen.countdown}
         />
 
@@ -779,6 +785,7 @@ const Home = () => {
           onMouseEnter={() => handleMouseEnter('blogs')}
           onMouseLeave={() => handleMouseLeave('blogs')}
           hidden={modalOpen.blogs}
+          layoutId={enableMorph ? 'blog-card' : undefined}
         />
       </div>
 
@@ -788,13 +795,14 @@ const Home = () => {
         isOpen={modalOpen.skills}
         onClose={() => closeModal('skills')}
         timelineEvents={myData.timelineEvents}
-        layoutId="activity-card"
+        layoutId={enableMorph ? 'activity-card' : undefined}
       />
 
       {/* 模态框 - 个人资料 */}
       <ProfileModal
         isOpen={modalOpen.personal}
         onClose={() => closeModal('personal')}
+        layoutId={enableMorph ? 'profile-card' : undefined}
       />
 
 
@@ -803,7 +811,7 @@ const Home = () => {
         isOpen={modalOpen.devices}
         onClose={() => closeModal('devices')}
         devices={devices}
-        layoutId="devices-card"
+        layoutId={enableMorph ? 'devices-card' : undefined}
       />
 
 
@@ -813,7 +821,7 @@ const Home = () => {
         isOpen={modalOpen.countdown}
         onClose={() => closeModal('countdown')}
         events={countdownData}
-        layoutId="countdown-card"
+        layoutId={enableMorph ? 'countdown-card' : undefined}
       />
 
       {/* 模态框 - 最新博客 */}
@@ -821,7 +829,7 @@ const Home = () => {
         isOpen={modalOpen.blogs}
         onClose={() => closeModal('blogs')}
         blogPosts={blogPosts}
-        layoutId="blog-card"
+        layoutId={enableMorph ? 'blog-card' : undefined}
       />
 
     </motion.div >

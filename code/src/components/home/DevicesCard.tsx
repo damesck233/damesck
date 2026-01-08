@@ -33,7 +33,7 @@ const DevicesCard: React.FC<DevicesCardProps> = ({
     onClick,
     onMouseEnter,
     onMouseLeave,
-    layoutId = 'devices-card',
+    layoutId,
     hidden = false
 }) => {
     // Get top 3 devices

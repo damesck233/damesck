@@ -5,22 +5,21 @@ export const useScrollLock = () => {
     const lockScroll = useCallback(() => {
         const osInstance = OverlayScrollbars(document.body);
         if (osInstance) {
-            // Lock scrolling by modifying the overflow options
             osInstance.options({ overflow: { y: 'hidden' } });
         } else {
-            // Fallback for native scroll locking
+            // Lock body and html
             document.body.style.overflow = 'hidden';
+            document.documentElement.style.overflow = 'hidden'; // Important for some browsers
         }
     }, []);
 
     const unlockScroll = useCallback(() => {
         const osInstance = OverlayScrollbars(document.body);
         if (osInstance) {
-            // Restore scrolling
             osInstance.options({ overflow: { y: 'scroll' } });
         } else {
-            // Fallback
             document.body.style.overflow = '';
+            document.documentElement.style.overflow = '';
         }
     }, []);
 

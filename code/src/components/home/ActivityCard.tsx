@@ -33,7 +33,7 @@ const ActivityCard: React.FC<ActivityCardProps> = ({
     onClick,
     onMouseEnter,
     onMouseLeave,
-    layoutId = 'activity-card',
+    layoutId,
     hidden = false
 }) => {
 
