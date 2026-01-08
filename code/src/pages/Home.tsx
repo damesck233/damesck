@@ -30,9 +30,11 @@ import myData from '../data/my/data.json';
 
 const { personalInfo, socialLinks } = myData;
 import ProfileCard from '../components/home/ProfileCard';
-import ProfileModal from '../components/home/modals/ProfileModal';
 import ActivityCard from '../components/home/ActivityCard';
+import DevicesCard from '../components/home/DevicesCard';
 import ActivityModal from '../components/home/modals/ActivityModal';
+import ProfileModal from '../components/home/modals/ProfileModal';
+import DevicesModal from '../components/home/modals/DevicesModal';
 
 // 定义博客文章接口
 interface BlogPost {
@@ -732,140 +734,14 @@ const Home = () => {
 
 
         {/* 我的设备卡片 - 使用新数据 */}
-        <motion.div
-          variants={fadeIn}
-          custom={3}
-          initial="hidden"
-          animate="visible"
-          className="md:col-span-2 cursor-pointer card-container floating-element"
-          style={{ height: 'calc(100% - 0px)' }}
+        <DevicesCard
+          devices={devices}
+          onClick={() => openModal('devices')}
           onMouseEnter={() => handleMouseEnter('devices')}
           onMouseLeave={() => handleMouseLeave('devices')}
-          onClick={() => openModal('devices')}
-        >
-          <div
-            className="h-full"
-            style={{
-              ...iosCardStyle,
-              ...(hoveredCards.devices ? hoverStyle : {})
-            }}
-          >
-            <div
-              style={{
-                ...cardHeaderStyle
-              }}
-            >
-              <div className="flex items-center">
-                <AppleStyleIcon
-                  colorScheme="orange"
-                >
-                  <AppleDeviceIcon className="w-5 h-5 text-white" />
-                </AppleStyleIcon>
-                <div className="ml-3">
-                  <h3 className="text-base font-semibold dark:text-gray-100 text-[#2c2c2e]">我的设备</h3>
-                  <p className="text-xs dark:text-gray-400 text-gray-500 mt-0.5">浏览全部设备</p>
-                </div>
-              </div>
-              <div className="w-6 h-6 flex items-center justify-center rounded-full dark:bg-gray-700 bg-gray-100">
-                <span className="text-[#FF9F0A] font-semibold text-sm">{myDevices.length}</span>
-              </div>
-            </div>
-            <div style={cardBodyStyle} className="h-[calc(100%-64px)] overflow-y-auto">
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                {myDevices.slice(0, 3).map((device, index) => (
-                  <div key={index} className="relative flex flex-col overflow-hidden h-full dark:bg-gray-800/70 dark:border-gray-700/50 bg-white/70 rounded-xl hover:bg-white/90 dark:hover:bg-gray-700/90 transition-all shadow-sm border border-gray-100/50 group">
-                    {/* 背景装饰 */}
-                    <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                      <div className="absolute -right-6 -top-6 w-16 h-16 rounded-full bg-gradient-to-br from-blue-500/20 to-purple-500/20 blur-xl dark:from-blue-600/10 dark:to-purple-600/10"></div>
-                      <div className="absolute -left-4 -bottom-4 w-12 h-12 rounded-full bg-gradient-to-tr from-green-500/10 to-yellow-500/10 blur-lg dark:from-green-600/5 dark:to-yellow-600/5"></div>
-                    </div>
-
-                    {/* 上部图片与信息区 */}
-                    <div className="p-3 pb-2 relative z-10">
-                      <div className="flex items-center">
-                        <div className="relative w-14 h-14 rounded-xl overflow-hidden mr-3 shadow-sm flex-shrink-0">
-                          <div className="absolute inset-0 dark:bg-gradient-to-br dark:from-gray-700 dark:to-gray-800 bg-gradient-to-br from-gray-100 to-gray-200"></div>
-                          <img src={device.image} alt={device.name} className="w-full h-full object-contain p-1.5 relative z-10 transition-transform duration-300 group-hover:scale-110" style={{ willChange: 'transform' }} />
-                        </div>
-                        <div className="flex-grow overflow-hidden">
-                          <h4 className="font-semibold dark:text-gray-100 text-[#1d1d1f] truncate">{device.name}</h4>
-                          <div className="flex items-center mt-0.5">
-                            <div className="w-2 h-2 rounded-full mr-1.5 flex-shrink-0"
-                              style={{
-                                backgroundColor: device.specs.condition === '良好' ? '#34D399' :
-                                  device.specs.condition === '一般' ? '#FBBF24' :
-                                    device.specs.condition === '需要维修' ? '#F87171' : '#60A5FA'
-                              }}
-                            ></div>
-                            <span className="text-xs dark:text-gray-400 text-gray-500">{device.specs.condition}</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* 中部卡片内容 */}
-                    <div className="flex-grow px-3 pb-1 flex flex-col relative z-10">
-                      <p className="text-xs dark:text-gray-400 text-gray-500 line-clamp-2 mb-2">{device.description}</p>
-
-                      {/* 信息卡片 */}
-                      <div className="mt-auto mb-2">
-                        <div className="w-full dark:bg-gray-700/40 bg-gray-100/80 rounded-lg p-2 backdrop-blur-sm">
-                          <div className="flex justify-between items-center">
-                            <span className="text-[10px] dark:text-gray-400 text-gray-500">购买日期</span>
-                            <span className="text-xs font-medium dark:text-gray-300 text-gray-700">{device.specs.purchaseDate}</span>
-                          </div>
-                          <div className="flex justify-between items-center mt-1">
-                            <span className="text-[10px] dark:text-gray-400 text-gray-500">保修状态</span>
-                            <span className="text-xs font-medium dark:text-gray-300 text-gray-700">{device.specs.warranty}</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* 底部标签区域 */}
-                    <div className="p-3 pt-0 relative z-10">
-                      <div className="flex flex-wrap gap-1.5">
-                        {device.tags.map((tag, tagIndex) => (
-                          <span
-                            key={tagIndex}
-                            className="inline-flex items-center px-2 py-0.5 text-2xs rounded-full backdrop-blur-sm transition-all duration-300 group-hover:translate-y-[-1px] group-hover:shadow-sm"
-                            style={{
-                              backgroundColor: tagIndex === 0 ? 'rgba(59, 130, 246, 0.1)' :
-                                tagIndex === 1 ? 'rgba(16, 185, 129, 0.1)' :
-                                  'rgba(99, 102, 241, 0.1)',
-                              color: tagIndex === 0 ? '#3B82F6' :
-                                tagIndex === 1 ? '#10B981' :
-                                  '#6366F1',
-                              borderColor: tagIndex === 0 ? 'rgba(59, 130, 246, 0.2)' :
-                                tagIndex === 1 ? 'rgba(16, 185, 129, 0.2)' :
-                                  'rgba(99, 102, 241, 0.2)',
-                              borderWidth: '1px'
-                            }}
-                          >
-                            {tagIndex === 0 && (
-                              <svg className="w-2 h-2 mr-1" viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M12 2C6.5 2 2 6.5 2 12S6.5 22 12 22 22 17.5 22 12 17.5 2 12 2M10 17L5 12L6.41 10.59L10 14.17L17.59 6.58L19 8L10 17Z" />
-                              </svg>
-                            )}
-                            {tagIndex === 1 && (
-                              <svg className="w-2 h-2 mr-1" viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M13,9H11V7H13M13,17H11V11H13M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z" />
-                              </svg>
-                            )}
-                            {tag.name}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* 悬停指示器 */}
-                    <div className="absolute top-0 right-0 w-0 h-0 border-l-[24px] border-l-transparent border-t-[24px] border-blue-500/70 dark:border-blue-600/70 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </motion.div>
+          layoutId="devices-card"
+          hidden={modalOpen.devices}
+        />
 
         {/* 倒计时卡片 - 使用新数据 */}
         <motion.div
@@ -1067,951 +943,401 @@ const Home = () => {
 
 
       {/* 模态框 - 我的设备 */}
-      <AnimatePresence>
-        {modalOpen.devices && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/50 dark:bg-black/70 backdrop-blur-md flex items-center justify-center z-[1000]"
-            onClick={() => closeModal('devices')}
-          >
-            <motion.div
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.9, opacity: 0 }}
-              onClick={(e) => e.stopPropagation()}
-              className="bg-white/85 dark:bg-gray-900/85 border border-white/20 dark:border-gray-700/30"
-              style={{
-                borderRadius: '24px',
-                boxShadow: '0 32px 64px rgba(0, 0, 0, 0.15), 0 16px 32px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.8)',
-                backdropFilter: 'blur(40px) saturate(180%)',
-                width: '90%',
-                maxWidth: '900px',
-                maxHeight: '85vh',
-                position: 'relative' as const,
-                overflow: 'hidden'
-              }}
-            >
-              {/* Mica 效果背景层 */}
-              <div
-                className="absolute inset-0 bg-gradient-to-br from-white/90 via-white/70 to-white/80 dark:from-gray-800/90 dark:via-gray-800/70 dark:to-gray-800/80"
-                style={{
-                  zIndex: 1
-                }}
-              />
+      <DevicesModal
+        isOpen={modalOpen.devices}
+        onClose={() => closeModal('devices')}
+        devices={devices}
+        layoutId="devices-card"
+      />
 
-              {/* 噪点纹理层 */}
-              <div
-                style={{
-                  position: 'absolute',
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  bottom: 0,
-                  backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E")`,
-                  zIndex: 2
-                }}
-              />
 
-              {/* 动态光影效果 */}
-              <div
-                style={{
-                  position: 'absolute',
-                  top: '-50%',
-                  left: '-50%',
-                  width: '200%',
-                  height: '200%',
-                  background: 'radial-gradient(circle at 30% 20%, rgba(255, 159, 10, 0.08) 0%, transparent 50%)',
-                  zIndex: 3,
-                  pointerEvents: 'none'
-                }}
-              />
-
-              {/* 模态框头部 */}
-              <div
-                className="flex justify-between items-center p-6 pb-4 bg-gradient-to-br from-white/95 to-white/85 dark:from-gray-800/95 dark:to-gray-800/85"
-                style={{
-                  position: 'relative',
-                  zIndex: 10,
-                  borderTopLeftRadius: '24px',
-                  borderTopRightRadius: '24px',
-                  backdropFilter: 'blur(20px)',
-                  boxShadow: 'inset 0 1px 0 rgba(255, 255, 255, 0.8), 0 1px 3px rgba(0, 0, 0, 0.05)'
-                }}
-              >
-                <div className="flex items-center">
-                  <AppleStyleIcon
-                    colorScheme="orange"
-                    size="lg"
-                  >
-                    <AppleDeviceIcon className="w-6 h-6 text-white" />
-                  </AppleStyleIcon>
-                  <div className="ml-3">
-                    <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-100">我的设备详情</h2>
-                    <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">管理和查看您的所有设备信息</p>
-                  </div>
-                </div>
-                <button
-                  className="w-10 h-10 rounded-full bg-gray-100/80 hover:bg-gray-200/80 dark:bg-gray-700/50 dark:hover:bg-gray-600/60 flex items-center justify-center transition-all duration-200 backdrop-blur-sm border border-gray-200/50 dark:border-gray-600/30"
-                  onClick={() => closeModal('devices')}
-                  style={{
-                    boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)'
-                  }}
-                >
-                  <XMarkIcon className="w-5 h-5 text-gray-600 dark:text-gray-300" />
-                </button>
-              </div>
-
-              {/* 模态框主要内容 */}
-              <div
-                className="p-6 pt-2 bg-gradient-to-br from-white/90 to-white/80 dark:from-gray-800/90 dark:to-gray-800/80"
-                style={{
-                  position: 'relative',
-                  zIndex: 10,
-                  backdropFilter: 'blur(20px)',
-                  borderBottomLeftRadius: '24px',
-                  borderBottomRightRadius: '24px',
-                  maxHeight: 'calc(85vh - 120px)',
-                  overflowY: 'auto'
-                }}
-              >
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                  {myDevices.map((device, index) => (
-                    <motion.div
-                      key={index}
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: index * 0.1, duration: 0.5 }}
-                      className="group bg-gradient-to-br from-white/90 to-white/70 dark:from-gray-800/90 dark:to-gray-800/70 border border-white/30 dark:border-gray-600/30 rounded-[20px] overflow-hidden transition-all duration-300"
-                      style={{
-                        backdropFilter: 'blur(20px)',
-                        boxShadow: '0 8px 32px rgba(0, 0, 0, 0.08), 0 4px 16px rgba(0, 0, 0, 0.04)'
-                      }}
-                      onMouseEnter={(e) => {
-                        e.currentTarget.style.transform = 'translateY(-4px)';
-                        e.currentTarget.style.boxShadow = '0 16px 48px rgba(0, 0, 0, 0.12), 0 8px 24px rgba(0, 0, 0, 0.08)';
-                      }}
-                      onMouseLeave={(e) => {
-                        e.currentTarget.style.transform = 'translateY(0)';
-                        e.currentTarget.style.boxShadow = '0 8px 32px rgba(0, 0, 0, 0.08), 0 4px 16px rgba(0, 0, 0, 0.04)';
-                      }}
-                    >
-                      {/* 装饰性顶部边框 */}
-                      <div
-                        style={{
-                          height: '4px',
-                          background: `linear-gradient(90deg, ${appleColors.orange.start}, ${appleColors.orange.end})`,
-                          boxShadow: `0 2px 8px ${appleColors.orange.shadow}`
-                        }}
-                      />
-
-                      <div className="relative h-48 overflow-hidden">
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent z-10"></div>
-                        <div className="w-full h-full bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-700 dark:to-gray-800 flex items-center justify-center">
-                          <img
-                            src={device.image}
-                            alt={device.name}
-                            className="w-full h-full object-contain p-6 transition-all duration-500 group-hover:scale-110"
-                            style={{
-                              willChange: 'transform',
-                              filter: 'drop-shadow(0 4px 12px rgba(0, 0, 0, 0.1))'
-                            }}
-                          />
-                        </div>
-                        <div className="absolute bottom-0 left-0 right-0 z-20 p-4">
-                          <div className="flex items-center mb-2">
-                            <div
-                              className="w-8 h-8 rounded-lg flex items-center justify-center mr-3"
-                              style={{
-                                background: `linear-gradient(135deg, ${appleColors.orange.start}, ${appleColors.orange.end})`,
-                                boxShadow: `0 4px 12px ${appleColors.orange.shadow}`
-                              }}
-                            >
-                              <AppleDeviceIcon className="w-4 h-4 text-white" />
-                            </div>
-                            <h3 className="text-xl font-semibold text-white drop-shadow-lg">{device.name}</h3>
-                          </div>
-                          <div className="flex flex-wrap gap-2">
-                            {device.tags.map((tag, tagIndex) => (
-                              <motion.span
-                                key={tagIndex}
-                                initial={{ opacity: 0, scale: 0.8 }}
-                                animate={{ opacity: 1, scale: 1 }}
-                                transition={{ delay: (index * 0.1) + (tagIndex * 0.05), duration: 0.3 }}
-                                className="px-3 py-1 text-xs rounded-full text-white backdrop-blur-md border border-white/30 hover:border-white/50 transition-all duration-200 bg-white/20 dark:bg-gray-800/40"
-                                style={{
-                                  boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)'
-                                }}
-                              >
-                                {tag.name}
-                              </motion.span>
-                            ))}
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="p-5">
-                        <p className="text-sm text-gray-600 dark:text-gray-400 mb-4 line-clamp-2 leading-relaxed">{device.description}</p>
-
-                        <div className="grid grid-cols-2 gap-3 mb-4">
-                          <div
-                            className="rounded-xl p-3 flex flex-col items-center justify-center transition-all duration-200 hover:scale-105 bg-gradient-to-br from-white/80 to-white/60 dark:from-gray-800/80 dark:to-gray-800/60 border border-white/30 dark:border-gray-600/30"
-                            style={{
-                              backdropFilter: 'blur(10px)',
-                              boxShadow: '0 4px 16px rgba(0, 0, 0, 0.05)'
-                            }}
-                          >
-                            <span className="text-xs text-gray-500 dark:text-gray-400 mb-1">购买日期</span>
-                            <span className="text-sm font-semibold text-gray-800 dark:text-gray-200">{device.specs.purchaseDate}</span>
-                          </div>
-                          <div
-                            className="rounded-xl p-3 flex flex-col items-center justify-center transition-all duration-200 hover:scale-105 bg-gradient-to-br from-white/80 to-white/60 dark:from-gray-800/80 dark:to-gray-800/60 border border-white/30 dark:border-gray-600/30"
-                            style={{
-                              backdropFilter: 'blur(10px)',
-                              boxShadow: '0 4px 16px rgba(0, 0, 0, 0.05)'
-                            }}
-                          >
-                            <span className="text-xs text-gray-500 dark:text-gray-400 mb-1">保修状态</span>
-                            <span className="text-sm font-semibold text-gray-800 dark:text-gray-200">{device.specs.warranty}</span>
-                          </div>
-                        </div>
-
-                        <div className="mb-4 flex items-center p-3 rounded-xl bg-gradient-to-br from-white/70 to-white/50 dark:from-gray-800/70 dark:to-gray-800/50 border border-white/30 dark:border-gray-600/30"
-                          style={{
-                            backdropFilter: 'blur(10px)'
-                          }}
-                        >
-                          <div
-                            className="w-4 h-4 rounded-full mr-3 shadow-lg"
-                            style={{
-                              backgroundColor: device.specs.condition === '良好' ? '#34D399' :
-                                device.specs.condition === '一般' ? '#FBBF24' :
-                                  device.specs.condition === '需要维修' ? '#F87171' : '#60A5FA',
-                              boxShadow: `0 2px 8px ${device.specs.condition === '良好' ? 'rgba(52, 211, 153, 0.3)' :
-                                device.specs.condition === '一般' ? 'rgba(251, 191, 36, 0.3)' :
-                                  device.specs.condition === '需要维修' ? 'rgba(248, 113, 113, 0.3)' : 'rgba(96, 165, 250, 0.3)'}`
-                            }}
-                          ></div>
-                          <span className="text-sm font-medium text-gray-800 dark:text-gray-200">状态: {device.specs.condition}</span>
-                        </div>
-
-                        <div className="border-t pt-4 border-gray-200/50 dark:border-gray-600/30">
-                          <h4 className="text-sm font-semibold mb-3 text-gray-800 dark:text-gray-200 flex items-center">
-                            <div className="w-2 h-2 rounded-full bg-blue-500 mr-2"></div>
-                            设备详情
-                          </h4>
-                          <ul className="text-xs text-gray-600 dark:text-gray-400 space-y-2">
-                            {device.specs.details.map((detail, detailIndex) => (
-                              <motion.li
-                                key={detailIndex}
-                                initial={{ opacity: 0, x: -10 }}
-                                animate={{ opacity: 1, x: 0 }}
-                                transition={{ delay: (index * 0.1) + (detailIndex * 0.05), duration: 0.3 }}
-                                className="flex items-start p-2 rounded-lg hover:bg-white/50 dark:hover:bg-gray-700/50 transition-all duration-200"
-                              >
-                                <span className="mr-2 text-blue-500 font-bold">•</span>
-                                <span className="leading-relaxed">{detail}</span>
-                              </motion.li>
-                            ))}
-                          </ul>
-                        </div>
-                      </div>
-                    </motion.div>
-                  ))}
-                </div>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
 
       {/* 模态框 - 倒计时 */}
       <AnimatePresence>
-        {modalOpen.countdown && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/50 dark:bg-black/70 backdrop-blur-md flex items-center justify-center z-[1000]"
-            onClick={() => closeModal('countdown')}
-          >
+        {
+          modalOpen.countdown && (
             <motion.div
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.9, opacity: 0 }}
-              onClick={(e) => e.stopPropagation()}
-              className="bg-white/85 dark:bg-gray-800/85 border border-white/40 dark:border-gray-600/40"
-              style={{
-                borderRadius: '24px',
-                boxShadow: '0 32px 64px rgba(0, 0, 0, 0.12), 0 16px 32px rgba(0, 0, 0, 0.08), 0 8px 16px rgba(0, 0, 0, 0.04)',
-                backdropFilter: 'blur(40px) saturate(1.8)',
-                width: '90%',
-                maxWidth: '900px',
-                maxHeight: '85vh',
-                position: 'relative',
-                overflow: 'hidden'
-              }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 bg-black/50 dark:bg-black/70 backdrop-blur-md flex items-center justify-center z-[1000]"
+              onClick={() => closeModal('countdown')}
             >
-              {/* Mica 效果背景层 */}
-              <div
-                className="bg-white/90 dark:bg-gray-800/90"
+              <motion.div
+                initial={{ scale: 0.9, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.9, opacity: 0 }}
+                onClick={(e) => e.stopPropagation()}
+                className="bg-white/85 dark:bg-gray-800/85 border border-white/40 dark:border-gray-600/40"
                 style={{
-                  position: 'absolute',
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  bottom: 0,
-                  zIndex: 1
-                }}
-              />
-
-              {/* 噪点纹理层 */}
-              <div
-                style={{
-                  position: 'absolute',
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  bottom: 0,
-                  backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E")`,
-                  zIndex: 2
-                }}
-              />
-
-              {/* 动态光影效果 */}
-              <div
-                style={{
-                  position: 'absolute',
-                  top: '-50%',
-                  left: '-50%',
-                  width: '200%',
-                  height: '200%',
-                  background: 'radial-gradient(circle at 30% 20%, rgba(100, 210, 255, 0.08) 0%, transparent 50%), radial-gradient(circle at 70% 80%, rgba(94, 92, 230, 0.06) 0%, transparent 50%)',
-                  zIndex: 3,
-                  pointerEvents: 'none'
-                }}
-              />
-
-              {/* 模态框头部 */}
-              <div
-                className="flex justify-between items-center p-6 pb-4 bg-white/95 dark:bg-gray-800/95"
-                style={{
+                  borderRadius: '24px',
+                  boxShadow: '0 32px 64px rgba(0, 0, 0, 0.12), 0 16px 32px rgba(0, 0, 0, 0.08), 0 8px 16px rgba(0, 0, 0, 0.04)',
+                  backdropFilter: 'blur(40px) saturate(1.8)',
+                  width: '90%',
+                  maxWidth: '900px',
+                  maxHeight: '85vh',
                   position: 'relative',
-                  zIndex: 10,
-                  borderTopLeftRadius: '24px',
-                  borderTopRightRadius: '24px',
-                  backdropFilter: 'blur(20px)',
-                  boxShadow: '0 1px 0 rgba(255, 255, 255, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.8)'
+                  overflow: 'hidden'
                 }}
               >
-                <div className="flex items-center">
-                  <AppleStyleIcon
-                    colorScheme="teal"
-                    size="md"
-                  >
-                    <ClockIcon className="w-5 h-5 text-white" />
-                  </AppleStyleIcon>
-                  <div className="ml-3">
-                    <h2 className="text-2xl font-bold dark:text-gray-100 text-[#2c2c2e]">倒计日</h2>
-                  </div>
-                </div>
-                <button
-                  className="w-10 h-10 rounded-full flex items-center justify-center transition-all duration-200 hover:scale-105"
+                {/* Mica 效果背景层 */}
+                <div
+                  className="bg-white/90 dark:bg-gray-800/90"
                   style={{
-                    background: 'rgba(0, 0, 0, 0.05)',
-                    backdropFilter: 'blur(10px)',
-                    border: '1px solid rgba(255, 255, 255, 0.3)'
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    zIndex: 1
                   }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.background = 'rgba(0, 0, 0, 0.08)';
-                    e.currentTarget.style.transform = 'scale(1.05)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.background = 'rgba(0, 0, 0, 0.05)';
-                    e.currentTarget.style.transform = 'scale(1)';
-                  }}
-                  onClick={() => closeModal('countdown')}
-                >
-                  <XMarkIcon className="w-5 h-5 dark:text-gray-300 text-gray-600" />
-                </button>
-              </div>
+                />
 
-              {/* 模态框主要内容 */}
-              <div
-                className="p-6 pt-2 bg-white/90 dark:bg-gray-800/90"
-                style={{
-                  position: 'relative',
-                  zIndex: 10,
-                  backdropFilter: 'blur(20px)',
-                  borderBottomLeftRadius: '24px',
-                  borderBottomRightRadius: '24px',
-                  maxHeight: 'calc(85vh - 120px)',
-                  overflowY: 'auto'
-                }}
-              >
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, ease: "easeOut" }}
-                  className="rounded-2xl overflow-hidden shadow-lg mb-6 bg-white/95 dark:bg-gray-800/95 border border-white/30 dark:border-gray-600/30"
+                {/* 噪点纹理层 */}
+                <div
                   style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E")`,
+                    zIndex: 2
+                  }}
+                />
+
+                {/* 动态光影效果 */}
+                <div
+                  style={{
+                    position: 'absolute',
+                    top: '-50%',
+                    left: '-50%',
+                    width: '200%',
+                    height: '200%',
+                    background: 'radial-gradient(circle at 30% 20%, rgba(100, 210, 255, 0.08) 0%, transparent 50%), radial-gradient(circle at 70% 80%, rgba(94, 92, 230, 0.06) 0%, transparent 50%)',
+                    zIndex: 3,
+                    pointerEvents: 'none'
+                  }}
+                />
+
+                {/* 模态框头部 */}
+                <div
+                  className="flex justify-between items-center p-6 pb-4 bg-white/95 dark:bg-gray-800/95"
+                  style={{
+                    position: 'relative',
+                    zIndex: 10,
+                    borderTopLeftRadius: '24px',
+                    borderTopRightRadius: '24px',
                     backdropFilter: 'blur(20px)',
-                    boxShadow: '0 16px 32px rgba(0, 0, 0, 0.08), 0 8px 16px rgba(0, 0, 0, 0.04)'
+                    boxShadow: '0 1px 0 rgba(255, 255, 255, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.8)'
                   }}
                 >
-                  <div className="relative p-6 pb-4">
-                    {/* 装饰性顶部边框 */}
-                    <div
-                      style={{
-                        position: 'absolute',
-                        top: 0,
-                        left: 0,
-                        right: 0,
-                        height: '4px',
-                        background: `linear-gradient(90deg, ${appleColors.teal.start}, ${appleColors.teal.end})`,
-                        boxShadow: `0 2px 8px ${appleColors.teal.shadow}`
-                      }}
-                    />
-
-                    {/* 背景装饰 */}
-                    <div className="absolute -top-10 -right-10 w-40 h-40 bg-gradient-to-br from-blue-400/10 to-purple-500/10 rounded-full blur-2xl pointer-events-none"></div>
-                    <div className="absolute -bottom-10 -left-10 w-32 h-32 bg-gradient-to-tr from-green-400/10 to-yellow-500/10 rounded-full blur-xl pointer-events-none"></div>
-
-                    {/* 主倒计时显示 */}
-                    <div className="flex flex-col items-center md:flex-row md:items-start mb-6 relative">
-                      <motion.div
-                        initial={{ scale: 0.8, opacity: 0 }}
-                        animate={{ scale: 1, opacity: 1 }}
-                        transition={{ delay: 0.2, duration: 0.5, ease: "easeOut" }}
-                        className="relative w-32 h-32 rounded-2xl flex flex-col items-center justify-center text-white shadow-lg mb-4 md:mb-0 overflow-hidden group"
-                        style={{
-                          background: `linear-gradient(135deg, ${appleColors.teal.start}, ${appleColors.teal.end})`,
-                          boxShadow: `0 8px 24px ${appleColors.teal.shadow}, 0 4px 12px rgba(0, 0, 0, 0.1)`
-                        }}
-                      >
-                        <div className="absolute inset-0 backdrop-blur-sm bg-white/5"></div>
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent"></div>
-                        <div className="z-10 text-center">
-                          <div className="text-6xl font-bold drop-shadow-lg">{daysLeft}</div>
-                          <div className="text-sm font-medium text-center text-white/90">剩余天数</div>
-                        </div>
-                      </motion.div>
-
-                      <div className="md:ml-6 flex-grow">
-                        <motion.h3
-                          initial={{ opacity: 0, x: -20 }}
-                          animate={{ opacity: 1, x: 0 }}
-                          transition={{ delay: 0.3, duration: 0.5 }}
-                          className="text-2xl font-bold text-center md:text-left mb-3 dark:text-gray-100 text-gray-800"
-                        >
-                          {getMainCountdown(countdownData).title}
-                        </motion.h3>
-
-                        <motion.div
-                          initial={{ opacity: 0, scaleX: 0 }}
-                          animate={{ opacity: 1, scaleX: 1 }}
-                          transition={{ delay: 0.4, duration: 0.8, ease: "easeOut" }}
-                          className="h-3 w-full rounded-full overflow-hidden mb-3 shadow-inner"
-                          style={{
-                            background: 'linear-gradient(135deg, rgba(0, 0, 0, 0.05) 0%, rgba(0, 0, 0, 0.1) 100%)',
-                            border: '1px solid rgba(255, 255, 255, 0.3)'
-                          }}
-                        >
-                          <div
-                            className="h-full rounded-full transition-all duration-1000 ease-out"
-                            style={{
-                              width: `${calculateProgress(getMainCountdown(countdownData))}%`,
-                              background: `linear-gradient(90deg, ${appleColors.teal.start}, ${appleColors.teal.end})`,
-                              boxShadow: `0 0 12px ${appleColors.teal.shadow}`
-                            }}
-                          ></div>
-                        </motion.div>
-
-                        <motion.div
-                          initial={{ opacity: 0, y: 10 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          transition={{ delay: 0.5, duration: 0.5 }}
-                          className="flex justify-between text-sm dark:text-gray-400 text-gray-600 mb-4"
-                        >
-                          <span>开始日期: {getMainCountdown(countdownData).Startdate}</span>
-                          <span>目标日期: {getMainCountdown(countdownData).targetDate}</span>
-                        </motion.div>
-
-                        <div className="grid grid-cols-3 gap-3 mt-4">
-                          {[
-                            {
-                              label: '已过天数',
-                              value: getMainCountdown(countdownData)?.Startdate ? calculatePassedDays(getMainCountdown(countdownData).Startdate) : 0,
-                              color: appleColors.green
-                            },
-                            {
-                              label: '总天数',
-                              value: (getMainCountdown(countdownData)?.Startdate && getMainCountdown(countdownData)?.targetDate) ?
-                                calculateTotalDays(getMainCountdown(countdownData).Startdate, getMainCountdown(countdownData).targetDate) : 0,
-                              color: appleColors.blue
-                            },
-                            {
-                              label: '完成度',
-                              value: `${Math.round(calculateProgress(getMainCountdown(countdownData)))}%`,
-                              color: appleColors.purple
-                            }
-                          ].map((item, index) => (
-                            <motion.div
-                              key={index}
-                              initial={{ opacity: 0, y: 20 }}
-                              animate={{ opacity: 1, y: 0 }}
-                              transition={{ delay: 0.6 + index * 0.1, duration: 0.5 }}
-                              className="rounded-lg p-3 flex flex-col items-center justify-center transition-all duration-300 hover:scale-105 group"
-                              style={{
-                                background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0.6) 100%)',
-                                backdropFilter: 'blur(10px)',
-                                border: '1px solid rgba(255, 255, 255, 0.3)',
-                                boxShadow: '0 4px 12px rgba(0, 0, 0, 0.05)'
-                              }}
-                              onMouseEnter={(e) => {
-                                e.currentTarget.style.boxShadow = `0 8px 24px ${item.color.shadow}`;
-                              }}
-                              onMouseLeave={(e) => {
-                                e.currentTarget.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.05)';
-                              }}
-                            >
-                              <span className="text-xs text-gray-500 dark:text-gray-400 mb-1">{item.label}</span>
-                              <span
-                                className="text-lg font-medium"
-                                style={{ color: item.color.start }}
-                              >
-                                {item.value}
-                              </span>
-                            </motion.div>
-                          ))}
-                        </div>
-                      </div>
+                  <div className="flex items-center">
+                    <AppleStyleIcon
+                      colorScheme="teal"
+                      size="md"
+                    >
+                      <ClockIcon className="w-5 h-5 text-white" />
+                    </AppleStyleIcon>
+                    <div className="ml-3">
+                      <h2 className="text-2xl font-bold dark:text-gray-100 text-[#2c2c2e]">倒计日</h2>
                     </div>
                   </div>
-                </motion.div>
+                  <button
+                    className="w-10 h-10 rounded-full flex items-center justify-center transition-all duration-200 hover:scale-105"
+                    style={{
+                      background: 'rgba(0, 0, 0, 0.05)',
+                      backdropFilter: 'blur(10px)',
+                      border: '1px solid rgba(255, 255, 255, 0.3)'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.background = 'rgba(0, 0, 0, 0.08)';
+                      e.currentTarget.style.transform = 'scale(1.05)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.background = 'rgba(0, 0, 0, 0.05)';
+                      e.currentTarget.style.transform = 'scale(1)';
+                    }}
+                    onClick={() => closeModal('countdown')}
+                  >
+                    <XMarkIcon className="w-5 h-5 dark:text-gray-300 text-gray-600" />
+                  </button>
+                </div>
 
-                {/* 其他倒计时列表 */}
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.8, duration: 0.6 }}
-                  className="rounded-2xl overflow-hidden bg-white/95 dark:bg-gray-800/95 border border-white/30 dark:border-gray-600/30"
+                {/* 模态框主要内容 */}
+                <div
+                  className="p-6 pt-2 bg-white/90 dark:bg-gray-800/90"
                   style={{
+                    position: 'relative',
+                    zIndex: 10,
                     backdropFilter: 'blur(20px)',
-                    boxShadow: '0 16px 32px rgba(0, 0, 0, 0.08), 0 8px 16px rgba(0, 0, 0, 0.04)'
+                    borderBottomLeftRadius: '24px',
+                    borderBottomRightRadius: '24px',
+                    maxHeight: 'calc(85vh - 120px)',
+                    overflowY: 'auto'
                   }}
                 >
-                  <div className="px-6 pt-4 pb-6">
-                    <motion.h4
-                      initial={{ opacity: 0, x: -20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: 0.9, duration: 0.5 }}
-                      className="text-lg font-medium mb-4 dark:text-gray-100 text-gray-800 flex items-center"
-                    >
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, ease: "easeOut" }}
+                    className="rounded-2xl overflow-hidden shadow-lg mb-6 bg-white/95 dark:bg-gray-800/95 border border-white/30 dark:border-gray-600/30"
+                    style={{
+                      backdropFilter: 'blur(20px)',
+                      boxShadow: '0 16px 32px rgba(0, 0, 0, 0.08), 0 8px 16px rgba(0, 0, 0, 0.04)'
+                    }}
+                  >
+                    <div className="relative p-6 pb-4">
+                      {/* 装饰性顶部边框 */}
                       <div
-                        className="w-8 h-8 rounded-lg flex items-center justify-center mr-3"
                         style={{
-                          background: `linear-gradient(135deg, ${appleColors.teal.start}, ${appleColors.teal.end})`,
-                          boxShadow: `0 4px 12px ${appleColors.teal.shadow}`
+                          position: 'absolute',
+                          top: 0,
+                          left: 0,
+                          right: 0,
+                          height: '4px',
+                          background: `linear-gradient(90deg, ${appleColors.teal.start}, ${appleColors.teal.end})`,
+                          boxShadow: `0 2px 8px ${appleColors.teal.shadow}`
                         }}
-                      >
-                        <CalendarIcon className="w-4 h-4 text-white" />
-                      </div>
-                      所有倒计时
-                    </motion.h4>
+                      />
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      {/* 主倒计时卡片 */}
-                      <motion.div
-                        initial={{ opacity: 0, scale: 0.9 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ delay: 1.0, duration: 0.5 }}
-                        className="rounded-xl p-4 relative overflow-hidden group cursor-pointer"
-                        style={{
-                          background: 'linear-gradient(135deg, rgba(100, 210, 255, 0.1) 0%, rgba(94, 92, 230, 0.1) 100%)',
-                          backdropFilter: 'blur(10px)',
-                          border: '1px solid rgba(100, 210, 255, 0.2)',
-                          boxShadow: '0 8px 24px rgba(100, 210, 255, 0.1)'
-                        }}
-                        whileHover={{ scale: 1.02, y: -2 }}
-                        whileTap={{ scale: 0.98 }}
-                      >
-                        {/* 装饰性左边框 */}
-                        <div
-                          style={{
-                            position: 'absolute',
-                            left: 0,
-                            top: 0,
-                            bottom: 0,
-                            width: '4px',
-                            background: `linear-gradient(180deg, ${appleColors.teal.start}, ${appleColors.teal.end})`,
-                            boxShadow: `2px 0 8px ${appleColors.teal.shadow}`
-                          }}
-                        />
+                      {/* 背景装饰 */}
+                      <div className="absolute -top-10 -right-10 w-40 h-40 bg-gradient-to-br from-blue-400/10 to-purple-500/10 rounded-full blur-2xl pointer-events-none"></div>
+                      <div className="absolute -bottom-10 -left-10 w-32 h-32 bg-gradient-to-tr from-green-400/10 to-yellow-500/10 rounded-full blur-xl pointer-events-none"></div>
 
-                        <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 to-indigo-500/5 group-hover:from-blue-500/10 group-hover:to-indigo-500/10 transition-all duration-300"></div>
-                        <div className="flex items-center justify-between mb-3 relative">
-                          <h5 className="font-semibold text-blue-700 dark:text-blue-400">{getMainCountdown(countdownData).title}</h5>
-                          <motion.span
-                            initial={{ scale: 0 }}
-                            animate={{ scale: 1 }}
-                            transition={{ delay: 1.2, duration: 0.3 }}
-                            className="py-1 px-3 text-xs rounded-full text-white"
-                            style={{
-                              background: `linear-gradient(135deg, ${appleColors.teal.start}, ${appleColors.teal.end})`,
-                              boxShadow: `0 2px 8px ${appleColors.teal.shadow}`
-                            }}
-                          >
-                            主要
-                          </motion.span>
-                        </div>
-                        <div className="flex items-center justify-between relative">
-                          <div className="flex items-baseline">
-                            <span className="text-3xl font-bold text-blue-700 dark:text-blue-400">{daysLeft}</span>
-                            <span className="ml-1 text-sm text-gray-500 dark:text-gray-400">天</span>
-                          </div>
-                          <span className="text-xs text-gray-600 dark:text-gray-400">{getMainCountdown(countdownData).targetDate}</span>
-                        </div>
-                        <div className="mt-3 h-2 w-full rounded-full overflow-hidden relative"
+                      {/* 主倒计时显示 */}
+                      <div className="flex flex-col items-center md:flex-row md:items-start mb-6 relative">
+                        <motion.div
+                          initial={{ scale: 0.8, opacity: 0 }}
+                          animate={{ scale: 1, opacity: 1 }}
+                          transition={{ delay: 0.2, duration: 0.5, ease: "easeOut" }}
+                          className="relative w-32 h-32 rounded-2xl flex flex-col items-center justify-center text-white shadow-lg mb-4 md:mb-0 overflow-hidden group"
                           style={{
-                            background: 'linear-gradient(135deg, rgba(0, 0, 0, 0.05) 0%, rgba(0, 0, 0, 0.1) 100%)',
-                            border: '1px solid rgba(255, 255, 255, 0.3)'
+                            background: `linear-gradient(135deg, ${appleColors.teal.start}, ${appleColors.teal.end})`,
+                            boxShadow: `0 8px 24px ${appleColors.teal.shadow}, 0 4px 12px rgba(0, 0, 0, 0.1)`
                           }}
                         >
-                          <motion.div
-                            initial={{ width: 0 }}
-                            animate={{ width: `${calculateProgress(getMainCountdown(countdownData))}%` }}
-                            transition={{ delay: 1.3, duration: 1.2, ease: "easeOut" }}
-                            className="h-full rounded-full"
-                            style={{
-                              background: `linear-gradient(90deg, ${appleColors.teal.start}, ${appleColors.teal.end})`,
-                              boxShadow: `0 0 12px ${appleColors.teal.shadow}`
-                            }}
-                          ></motion.div>
-                        </div>
-                      </motion.div>
+                          <div className="absolute inset-0 backdrop-blur-sm bg-white/5"></div>
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent"></div>
+                          <div className="z-10 text-center">
+                            <div className="text-6xl font-bold drop-shadow-lg">{daysLeft}</div>
+                            <div className="text-sm font-medium text-center text-white/90">剩余天数</div>
+                          </div>
+                        </motion.div>
 
-                      {/* 其他倒计时卡片 */}
-                      {countdownData.filter(item => !item.top).map((item, index) => {
-                        const colors = [appleColors.green, appleColors.orange];
-                        const color = colors[index % colors.length];
-
-                        return (
-                          <motion.div
-                            key={index}
-                            initial={{ opacity: 0, scale: 0.9 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            transition={{ delay: 1.1 + index * 0.1, duration: 0.5 }}
-                            className="rounded-xl p-4 relative overflow-hidden group cursor-pointer"
-                            style={{
-                              background: `linear-gradient(135deg, ${color.start}15, ${color.end}10)`,
-                              backdropFilter: 'blur(10px)',
-                              border: `1px solid ${color.start}30`,
-                              boxShadow: `0 8px 24px ${color.shadow}`
-                            }}
-                            whileHover={{ scale: 1.02, y: -2 }}
-                            whileTap={{ scale: 0.98 }}
+                        <div className="md:ml-6 flex-grow">
+                          <motion.h3
+                            initial={{ opacity: 0, x: -20 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ delay: 0.3, duration: 0.5 }}
+                            className="text-2xl font-bold text-center md:text-left mb-3 dark:text-gray-100 text-gray-800"
                           >
-                            {/* 装饰性左边框 */}
-                            <div
-                              style={{
-                                position: 'absolute',
-                                left: 0,
-                                top: 0,
-                                bottom: 0,
-                                width: '4px',
-                                background: `linear-gradient(180deg, ${color.start}, ${color.end})`,
-                                boxShadow: `2px 0 8px ${color.shadow}`
-                              }}
-                            />
+                            {getMainCountdown(countdownData).title}
+                          </motion.h3>
 
-                            <div className="flex items-center justify-between mb-3">
-                              <h5 className="font-semibold" style={{ color: color.start }}>
-                                {item.title}
-                              </h5>
-                            </div>
-                            <div className="flex items-center justify-between">
-                              <div className="flex items-baseline">
-                                <span className="text-2xl font-bold text-gray-700 dark:text-gray-300">{calculateDaysLeft(item.targetDate)}</span>
-                                <span className="ml-1 text-sm text-gray-500 dark:text-gray-400">天</span>
-                              </div>
-                              <span className="text-xs text-gray-600 dark:text-gray-400">{item.targetDate}</span>
-                            </div>
-                            <div className="mt-3 h-2 w-full rounded-full overflow-hidden"
+                          <motion.div
+                            initial={{ opacity: 0, scaleX: 0 }}
+                            animate={{ opacity: 1, scaleX: 1 }}
+                            transition={{ delay: 0.4, duration: 0.8, ease: "easeOut" }}
+                            className="h-3 w-full rounded-full overflow-hidden mb-3 shadow-inner"
+                            style={{
+                              background: 'linear-gradient(135deg, rgba(0, 0, 0, 0.05) 0%, rgba(0, 0, 0, 0.1) 100%)',
+                              border: '1px solid rgba(255, 255, 255, 0.3)'
+                            }}
+                          >
+                            <div
+                              className="h-full rounded-full transition-all duration-1000 ease-out"
                               style={{
-                                background: 'linear-gradient(135deg, rgba(0, 0, 0, 0.05) 0%, rgba(0, 0, 0, 0.1) 100%)',
-                                border: '1px solid rgba(255, 255, 255, 0.3)'
+                                width: `${calculateProgress(getMainCountdown(countdownData))}%`,
+                                background: `linear-gradient(90deg, ${appleColors.teal.start}, ${appleColors.teal.end})`,
+                                boxShadow: `0 0 12px ${appleColors.teal.shadow}`
+                              }}
+                            ></div>
+                          </motion.div>
+
+                          <motion.div
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.5, duration: 0.5 }}
+                            className="flex justify-between text-sm dark:text-gray-400 text-gray-600 mb-4"
+                          >
+                            <span>开始日期: {getMainCountdown(countdownData).Startdate}</span>
+                            <span>目标日期: {getMainCountdown(countdownData).targetDate}</span>
+                          </motion.div>
+
+                          <div className="grid grid-cols-3 gap-3 mt-4">
+                            {[
+                              {
+                                label: '已过天数',
+                                value: getMainCountdown(countdownData)?.Startdate ? calculatePassedDays(getMainCountdown(countdownData).Startdate) : 0,
+                                color: appleColors.green
+                              },
+                              {
+                                label: '总天数',
+                                value: (getMainCountdown(countdownData)?.Startdate && getMainCountdown(countdownData)?.targetDate) ?
+                                  calculateTotalDays(getMainCountdown(countdownData).Startdate, getMainCountdown(countdownData).targetDate) : 0,
+                                color: appleColors.blue
+                              },
+                              {
+                                label: '完成度',
+                                value: `${Math.round(calculateProgress(getMainCountdown(countdownData)))}%`,
+                                color: appleColors.purple
+                              }
+                            ].map((item, index) => (
+                              <motion.div
+                                key={index}
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: 0.6 + index * 0.1, duration: 0.5 }}
+                                className="rounded-lg p-3 flex flex-col items-center justify-center transition-all duration-300 hover:scale-105 group"
+                                style={{
+                                  background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0.6) 100%)',
+                                  backdropFilter: 'blur(10px)',
+                                  border: '1px solid rgba(255, 255, 255, 0.3)',
+                                  boxShadow: '0 4px 12px rgba(0, 0, 0, 0.05)'
+                                }}
+                                onMouseEnter={(e) => {
+                                  e.currentTarget.style.boxShadow = `0 8px 24px ${item.color.shadow}`;
+                                }}
+                                onMouseLeave={(e) => {
+                                  e.currentTarget.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.05)';
+                                }}
+                              >
+                                <span className="text-xs text-gray-500 dark:text-gray-400 mb-1">{item.label}</span>
+                                <span
+                                  className="text-lg font-medium"
+                                  style={{ color: item.color.start }}
+                                >
+                                  {item.value}
+                                </span>
+                              </motion.div>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </motion.div>
+
+                  {/* 其他倒计时列表 */}
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.8, duration: 0.6 }}
+                    className="rounded-2xl overflow-hidden bg-white/95 dark:bg-gray-800/95 border border-white/30 dark:border-gray-600/30"
+                    style={{
+                      backdropFilter: 'blur(20px)',
+                      boxShadow: '0 16px 32px rgba(0, 0, 0, 0.08), 0 8px 16px rgba(0, 0, 0, 0.04)'
+                    }}
+                  >
+                    <div className="px-6 pt-4 pb-6">
+                      <motion.h4
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: 0.9, duration: 0.5 }}
+                        className="text-lg font-medium mb-4 dark:text-gray-100 text-gray-800 flex items-center"
+                      >
+                        <div
+                          className="w-8 h-8 rounded-lg flex items-center justify-center mr-3"
+                          style={{
+                            background: `linear-gradient(135deg, ${appleColors.teal.start}, ${appleColors.teal.end})`,
+                            boxShadow: `0 4px 12px ${appleColors.teal.shadow}`
+                          }}
+                        >
+                          <CalendarIcon className="w-4 h-4 text-white" />
+                        </div>
+                        所有倒计时
+                      </motion.h4>
+
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {/* 主倒计时卡片 */}
+                        <motion.div
+                          initial={{ opacity: 0, scale: 0.9 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          transition={{ delay: 1.0, duration: 0.5 }}
+                          className="rounded-xl p-4 relative overflow-hidden group cursor-pointer"
+                          style={{
+                            background: 'linear-gradient(135deg, rgba(100, 210, 255, 0.1) 0%, rgba(94, 92, 230, 0.1) 100%)',
+                            backdropFilter: 'blur(10px)',
+                            border: '1px solid rgba(100, 210, 255, 0.2)',
+                            boxShadow: '0 8px 24px rgba(100, 210, 255, 0.1)'
+                          }}
+                          whileHover={{ scale: 1.02, y: -2 }}
+                          whileTap={{ scale: 0.98 }}
+                        >
+                          {/* 装饰性左边框 */}
+                          <div
+                            style={{
+                              position: 'absolute',
+                              left: 0,
+                              top: 0,
+                              bottom: 0,
+                              width: '4px',
+                              background: `linear-gradient(180deg, ${appleColors.teal.start}, ${appleColors.teal.end})`,
+                              boxShadow: `2px 0 8px ${appleColors.teal.shadow}`
+                            }}
+                          />
+
+                          <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 to-indigo-500/5 group-hover:from-blue-500/10 group-hover:to-indigo-500/10 transition-all duration-300"></div>
+                          <div className="flex items-center justify-between mb-3 relative">
+                            <h5 className="font-semibold text-blue-700 dark:text-blue-400">{getMainCountdown(countdownData).title}</h5>
+                            <motion.span
+                              initial={{ scale: 0 }}
+                              animate={{ scale: 1 }}
+                              transition={{ delay: 1.2, duration: 0.3 }}
+                              className="py-1 px-3 text-xs rounded-full text-white"
+                              style={{
+                                background: `linear-gradient(135deg, ${appleColors.teal.start}, ${appleColors.teal.end})`,
+                                boxShadow: `0 2px 8px ${appleColors.teal.shadow}`
                               }}
                             >
-                              <motion.div
-                                initial={{ width: 0 }}
-                                animate={{ width: `${calculateProgress(item)}%` }}
-                                transition={{ delay: 1.4 + index * 0.1, duration: 1.2, ease: "easeOut" }}
-                                className="h-full rounded-full"
-                                style={{
-                                  background: `linear-gradient(90deg, ${color.start}, ${color.end})`,
-                                  boxShadow: `0 0 12px ${color.shadow}`
-                                }}
-                              ></motion.div>
+                              主要
+                            </motion.span>
+                          </div>
+                          <div className="flex items-center justify-between relative">
+                            <div className="flex items-baseline">
+                              <span className="text-3xl font-bold text-blue-700 dark:text-blue-400">{daysLeft}</span>
+                              <span className="ml-1 text-sm text-gray-500 dark:text-gray-400">天</span>
                             </div>
-                          </motion.div>
-                        );
-                      })}
+                            <span className="text-xs text-gray-600 dark:text-gray-400">{getMainCountdown(countdownData).targetDate}</span>
+                          </div>
+                          <div className="mt-3 h-2 w-full rounded-full overflow-hidden relative"
+                            style={{
+                              background: 'linear-gradient(135deg, rgba(0, 0, 0, 0.05) 0%, rgba(0, 0, 0, 0.1) 100%)',
+                              border: '1px solid rgba(255, 255, 255, 0.3)'
+                            }}
+                          >
+                            <motion.div
+                              initial={{ width: 0 }}
+                              animate={{ width: `${calculateProgress(getMainCountdown(countdownData))}%` }}
+                              transition={{ delay: 1.3, duration: 1.2, ease: "easeOut" }}
+                              className="h-full rounded-full"
+                              style={{
+                                background: `linear-gradient(90deg, ${appleColors.teal.start}, ${appleColors.teal.end})`,
+                                boxShadow: `0 0 12px ${appleColors.teal.shadow}`
+                              }}
+                            ></motion.div>
+                          </div>
+                        </motion.div>
 
-                      {/* 添加新倒计时按钮卡片 */}
-                      <motion.div
-                        initial={{ opacity: 0, scale: 0.9 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ delay: 1.3, duration: 0.5 }}
-                        className="rounded-xl flex items-center justify-center p-4 cursor-pointer group transition-all duration-300"
-                        style={{
-                          background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0.6) 100%)',
-                          backdropFilter: 'blur(10px)',
-                          border: '2px dashed rgba(0, 0, 0, 0.1)',
-                          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.05)'
-                        }}
-                        whileHover={{ scale: 1.02, y: -2 }}
-                        whileTap={{ scale: 0.98 }}
-                        onMouseEnter={(e) => {
-                          e.currentTarget.style.borderColor = appleColors.blue.start + '50';
-                          e.currentTarget.style.boxShadow = `0 8px 24px ${appleColors.blue.shadow}`;
-                        }}
-                        onMouseLeave={(e) => {
-                          e.currentTarget.style.borderColor = 'rgba(0, 0, 0, 0.1)';
-                          e.currentTarget.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.05)';
-                        }}
-                      >
-                        <div
-                          className="w-8 h-8 rounded-lg flex items-center justify-center mr-3 transition-all duration-300"
-                          style={{
-                            background: `linear-gradient(135deg, ${appleColors.blue.start}, ${appleColors.blue.end})`,
-                            boxShadow: `0 4px 12px ${appleColors.blue.shadow}`
-                          }}
-                        >
-                          <svg className="w-4 h-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                          </svg>
-                        </div>
-                        <span className="text-sm text-gray-600 dark:text-gray-400 group-hover:text-gray-700 dark:group-hover:text-gray-300 transition-colors font-medium">添加新倒计时</span>
-                      </motion.div>
-                    </div>
-                  </div>
-
-                  {/* 底部提示区 */}
-                  <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 1.5, duration: 0.5 }}
-                    className="px-6 py-3 text-xs text-gray-500 dark:text-gray-400 border-t border-white/30 dark:border-gray-600/30 bg-white/70 dark:bg-gray-800/70"
-                    style={{
-                      backdropFilter: 'blur(10px)'
-                    }}
-                  >
-                    💡 提示: 您可以点击每个倒计时卡片查看详细信息，或者添加新的倒计时事件。
-                  </motion.div>
-                </motion.div>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* 模态框 - 最新博客 */}
-      <AnimatePresence>
-        {modalOpen.blogs && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/50 dark:bg-black/70 backdrop-blur-md flex items-center justify-center z-[1000]"
-            onClick={() => closeModal('blogs')}
-          >
-            <motion.div
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.9, opacity: 0 }}
-              onClick={(e) => e.stopPropagation()}
-              style={{
-                backgroundColor: 'rgba(255, 255, 255, 0.85)',
-                borderRadius: '24px',
-                boxShadow: '0 32px 64px rgba(0, 0, 0, 0.12), 0 16px 32px rgba(0, 0, 0, 0.08), 0 8px 16px rgba(0, 0, 0, 0.04)',
-                border: '1px solid rgba(255, 255, 255, 0.4)',
-                backdropFilter: 'blur(40px)',
-                width: '90%',
-                maxWidth: '900px',
-                maxHeight: '85vh',
-                position: 'relative',
-                overflow: 'hidden'
-              }}
-            >
-              {/* Mica 效果背景层 */}
-              <div
-                className="absolute inset-0 bg-white/90 dark:bg-gray-800/90"
-                style={{
-                  zIndex: 1
-                }}
-              />
-
-              {/* 噪点纹理层 */}
-              <div
-                style={{
-                  position: 'absolute',
-                  inset: 0,
-                  backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E")`,
-                  zIndex: 2
-                }}
-              />
-
-              {/* 动态光影效果 */}
-              <div
-                style={{
-                  position: 'absolute',
-                  inset: 0,
-                  background: 'radial-gradient(circle at 30% 20%, rgba(255, 105, 180, 0.08) 0%, transparent 50%), radial-gradient(circle at 70% 80%, rgba(138, 43, 226, 0.06) 0%, transparent 50%)',
-                  zIndex: 3
-                }}
-              />
-
-              {/* 模态框头部 */}
-              <motion.div
-                initial={{ opacity: 0, y: -20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2, duration: 0.5 }}
-                className="flex justify-between items-center p-6 pb-4 bg-white/95 dark:bg-gray-800/95"
-                style={{
-                  position: 'relative',
-                  zIndex: 10,
-                  borderTopLeftRadius: '24px',
-                  borderTopRightRadius: '24px',
-                  backdropFilter: 'blur(20px)',
-                  boxShadow: '0 1px 0 rgba(255, 255, 255, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.8)'
-                }}
-              >
-                <div className="flex items-center">
-                  <div
-                    className="w-12 h-12 rounded-xl flex items-center justify-center mr-4"
-                    style={{
-                      background: `linear-gradient(135deg, ${appleColors.pink.start}, ${appleColors.pink.end})`,
-                      boxShadow: `0 8px 20px ${appleColors.pink.shadow}, 0 4px 8px rgba(0, 0, 0, 0.1)`
-                    }}
-                  >
-                    <DocumentTextIcon className="w-6 h-6 text-white" />
-                  </div>
-                  <div>
-                    <motion.h3
-                      initial={{ opacity: 0, x: -20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: 0.3, duration: 0.5 }}
-                      className="text-lg font-semibold text-gray-800"
-                    >
-                      我的博客文章
-                    </motion.h3>
-                    <motion.p
-                      initial={{ opacity: 0, x: -20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: 0.4, duration: 0.5 }}
-                      className="text-sm text-gray-600 mt-1"
-                    >
-                      从 blog.damesck.net 获取的最新内容
-                    </motion.p>
-                  </div>
-                </div>
-                <motion.button
-                  initial={{ opacity: 0, scale: 0 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: 0.5, duration: 0.3 }}
-                  className="w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-300 bg-white/90 dark:bg-gray-700/90 border border-white/50 dark:border-gray-600/50"
-                  style={{
-                    backdropFilter: 'blur(10px)',
-                    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)'
-                  }}
-                  onClick={() => closeModal('blogs')}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.transform = 'scale(1.1)';
-                    e.currentTarget.style.boxShadow = `0 8px 24px ${appleColors.red.shadow}`;
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.transform = 'scale(1)';
-                    e.currentTarget.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.1)';
-                  }}
-                >
-                  <XMarkIcon className="w-5 h-5 text-gray-600" />
-                </motion.button>
-              </motion.div>
-
-              {/* 主内容区域 */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.6, duration: 0.6 }}
-                className="bg-white/95 dark:bg-gray-800/95"
-                style={{
-                  position: 'relative',
-                  zIndex: 10,
-                  backdropFilter: 'blur(20px)',
-                  borderBottomLeftRadius: '24px',
-                  borderBottomRightRadius: '24px',
-                  maxHeight: 'calc(85vh - 120px)',
-                  overflowY: 'auto'
-                }}
-              >
-                {apiError ? (
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: 0.7, duration: 0.5 }}
-                    className="flex flex-col items-center justify-center p-8 text-center"
-                  >
-                    <div
-                      className="w-16 h-16 rounded-2xl flex items-center justify-center mb-4"
-                      style={{
-                        background: `linear-gradient(135deg, ${appleColors.red.start}, ${appleColors.red.end})`,
-                        boxShadow: `0 8px 20px ${appleColors.red.shadow}`
-                      }}
-                    >
-                      <XMarkIcon className="w-8 h-8 text-white" />
-                    </div>
-                    <div className="text-red-600 mb-2 font-semibold text-lg">请求失败 (错误代码: {apiError.code})</div>
-                    <div className="text-sm text-gray-700 mb-3 max-w-md">{apiError.message}</div>
-                    {apiError.details && (
-                      <div className="text-xs text-gray-500 max-w-md mb-6 leading-relaxed">{apiError.details}</div>
-                    )}
-                    <motion.button
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      onClick={fetchBlogPosts}
-                      className="px-6 py-3 text-white rounded-xl text-sm font-medium transition-all duration-300"
-                      style={{
-                        background: `linear-gradient(135deg, ${appleColors.blue.start}, ${appleColors.blue.end})`,
-                        boxShadow: `0 8px 20px ${appleColors.blue.shadow}`
-                      }}
-                    >
-                      重新获取
-                    </motion.button>
-                  </motion.div>
-                ) : (
-                  <div className="p-6">
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                      {blogPosts.length > 0 ?
-                        blogPosts.slice(0, 4).map((blog, index) => {
-                          const colors = [appleColors.blue, appleColors.green, appleColors.purple, appleColors.orange];
+                        {/* 其他倒计时卡片 */}
+                        {countdownData.filter(item => !item.top).map((item, index) => {
+                          const colors = [appleColors.green, appleColors.orange];
                           const color = colors[index % colors.length];
 
                           return (
                             <motion.div
                               key={index}
-                              initial={{ opacity: 0, y: 20, scale: 0.9 }}
-                              animate={{ opacity: 1, y: 0, scale: 1 }}
-                              transition={{ delay: 0.8 + index * 0.1, duration: 0.5 }}
-                              className="rounded-xl p-4 h-full flex flex-col cursor-pointer group relative overflow-hidden"
+                              initial={{ opacity: 0, scale: 0.9 }}
+                              animate={{ opacity: 1, scale: 1 }}
+                              transition={{ delay: 1.1 + index * 0.1, duration: 0.5 }}
+                              className="rounded-xl p-4 relative overflow-hidden group cursor-pointer"
                               style={{
-                                background: `linear-gradient(135deg, ${color.start}10, ${color.end}08)`,
+                                background: `linear-gradient(135deg, ${color.start}15, ${color.end}10)`,
                                 backdropFilter: 'blur(10px)',
-                                border: `1px solid ${color.start}20`,
+                                border: `1px solid ${color.start}30`,
                                 boxShadow: `0 8px 24px ${color.shadow}`
                               }}
-                              whileHover={{ scale: 1.02, y: -4 }}
+                              whileHover={{ scale: 1.02, y: -2 }}
                               whileTap={{ scale: 0.98 }}
                             >
                               {/* 装饰性左边框 */}
@@ -2027,105 +1353,409 @@ const Home = () => {
                                 }}
                               />
 
-                              {/* 渐变图标背景 */}
-                              <div className="flex items-center mb-3">
-                                <div
-                                  className="w-8 h-8 rounded-lg flex items-center justify-center mr-3"
-                                  style={{
-                                    background: `linear-gradient(135deg, ${color.start}, ${color.end})`,
-                                    boxShadow: `0 4px 12px ${color.shadow}`
-                                  }}
-                                >
-                                  <DocumentTextIcon className="w-4 h-4 text-white" />
-                                </div>
-                                <div className="flex-1">
-                                  <h4 className="font-semibold text-sm text-gray-800 line-clamp-2 leading-tight">
-                                    {blog.title}
-                                  </h4>
-                                </div>
+                              <div className="flex items-center justify-between mb-3">
+                                <h5 className="font-semibold" style={{ color: color.start }}>
+                                  {item.title}
+                                </h5>
                               </div>
-
-                              <p className="text-xs text-gray-600 line-clamp-4 mb-auto leading-relaxed">
-                                {blog.summary}
-                              </p>
-
-                              <div className="mt-4 pt-3 border-t border-gray-200/50">
-                                <div className="flex gap-1 flex-wrap mb-2">
-                                  {blog.tags.slice(0, 2).map((tag, tagIndex) => (
-                                    <motion.span
-                                      key={tagIndex}
-                                      initial={{ opacity: 0, scale: 0 }}
-                                      animate={{ opacity: 1, scale: 1 }}
-                                      transition={{ delay: 1.0 + index * 0.1 + tagIndex * 0.05, duration: 0.3 }}
-                                      className="px-2 py-1 text-xs rounded-md text-white font-medium"
-                                      style={{
-                                        background: `linear-gradient(135deg, ${color.start}80, ${color.end}60)`,
-                                        boxShadow: `0 2px 8px ${color.shadow}`
-                                      }}
-                                    >
-                                      {tag.name}
-                                    </motion.span>
-                                  ))}
+                              <div className="flex items-center justify-between">
+                                <div className="flex items-baseline">
+                                  <span className="text-2xl font-bold text-gray-700 dark:text-gray-300">{calculateDaysLeft(item.targetDate)}</span>
+                                  <span className="ml-1 text-sm text-gray-500 dark:text-gray-400">天</span>
                                 </div>
-                                <div className="flex items-center justify-between text-xs text-gray-500">
-                                  <span>{blog.date}</span>
-                                  <span className="flex items-center">
-                                    <ClockIcon className="w-3 h-3 mr-1" />
-                                    {blog.readTime}
-                                  </span>
-                                </div>
+                                <span className="text-xs text-gray-600 dark:text-gray-400">{item.targetDate}</span>
                               </div>
-
-                              {/* 悬停时的光效 */}
-                              <div
-                                className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
+                              <div className="mt-3 h-2 w-full rounded-full overflow-hidden"
                                 style={{
-                                  background: `radial-gradient(circle at 50% 50%, ${color.start}15 0%, transparent 70%)`
+                                  background: 'linear-gradient(135deg, rgba(0, 0, 0, 0.05) 0%, rgba(0, 0, 0, 0.1) 100%)',
+                                  border: '1px solid rgba(255, 255, 255, 0.3)'
                                 }}
-                              />
+                              >
+                                <motion.div
+                                  initial={{ width: 0 }}
+                                  animate={{ width: `${calculateProgress(item)}%` }}
+                                  transition={{ delay: 1.4 + index * 0.1, duration: 1.2, ease: "easeOut" }}
+                                  className="h-full rounded-full"
+                                  style={{
+                                    background: `linear-gradient(90deg, ${color.start}, ${color.end})`,
+                                    boxShadow: `0 0 12px ${color.shadow}`
+                                  }}
+                                ></motion.div>
+                              </div>
                             </motion.div>
                           );
-                        }) :
+                        })}
+
+                        {/* 添加新倒计时按钮卡片 */}
                         <motion.div
-                          initial={{ opacity: 0 }}
-                          animate={{ opacity: 1 }}
-                          transition={{ delay: 0.8, duration: 0.5 }}
-                          className="col-span-full flex flex-col items-center justify-center p-8 text-center"
+                          initial={{ opacity: 0, scale: 0.9 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          transition={{ delay: 1.3, duration: 0.5 }}
+                          className="rounded-xl flex items-center justify-center p-4 cursor-pointer group transition-all duration-300"
+                          style={{
+                            background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0.6) 100%)',
+                            backdropFilter: 'blur(10px)',
+                            border: '2px dashed rgba(0, 0, 0, 0.1)',
+                            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.05)'
+                          }}
+                          whileHover={{ scale: 1.02, y: -2 }}
+                          whileTap={{ scale: 0.98 }}
+                          onMouseEnter={(e) => {
+                            e.currentTarget.style.borderColor = appleColors.blue.start + '50';
+                            e.currentTarget.style.boxShadow = `0 8px 24px ${appleColors.blue.shadow}`;
+                          }}
+                          onMouseLeave={(e) => {
+                            e.currentTarget.style.borderColor = 'rgba(0, 0, 0, 0.1)';
+                            e.currentTarget.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.05)';
+                          }}
                         >
                           <div
-                            className="w-16 h-16 rounded-2xl flex items-center justify-center mb-4"
+                            className="w-8 h-8 rounded-lg flex items-center justify-center mr-3 transition-all duration-300"
                             style={{
-                              background: `linear-gradient(135deg, ${appleColors.indigo.start}, ${appleColors.indigo.end})`,
-                              boxShadow: `0 8px 20px ${appleColors.indigo.shadow}`
+                              background: `linear-gradient(135deg, ${appleColors.blue.start}, ${appleColors.blue.end})`,
+                              boxShadow: `0 4px 12px ${appleColors.blue.shadow}`
                             }}
                           >
-                            <DocumentTextIcon className="w-8 h-8 text-white" />
+                            <svg className="w-4 h-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                            </svg>
                           </div>
-                          <p className="text-sm text-gray-600 font-medium">暂无博客数据</p>
-                          <p className="text-xs text-gray-500 mt-2">请稍后再试或检查网络连接</p>
+                          <span className="text-sm text-gray-600 dark:text-gray-400 group-hover:text-gray-700 dark:group-hover:text-gray-300 transition-colors font-medium">添加新倒计时</span>
                         </motion.div>
-                      }
+                      </div>
                     </div>
 
                     {/* 底部提示区 */}
                     <motion.div
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
-                      transition={{ delay: 1.2, duration: 0.5 }}
-                      className="mt-6 pt-4 border-t border-gray-200/50 text-center"
+                      transition={{ delay: 1.5, duration: 0.5 }}
+                      className="px-6 py-3 text-xs text-gray-500 dark:text-gray-400 border-t border-white/30 dark:border-gray-600/30 bg-white/70 dark:bg-gray-800/70"
+                      style={{
+                        backdropFilter: 'blur(10px)'
+                      }}
                     >
-                      <p className="text-xs text-gray-500">
-                        💡 点击卡片可查看完整文章内容
-                      </p>
+                      💡 提示: 您可以点击每个倒计时卡片查看详细信息，或者添加新的倒计时事件。
                     </motion.div>
-                  </div>
-                )}
+                  </motion.div>
+                </div>
               </motion.div>
             </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </motion.div>
+          )
+        }
+      </AnimatePresence >
+
+      {/* 模态框 - 最新博客 */}
+      <AnimatePresence>
+        {
+          modalOpen.blogs && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 bg-black/50 dark:bg-black/70 backdrop-blur-md flex items-center justify-center z-[1000]"
+              onClick={() => closeModal('blogs')}
+            >
+              <motion.div
+                initial={{ scale: 0.9, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.9, opacity: 0 }}
+                onClick={(e) => e.stopPropagation()}
+                style={{
+                  backgroundColor: 'rgba(255, 255, 255, 0.85)',
+                  borderRadius: '24px',
+                  boxShadow: '0 32px 64px rgba(0, 0, 0, 0.12), 0 16px 32px rgba(0, 0, 0, 0.08), 0 8px 16px rgba(0, 0, 0, 0.04)',
+                  border: '1px solid rgba(255, 255, 255, 0.4)',
+                  backdropFilter: 'blur(40px)',
+                  width: '90%',
+                  maxWidth: '900px',
+                  maxHeight: '85vh',
+                  position: 'relative',
+                  overflow: 'hidden'
+                }}
+              >
+                {/* Mica 效果背景层 */}
+                <div
+                  className="absolute inset-0 bg-white/90 dark:bg-gray-800/90"
+                  style={{
+                    zIndex: 1
+                  }}
+                />
+
+                {/* 噪点纹理层 */}
+                <div
+                  style={{
+                    position: 'absolute',
+                    inset: 0,
+                    backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E")`,
+                    zIndex: 2
+                  }}
+                />
+
+                {/* 动态光影效果 */}
+                <div
+                  style={{
+                    position: 'absolute',
+                    inset: 0,
+                    background: 'radial-gradient(circle at 30% 20%, rgba(255, 105, 180, 0.08) 0%, transparent 50%), radial-gradient(circle at 70% 80%, rgba(138, 43, 226, 0.06) 0%, transparent 50%)',
+                    zIndex: 3
+                  }}
+                />
+
+                {/* 模态框头部 */}
+                <motion.div
+                  initial={{ opacity: 0, y: -20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.2, duration: 0.5 }}
+                  className="flex justify-between items-center p-6 pb-4 bg-white/95 dark:bg-gray-800/95"
+                  style={{
+                    position: 'relative',
+                    zIndex: 10,
+                    borderTopLeftRadius: '24px',
+                    borderTopRightRadius: '24px',
+                    backdropFilter: 'blur(20px)',
+                    boxShadow: '0 1px 0 rgba(255, 255, 255, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.8)'
+                  }}
+                >
+                  <div className="flex items-center">
+                    <div
+                      className="w-12 h-12 rounded-xl flex items-center justify-center mr-4"
+                      style={{
+                        background: `linear-gradient(135deg, ${appleColors.pink.start}, ${appleColors.pink.end})`,
+                        boxShadow: `0 8px 20px ${appleColors.pink.shadow}, 0 4px 8px rgba(0, 0, 0, 0.1)`
+                      }}
+                    >
+                      <DocumentTextIcon className="w-6 h-6 text-white" />
+                    </div>
+                    <div>
+                      <motion.h3
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: 0.3, duration: 0.5 }}
+                        className="text-lg font-semibold text-gray-800"
+                      >
+                        我的博客文章
+                      </motion.h3>
+                      <motion.p
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: 0.4, duration: 0.5 }}
+                        className="text-sm text-gray-600 mt-1"
+                      >
+                        从 blog.damesck.net 获取的最新内容
+                      </motion.p>
+                    </div>
+                  </div>
+                  <motion.button
+                    initial={{ opacity: 0, scale: 0 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: 0.5, duration: 0.3 }}
+                    className="w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-300 bg-white/90 dark:bg-gray-700/90 border border-white/50 dark:border-gray-600/50"
+                    style={{
+                      backdropFilter: 'blur(10px)',
+                      boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)'
+                    }}
+                    onClick={() => closeModal('blogs')}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.transform = 'scale(1.1)';
+                      e.currentTarget.style.boxShadow = `0 8px 24px ${appleColors.red.shadow}`;
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.transform = 'scale(1)';
+                      e.currentTarget.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.1)';
+                    }}
+                  >
+                    <XMarkIcon className="w-5 h-5 text-gray-600" />
+                  </motion.button>
+                </motion.div>
+
+                {/* 主内容区域 */}
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.6, duration: 0.6 }}
+                  className="bg-white/95 dark:bg-gray-800/95"
+                  style={{
+                    position: 'relative',
+                    zIndex: 10,
+                    backdropFilter: 'blur(20px)',
+                    borderBottomLeftRadius: '24px',
+                    borderBottomRightRadius: '24px',
+                    maxHeight: 'calc(85vh - 120px)',
+                    overflowY: 'auto'
+                  }}
+                >
+                  {apiError ? (
+                    <motion.div
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ delay: 0.7, duration: 0.5 }}
+                      className="flex flex-col items-center justify-center p-8 text-center"
+                    >
+                      <div
+                        className="w-16 h-16 rounded-2xl flex items-center justify-center mb-4"
+                        style={{
+                          background: `linear-gradient(135deg, ${appleColors.red.start}, ${appleColors.red.end})`,
+                          boxShadow: `0 8px 20px ${appleColors.red.shadow}`
+                        }}
+                      >
+                        <XMarkIcon className="w-8 h-8 text-white" />
+                      </div>
+                      <div className="text-red-600 mb-2 font-semibold text-lg">请求失败 (错误代码: {apiError.code})</div>
+                      <div className="text-sm text-gray-700 mb-3 max-w-md">{apiError.message}</div>
+                      {apiError.details && (
+                        <div className="text-xs text-gray-500 max-w-md mb-6 leading-relaxed">{apiError.details}</div>
+                      )}
+                      <motion.button
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        onClick={fetchBlogPosts}
+                        className="px-6 py-3 text-white rounded-xl text-sm font-medium transition-all duration-300"
+                        style={{
+                          background: `linear-gradient(135deg, ${appleColors.blue.start}, ${appleColors.blue.end})`,
+                          boxShadow: `0 8px 20px ${appleColors.blue.shadow}`
+                        }}
+                      >
+                        重新获取
+                      </motion.button>
+                    </motion.div>
+                  ) : (
+                    <div className="p-6">
+                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                        {blogPosts.length > 0 ?
+                          blogPosts.slice(0, 4).map((blog, index) => {
+                            const colors = [appleColors.blue, appleColors.green, appleColors.purple, appleColors.orange];
+                            const color = colors[index % colors.length];
+
+                            return (
+                              <motion.div
+                                key={index}
+                                initial={{ opacity: 0, y: 20, scale: 0.9 }}
+                                animate={{ opacity: 1, y: 0, scale: 1 }}
+                                transition={{ delay: 0.8 + index * 0.1, duration: 0.5 }}
+                                className="rounded-xl p-4 h-full flex flex-col cursor-pointer group relative overflow-hidden"
+                                style={{
+                                  background: `linear-gradient(135deg, ${color.start}10, ${color.end}08)`,
+                                  backdropFilter: 'blur(10px)',
+                                  border: `1px solid ${color.start}20`,
+                                  boxShadow: `0 8px 24px ${color.shadow}`
+                                }}
+                                whileHover={{ scale: 1.02, y: -4 }}
+                                whileTap={{ scale: 0.98 }}
+                              >
+                                {/* 装饰性左边框 */}
+                                <div
+                                  style={{
+                                    position: 'absolute',
+                                    left: 0,
+                                    top: 0,
+                                    bottom: 0,
+                                    width: '4px',
+                                    background: `linear-gradient(180deg, ${color.start}, ${color.end})`,
+                                    boxShadow: `2px 0 8px ${color.shadow}`
+                                  }}
+                                />
+
+                                {/* 渐变图标背景 */}
+                                <div className="flex items-center mb-3">
+                                  <div
+                                    className="w-8 h-8 rounded-lg flex items-center justify-center mr-3"
+                                    style={{
+                                      background: `linear-gradient(135deg, ${color.start}, ${color.end})`,
+                                      boxShadow: `0 4px 12px ${color.shadow}`
+                                    }}
+                                  >
+                                    <DocumentTextIcon className="w-4 h-4 text-white" />
+                                  </div>
+                                  <div className="flex-1">
+                                    <h4 className="font-semibold text-sm text-gray-800 line-clamp-2 leading-tight">
+                                      {blog.title}
+                                    </h4>
+                                  </div>
+                                </div>
+
+                                <p className="text-xs text-gray-600 line-clamp-4 mb-auto leading-relaxed">
+                                  {blog.summary}
+                                </p>
+
+                                <div className="mt-4 pt-3 border-t border-gray-200/50">
+                                  <div className="flex gap-1 flex-wrap mb-2">
+                                    {blog.tags.slice(0, 2).map((tag, tagIndex) => (
+                                      <motion.span
+                                        key={tagIndex}
+                                        initial={{ opacity: 0, scale: 0 }}
+                                        animate={{ opacity: 1, scale: 1 }}
+                                        transition={{ delay: 1.0 + index * 0.1 + tagIndex * 0.05, duration: 0.3 }}
+                                        className="px-2 py-1 text-xs rounded-md text-white font-medium"
+                                        style={{
+                                          background: `linear-gradient(135deg, ${color.start}80, ${color.end}60)`,
+                                          boxShadow: `0 2px 8px ${color.shadow}`
+                                        }}
+                                      >
+                                        {tag.name}
+                                      </motion.span>
+                                    ))}
+                                  </div>
+                                  <div className="flex items-center justify-between text-xs text-gray-500">
+                                    <span>{blog.date}</span>
+                                    <span className="flex items-center">
+                                      <ClockIcon className="w-3 h-3 mr-1" />
+                                      {blog.readTime}
+                                    </span>
+                                  </div>
+                                </div>
+
+                                {/* 悬停时的光效 */}
+                                <div
+                                  className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
+                                  style={{
+                                    background: `radial-gradient(circle at 50% 50%, ${color.start}15 0%, transparent 70%)`
+                                  }}
+                                />
+                              </motion.div>
+                            );
+                          }) :
+                          <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            transition={{ delay: 0.8, duration: 0.5 }}
+                            className="col-span-full flex flex-col items-center justify-center p-8 text-center"
+                          >
+                            <div
+                              className="w-16 h-16 rounded-2xl flex items-center justify-center mb-4"
+                              style={{
+                                background: `linear-gradient(135deg, ${appleColors.indigo.start}, ${appleColors.indigo.end})`,
+                                boxShadow: `0 8px 20px ${appleColors.indigo.shadow}`
+                              }}
+                            >
+                              <DocumentTextIcon className="w-8 h-8 text-white" />
+                            </div>
+                            <p className="text-sm text-gray-600 font-medium">暂无博客数据</p>
+                            <p className="text-xs text-gray-500 mt-2">请稍后再试或检查网络连接</p>
+                          </motion.div>
+                        }
+                      </div>
+
+                      {/* 底部提示区 */}
+                      <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: 1.2, duration: 0.5 }}
+                        className="mt-6 pt-4 border-t border-gray-200/50 text-center"
+                      >
+                        <p className="text-xs text-gray-500">
+                          💡 点击卡片可查看完整文章内容
+                        </p>
+                      </motion.div>
+                    </div>
+                  )}
+                </motion.div>
+              </motion.div>
+            </motion.div>
+          )
+        }
+      </AnimatePresence >
+    </motion.div >
   );
 };
 

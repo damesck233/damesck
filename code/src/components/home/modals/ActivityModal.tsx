@@ -88,11 +88,7 @@ const ActivityModal: React.FC<ActivityModalProps> = ({
                     <div className="fixed inset-0 flex items-center justify-center z-[1000] pointer-events-none p-4">
                         <motion.div
                             layoutId={layoutId} // 启用布局动画
-                            className="w-full md:max-w-[1000px] h-[90vh] md:h-[750px] bg-[#f5f5f7] dark:bg-[#1c1c1e] rounded-[32px] shadow-2xl overflow-hidden pointer-events-auto flex flex-col md:flex-row relative p-2"
-                            style={{
-                                backdropFilter: 'blur(50px) saturate(180%)',
-                                WebkitBackdropFilter: 'blur(50px) saturate(180%)',
-                            }}
+                            className="w-full md:max-w-[1000px] h-[90vh] md:h-[750px] bg-white/95 dark:bg-[#1c1c1e]/95 backdrop-blur-2xl rounded-[32px] shadow-2xl overflow-hidden pointer-events-auto flex flex-col md:flex-row relative p-2"
                             transition={{
                                 type: "spring",
                                 stiffness: 250,

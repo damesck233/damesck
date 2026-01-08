@@ -108,7 +108,7 @@ const ActivityCard: React.FC<ActivityCardProps> = ({
     return (
         <motion.div
             layoutId={layoutId}
-            className={`md:col-span-2 cursor-pointer group relative z-10 overflow-hidden rounded-[32px] duration-200 aspect-square md:aspect-auto md:h-full ${hidden ? 'pointer-events-none' : ''}`}
+            className={`md:col-span-2 cursor-pointer group relative z-10 overflow-hidden rounded-[32px] duration-200 aspect-auto md:h-full bg-white/40 dark:bg-[#1c1c1e]/60 backdrop-blur-xl transition-colors duration-300 ${hidden ? 'pointer-events-none' : ''}`}
             animate={{ opacity: hidden ? 0 : 1 }}
             onMouseEnter={onMouseEnter}
             onMouseLeave={onMouseLeave}
@@ -117,8 +117,6 @@ const ActivityCard: React.FC<ActivityCardProps> = ({
             whileTap={{ scale: 0.98 }}
             transition={{ type: "spring", stiffness: 250, damping: 25, mass: 1.0 }}
         >
-            {/* Background - Glassmorphism Restored */}
-            <div className="absolute inset-0 bg-white/40 dark:bg-[#1c1c1e]/60 backdrop-blur-xl z-0 transition-colors duration-300"></div>
 
             {/* Gradient Overlay */}
             <div className="absolute inset-0 bg-gradient-to-br from-[#E0E7FF]/80 to-[#DBEAFE]/80 dark:from-[#1e1b4b]/40 dark:to-[#172554]/40 z-0 opacity-80"></div>
