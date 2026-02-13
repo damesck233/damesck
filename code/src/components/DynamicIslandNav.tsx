@@ -172,8 +172,8 @@ export default function DynamicIslandNav() {
                             <div className="h-[1px] bg-gray-200 dark:bg-white/10 my-1 mx-2" />
 
                             <div className="px-3 py-2 flex items-center justify-between text-xs text-gray-400">
-                                <span>© 2025 damesck</span>
-                                <span>v1.0.0</span>
+                                <span>© 2026 damesck</span>
+                                <span>Beta v0.0.13</span>
                             </div>
                         </motion.div>
                     )}
