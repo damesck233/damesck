@@ -27,6 +27,7 @@ const Travels = lazy(() => import('./pages/Travels'))
 import WebWalker from './components/WebWalker'
 import DynamicIslandNav from './components/DynamicIslandNav'
 import RestrictedAccess from './components/RestrictedAccess'
+import ScrollToTop from './components/ScrollToTop'
 import { preloadResourcesWithMinTime } from './utils/preloader'
 
 // 将背景图片组件分离，减少重渲染
@@ -124,6 +125,7 @@ function App() {
 
   return (
     <Router>
+      <ScrollToTop />
       {/* WebWalker组件放在最外层，管理所有动画效果 */}
       <WebWalker />
 

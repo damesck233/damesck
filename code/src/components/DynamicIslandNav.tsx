@@ -1,6 +1,6 @@
 import { useRef, useState, useEffect } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
-import { motion, AnimatePresence, LayoutGroup } from 'framer-motion';
+import { motion, AnimatePresence, useMotionValue, useSpring } from 'framer-motion';
 import {
     HomeIcon,
     PencilIcon,
@@ -19,6 +19,11 @@ const NAV_ITEMS = [
     { id: 'contact', path: '/contact', label: '联系', icon: PhoneIcon },
 ];
 
+// Define secondary routes that should act as temporary tabs when visited
+const SECONDARY_ITEMS = [
+    { id: 'friends', path: '/friends', label: '朋友们', icon: UserGroupIcon },
+];
+
 // Spring animation configuration for that "bouncy" Apple feel
 const springTransition = {
     type: "spring",
@@ -31,6 +36,67 @@ export default function DynamicIslandNav() {
     const [isMoreOpen, setIsMoreOpen] = useState(false);
     const location = useLocation();
     const menuRef = useRef<HTMLDivElement>(null);
+
+    const targetLeft = useMotionValue(0);
+    const targetWidth = useMotionValue(0);
+    const targetOpacity = useMotionValue(0);
+
+    // The pill smoothly springs towards the changing target values
+    const pillLeft = useSpring(targetLeft, springTransition);
+    const pillWidth = useSpring(targetWidth, springTransition);
+    const pillOpacity = useSpring(targetOpacity, springTransition);
+
+    const navRef = useRef<HTMLDivElement>(null);
+    const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
+
+    // Compute dynamic items: if we are on a secondary page, add it to the visible tabs
+    const activeSecondaryItem = SECONDARY_ITEMS.find(item =>
+        location.pathname === item.path || location.pathname.startsWith(`${item.path}/`)
+    );
+    const displayItems = activeSecondaryItem ? [...NAV_ITEMS, activeSecondaryItem] : NAV_ITEMS;
+
+    // Helper to calculate and set pill dimensions
+    const updatePill = () => {
+        const activeIndex = displayItems.findIndex(item =>
+            location.pathname === item.path || (item.path !== '/' && location.pathname.startsWith(item.path))
+        );
+
+        if (activeIndex !== -1 && itemRefs.current[activeIndex] && navRef.current) {
+            const activeItem = itemRefs.current[activeIndex];
+            const container = navRef.current;
+
+            if (activeItem && container) {
+                const itemRect = activeItem.getBoundingClientRect();
+                const containerRect = container.getBoundingClientRect();
+
+                // Bulletproof: Get exact pixel offset relative to the flex container edge
+                targetLeft.set(itemRect.left - containerRect.left);
+                targetWidth.set(itemRect.width);
+                targetOpacity.set(1);
+            }
+        } else {
+            targetOpacity.set(0);
+        }
+    };
+
+    // Update pill when path changes
+    useEffect(() => {
+        updatePill();
+    }, [location.pathname]);
+
+    // Update pill continuously as the active item's text animates in/out (changing its width)
+    useEffect(() => {
+        const observer = new ResizeObserver(() => {
+            updatePill();
+        });
+
+        // Observe all navigation items for width changes during animations
+        itemRefs.current.forEach((el) => {
+            if (el) observer.observe(el);
+        });
+
+        return () => observer.disconnect();
+    }, [location.pathname]);
 
     // Close menu when clicking outside
     useEffect(() => {
@@ -55,81 +121,92 @@ export default function DynamicIslandNav() {
 
                 {/* Main Pill Container */}
                 <motion.div
-                    layout
                     transition={springTransition}
-                    className="relative flex items-center bg-white/70 dark:bg-[#1c1c1e]/70 backdrop-blur-xl border border-white/20 dark:border-white/10 shadow-lg shadow-black/5 rounded-full px-2 py-2 overflow-hidden"
-                    style={{ height: '56px' }}
+                    whileHover={{ scale: 1.03 }}
+                    className="relative flex items-center bg-white/70 dark:bg-[#1c1c1e]/70 backdrop-blur-xl border border-white/20 dark:border-white/10 shadow-lg shadow-black/5 rounded-full px-2 py-2 overflow-hidden cursor-default"
+                    style={{ height: '56px', borderRadius: 9999 }}
                 >
-                    <LayoutGroup>
-                        {/* Primary Navigation Items */}
-                        <div className="flex items-center gap-1">
-                            {NAV_ITEMS.map((item) => {
+                    {/* Primary Navigation Items */}
+                    <div className="flex items-center gap-1 relative" ref={navRef}>
+
+                        {/* Shared Active Background - Layout agnostic tracking */}
+                        <motion.div
+                            className="absolute bg-black/5 dark:bg-white/10 rounded-full h-10 pointer-events-none"
+                            style={{
+                                left: pillLeft,
+                                width: pillWidth,
+                                opacity: pillOpacity,
+                                top: 0,
+                                zIndex: 0
+                            }}
+                            transition={springTransition}
+                        />
+
+                        <AnimatePresence mode="popLayout">
+                            {displayItems.map((item, index) => {
                                 const isActive = location.pathname === item.path ||
                                     (item.path !== '/' && location.pathname.startsWith(item.path));
 
                                 return (
-                                    <NavLink
+                                    <motion.div
                                         key={item.id}
-                                        to={item.path}
-                                        className="relative z-10"
+                                        layout
+                                        initial={{ opacity: 0, scale: 0.8 }}
+                                        animate={{ opacity: 1, scale: 1 }}
+                                        exit={{ opacity: 0, scale: 0.8, width: 0, marginLeft: 0, marginRight: 0 }}
+                                        transition={springTransition}
                                     >
-                                        <motion.div
-                                            layout
-                                            className="relative z-10 flex items-center justify-center rounded-full h-10 px-3 cursor-pointer"
+                                        <NavLink
+                                            to={item.path}
+                                            className="relative z-10 block"
                                         >
-                                            {/* Shared Active Background - The "Sliding Pill" */}
-                                            {isActive && (
-                                                <motion.div
-                                                    layoutId="active-pill"
-                                                    className="absolute inset-0 bg-black/5 dark:bg-white/10 rounded-full"
-                                                    transition={springTransition}
-                                                    style={{ zIndex: -1 }}
-                                                />
-                                            )}
+                                            <div
+                                                ref={(el) => { itemRefs.current[index] = el; }}
+                                                className="relative z-10 flex items-center justify-center rounded-full h-10 px-3 cursor-pointer"
+                                            >
+                                                <item.icon className={`w-5 h-5 flex-shrink-0 transition-colors duration-200 relative z-10 ${isActive ? 'text-black dark:text-white' : 'text-gray-500 dark:text-gray-400'}`} strokeWidth={2} />
 
-                                            <item.icon className={`w-5 h-5 flex-shrink-0 transition-colors duration-200 ${isActive ? 'text-black dark:text-white' : 'text-gray-500 dark:text-gray-400'}`} strokeWidth={2} />
-
-                                            <div className="overflow-hidden flex">
-                                                <AnimatePresence mode="popLayout" initial={false}>
-                                                    {isActive && (
-                                                        <motion.span
-                                                            initial={{ opacity: 0, width: 0, marginLeft: 0 }}
-                                                            animate={{ opacity: 1, width: 'auto', marginLeft: 8 }}
-                                                            exit={{ opacity: 0, width: 0, marginLeft: 0 }}
-                                                            transition={springTransition}
-                                                            className="text-sm font-medium whitespace-nowrap text-black dark:text-white"
-                                                        >
-                                                            {item.label}
-                                                        </motion.span>
-                                                    )}
-                                                </AnimatePresence>
+                                                <div className="overflow-hidden flex">
+                                                    <AnimatePresence initial={false}>
+                                                        {isActive && (
+                                                            <motion.span
+                                                                initial={{ opacity: 0, width: 0, marginLeft: 0 }}
+                                                                animate={{ opacity: 1, width: 'auto', marginLeft: 8 }}
+                                                                exit={{ opacity: 0, width: 0, marginLeft: 0 }}
+                                                                transition={springTransition}
+                                                                className="text-sm font-medium whitespace-nowrap text-black dark:text-white relative z-10"
+                                                            >
+                                                                {item.label}
+                                                            </motion.span>
+                                                        )}
+                                                    </AnimatePresence>
+                                                </div>
                                             </div>
-                                        </motion.div>
-                                    </NavLink>
+                                        </NavLink>
+                                    </motion.div>
                                 );
                             })}
+                        </AnimatePresence>
 
-                            {/* Divider */}
-                            <div className="w-[1px] h-6 bg-gray-200 dark:bg-white/10 mx-1" />
+                        {/* Divider */}
+                        <div className="w-[1px] h-6 bg-gray-200 dark:bg-white/10 mx-1" />
 
-                            {/* More Button */}
-                            <motion.button
-                                layout
-                                onClick={() => setIsMoreOpen(!isMoreOpen)}
-                                className={`flex items-center justify-center rounded-full w-10 h-10 transition-colors duration-200 ${isMoreOpen
-                                    ? 'bg-black/5 dark:bg-white/10 text-black dark:text-white'
-                                    : 'text-gray-500 hover:bg-black/5 dark:text-gray-400 dark:hover:bg-white/5'
-                                    }`}
-                            >
-                                <EllipsisHorizontalIcon className="w-6 h-6" />
-                            </motion.button>
+                        {/* More Button */}
+                        <button
+                            onClick={() => setIsMoreOpen(!isMoreOpen)}
+                            className={`flex items-center justify-center rounded-full w-10 h-10 transition-colors duration-200 ${isMoreOpen
+                                ? 'bg-black/5 dark:bg-white/10 text-black dark:text-white'
+                                : 'text-gray-500 hover:bg-black/5 dark:text-gray-400 dark:hover:bg-white/5'
+                                }`}
+                        >
+                            <EllipsisHorizontalIcon className="w-6 h-6" />
+                        </button>
 
-                            {/* Theme Toggle integrated */}
-                            <div className="ml-1">
-                                <ThemeToggle className="w-10 h-10" />
-                            </div>
+                        {/* Theme Toggle integrated */}
+                        <div className="ml-1">
+                            <ThemeToggle className="w-10 h-10" />
                         </div>
-                    </LayoutGroup>
+                    </div>
                 </motion.div>
 
                 {/* Expanded Menu Dropdown - Glassmorphic */}
@@ -173,7 +250,7 @@ export default function DynamicIslandNav() {
 
                             <div className="px-3 py-2 flex items-center justify-between text-xs text-gray-400">
                                 <span>© 2026 damesck</span>
-                                <span>Beta v0.0.13</span>
+                                <span>Beta v0.0.14</span>
                             </div>
                         </motion.div>
                     )}
