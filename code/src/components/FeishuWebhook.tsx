@@ -232,159 +232,63 @@ const FeishuWebhook: React.FC<FeishuWebhookProps> = ({ isOpen, onClose, type = '
             {/* 成功状态 */}
             {submitStatus === 'success' && (
               <motion.div
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ 
-                  type: "spring", 
-                  damping: 25, 
-                  stiffness: 300,
-                  duration: 0.5 
-                }}
-                className="text-center py-8 relative"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.3 }}
+                className="text-center py-10"
               >
-
-                
-                {/* 成功图标容器 */}
+                {/* 图标圆圈 */}
                 <motion.div
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
-                  transition={{ 
-                    type: "spring", 
-                    damping: 20, 
-                    stiffness: 400,
-                    delay: 0.1 
-                  }}
-                  className="relative z-20"
+                  transition={{ type: "spring", damping: 20, stiffness: 300 }}
+                  className="w-20 h-20 bg-green-50 dark:bg-green-900/20 rounded-full flex items-center justify-center mx-auto mb-6"
                 >
-                  {/* 主图标背景 */}
-                  <motion.div
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    transition={{ 
-                      type: "spring", 
-                      damping: 20, 
-                      stiffness: 300,
-                      delay: 0.2 
-                    }}
-                    className="w-16 h-16 bg-gradient-to-br from-green-100 to-emerald-100 dark:from-green-900/40 dark:to-emerald-900/40 rounded-full flex items-center justify-center mx-auto mb-6 relative shadow-lg border border-green-200/50 dark:border-green-700/50"
-                  >
-                    {/* 勾选图标 */}
-                    <motion.svg 
-                      className="w-8 h-8 text-green-600 dark:text-green-400" 
-                      fill="none" 
-                      stroke="currentColor" 
-                      viewBox="0 0 24 24"
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      transition={{ 
-                        opacity: { duration: 0.2, delay: 0.4 }
-                      }}
-                    >
-                      <motion.path 
-                        strokeLinecap="round" 
-                        strokeLinejoin="round" 
-                        strokeWidth="3" 
-                        d="M5 13l4 4L19 7"
-                        initial={{ pathLength: 0 }}
-                        animate={{ pathLength: 1 }}
-                        transition={{ duration: 0.6, delay: 0.4, ease: "easeInOut" }}
-                      />
-                    </motion.svg>
-                    
-                    {/* 简化的闪烁效果 */}
-                    <motion.div
-                      initial={{ scale: 0, opacity: 0 }}
-                      animate={{ scale: 1.2, opacity: 0.3 }}
-                      transition={{ 
-                        duration: 0.4, 
-                        delay: 0.7,
-                        ease: "easeOut"
-                      }}
-                      className="absolute inset-0 bg-green-200 dark:bg-green-600 rounded-full -z-10"
+                  <svg className="w-10 h-10 text-green-500 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <motion.path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2.5}
+                      d="M5 13l4 4L19 7"
+                      initial={{ pathLength: 0 }}
+                      animate={{ pathLength: 1 }}
+                      transition={{ duration: 0.5, delay: 0.15, ease: "easeInOut" }}
                     />
-                  </motion.div>
+                  </svg>
                 </motion.div>
 
-                {/* 标题动画 */}
-                <motion.h4 
-                  initial={{ opacity: 0, y: 15 }}
+                {/* 标题 */}
+                <motion.h4
+                  initial={{ opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ 
-                    delay: 0.5, 
-                    duration: 0.4,
-                    ease: "easeOut"
-                  }}
-                  className="relative z-30 text-xl font-bold text-gray-900 dark:text-white mb-3 bg-gradient-to-r from-green-600 to-emerald-600 dark:from-green-400 dark:to-emerald-400 bg-clip-text text-transparent"
+                  transition={{ delay: 0.3, duration: 0.35, ease: "easeOut" }}
+                  className="text-[22px] font-bold text-[#1d1d1f] dark:text-white tracking-tight mb-2"
                 >
-                  🎉 发送成功！
+                  发送成功
                 </motion.h4>
-                
-                {/* 描述文字动画 */}
-                <motion.p 
-                  initial={{ opacity: 0, y: 10 }}
+
+                {/* 描述 */}
+                <motion.p
+                  initial={{ opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ 
-                    delay: 0.6, 
-                    duration: 0.4,
-                    ease: "easeOut"
-                  }}
-                  className="relative z-30 text-gray-600 dark:text-gray-300 text-sm mb-8 leading-relaxed"
+                  transition={{ delay: 0.4, duration: 0.35, ease: "easeOut" }}
+                  className="text-[15px] text-[#1d1d1f]/60 dark:text-white/60 mb-8 leading-relaxed"
                 >
-                  您的消息已通过飞书机器人推送，我会尽快回复您。
+                  消息已通过飞书机器人推送，我会尽快回复您。
                 </motion.p>
-                
-                {/* 关闭按钮动画 */}
+
+                {/* 完成按钮 */}
                 <motion.button
-                  initial={{ opacity: 0, y: 15 }}
+                  initial={{ opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ 
-                    delay: 0.7, 
-                    duration: 0.3,
-                    ease: "easeOut"
-                  }}
+                  transition={{ delay: 0.5, duration: 0.35, ease: "easeOut" }}
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
-                  onClick={() => {
-                    onClose();
-                    setSubmitStatus('idle');
-                  }}
-                  className="relative z-30 px-8 py-3 bg-gradient-to-r from-[#007AFF] to-[#0063CC] dark:from-[#0063CC] dark:to-[#004999] text-white rounded-xl text-sm font-semibold shadow-lg hover:shadow-xl transition-all duration-200 border border-blue-500/20"
+                  onClick={() => { onClose(); setSubmitStatus('idle'); }}
+                  className="px-8 py-2.5 bg-[#007AFF] dark:bg-[#0063CC] text-white rounded-full text-sm font-semibold hover:bg-[#0063CC] dark:hover:bg-[#004999] transition-colors"
                 >
                   完成
                 </motion.button>
-
-                {/* 简化的装饰效果 */}
-                {[...Array(3)].map((_, i) => (
-                  <motion.div
-                    key={i}
-                    initial={{ 
-                      scale: 0, 
-                      opacity: 0,
-                      x: (i - 1) * 60,
-                      y: -20
-                    }}
-                    animate={{ 
-                      scale: 1, 
-                      opacity: 0.6,
-                      x: (i - 1) * 60,
-                      y: -20
-                    }}
-                    transition={{ 
-                      duration: 0.8,
-                      delay: 0.8 + i * 0.1,
-                      ease: "easeOut"
-                    }}
-                    className={`absolute w-1.5 h-1.5 rounded-full pointer-events-none z-10 ${
-                      i === 0 ? 'bg-green-400' : 
-                      i === 1 ? 'bg-emerald-400' : 'bg-teal-400'
-                    }`}
-                    style={{
-                      left: '50%',
-                      top: '25%',
-                      transform: 'translate(-50%, -50%)'
-                    }}
-                  />
-                ))}
               </motion.div>
             )}
 

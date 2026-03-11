@@ -183,60 +183,29 @@ const ContactCard: React.FC<ContactCardProps> = ({ contact, onViewQRCode, onWebh
         style={cardStyle}
         className={`h-full bg-gradient-to-br ${getCardColor()} backdrop-blur-xl overflow-hidden relative`}
       >
-        <div className="p-3 sm:p-4 flex flex-col sm:flex-row items-start sm:items-center sm:justify-between h-full">
-          <div className="flex items-center flex-1 mb-3 sm:mb-0">
-            <div className="p-2 sm:p-2.5 rounded-full bg-white/80 dark:bg-gray-700/80 shadow-sm mr-3 shrink-0">
+        <div className="p-4 flex flex-col h-full">
+          {/* 图标 + 标题 + 信息 */}
+          <div className="flex items-center mb-3">
+            <div className="p-2.5 rounded-full bg-white/80 dark:bg-gray-700/80 shadow-sm mr-3 shrink-0">
               {contact.icon}
             </div>
-            <div className="min-w-0">
-              <div className="flex items-center">
-                <h2 className="text-base sm:text-lg font-bold text-[#2c2c2e] dark:text-white truncate">{contact.title}</h2>
-                <div className="relative group ml-2 flex-shrink-0">
-                  <svg className="w-4 h-4 text-gray-400 cursor-help" viewBox="0 0 20 20" fill="currentColor">
-                    <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" />
-                  </svg>
-                  <div className="absolute left-0 w-48 p-2 bg-white dark:bg-gray-900 rounded-md shadow-lg 
-                    opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 
-                    text-xs text-gray-600 dark:text-gray-300 -translate-x-1/4 translate-y-1 z-10">
-                    {contact.description}
-                  </div>
-                </div>
-              </div>
-              <p className="text-xs sm:text-sm font-medium text-[#3c3c3e] dark:text-gray-200 mt-0.5 truncate max-w-[180px]">{contact.info}</p>
+            <div className="min-w-0 flex-1">
+              <h2 className="text-base font-bold text-[#2c2c2e] dark:text-white truncate leading-tight">{contact.title}</h2>
+              <p className="text-xs font-medium text-[#6c6c6e] dark:text-gray-400 mt-0.5 truncate">{contact.info}</p>
             </div>
           </div>
 
-          <div className="flex flex-wrap gap-2 sm:flex-nowrap sm:space-x-2 w-full sm:w-auto justify-start sm:justify-end">
-            {contact.qrCode && (
-              <button
-                onClick={() => onViewQRCode(contact)}
-                className="inline-flex items-center px-2 sm:px-3 py-1 sm:py-1.5 rounded-full bg-[#007AFF] dark:bg-[#0063CC] text-white font-medium text-xs transition-all hover:bg-[#0063CC] sm:whitespace-nowrap"
-              >
-                查看二维码
-                <svg className="ml-1 w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
-                </svg>
-              </button>
-            )}
+          {/* 描述文字 */}
+          <p className="text-xs text-gray-500 dark:text-gray-400 mb-4 flex-grow leading-relaxed">{contact.description}</p>
 
-            {contact.isEmail && (
-              <a
-                href={`mailto:${contact.info}`}
-                className="inline-flex items-center px-2 sm:px-3 py-1 sm:py-1.5 rounded-full bg-[#007AFF] dark:bg-[#0063CC] text-white font-medium text-xs transition-all hover:bg-[#0063CC] sm:whitespace-nowrap"
-              >
-                发送邮件
-                <svg className="ml-1 w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
-                </svg>
-              </a>
-            )}
-
-            {contact.isLink && !contact.qrCode && (
+          {/* 按钮区 */}
+          <div className="flex flex-wrap gap-2">
+            {contact.isLink && (
               <a
                 href={contact.link}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center px-2 sm:px-3 py-1 sm:py-1.5 rounded-full bg-[#007AFF] dark:bg-[#0063CC] text-white font-medium text-xs transition-all hover:bg-[#0063CC] sm:whitespace-nowrap"
+                className="inline-flex items-center px-3 py-1.5 rounded-full bg-[#007AFF] dark:bg-[#0063CC] text-white font-medium text-xs transition-all hover:bg-[#0063CC] whitespace-nowrap"
               >
                 访问链接
                 <svg className="ml-1 w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -245,39 +214,46 @@ const ContactCard: React.FC<ContactCardProps> = ({ contact, onViewQRCode, onWebh
               </a>
             )}
 
-            {contact.isLink && contact.qrCode && (
-              <div className="flex gap-2 sm:space-x-2 w-full sm:w-auto">
-                <a
-                  href={contact.link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center px-2 sm:px-3 py-1 sm:py-1.5 rounded-full bg-[#007AFF] dark:bg-[#0063CC] text-white font-medium text-xs transition-all hover:bg-[#0063CC] sm:whitespace-nowrap"
-                >
-                  访问链接
-                  <svg className="ml-1 w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                  </svg>
-                </a>
+            {contact.isEmail && (
+              <a
+                href={`mailto:${contact.info}`}
+                className="inline-flex items-center px-3 py-1.5 rounded-full bg-[#007AFF] dark:bg-[#0063CC] text-white font-medium text-xs transition-all hover:bg-[#0063CC] whitespace-nowrap"
+              >
+                发送邮件
+                <svg className="ml-1 w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
+                </svg>
+              </a>
+            )}
 
-                <button
-                  onClick={() => onViewQRCode(contact)}
-                  className="inline-flex items-center px-2 sm:px-3 py-1 sm:py-1.5 rounded-full bg-gray-600/80 dark:bg-gray-700/80 text-white font-medium text-xs transition-all hover:bg-gray-700 sm:whitespace-nowrap"
-                >
-                  二维码
-                  <svg className="ml-1 w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
-                  </svg>
-                </button>
-              </div>
+            {contact.qrCode && !contact.isLink && (
+              <button
+                onClick={() => onViewQRCode(contact)}
+                className="inline-flex items-center px-3 py-1.5 rounded-full bg-[#007AFF] dark:bg-[#0063CC] text-white font-medium text-xs transition-all hover:bg-[#0063CC] whitespace-nowrap"
+              >
+                查看二维码
+                <svg className="ml-1 w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
+                </svg>
+              </button>
+            )}
+
+            {contact.qrCode && contact.isLink && (
+              <button
+                onClick={() => onViewQRCode(contact)}
+                className="inline-flex items-center px-3 py-1.5 rounded-full bg-white/30 dark:bg-gray-700/60 text-gray-700 dark:text-gray-200 font-medium text-xs transition-all hover:bg-white/50 dark:hover:bg-gray-600/60 whitespace-nowrap"
+              >
+                二维码
+                <svg className="ml-1 w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
+                </svg>
+              </button>
             )}
 
             {contact.isWebhook && onWebhookClick && (
               <button
-                onClick={() => {
-                  console.log('Feishu button clicked!'); // 调试信息
-                  onWebhookClick();
-                }}
-                className="inline-flex items-center px-2 sm:px-3 py-1 sm:py-1.5 rounded-full bg-[#00D6B9] dark:bg-[#00B5A0] text-white font-medium text-xs transition-all hover:bg-[#00B5A0] sm:whitespace-nowrap"
+                onClick={onWebhookClick}
+                className="inline-flex items-center px-3 py-1.5 rounded-full bg-[#00D6B9] dark:bg-[#00B5A0] text-white font-medium text-xs transition-all hover:bg-[#00B5A0] whitespace-nowrap"
               >
                 发送消息
                 <svg className="ml-1 w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -288,8 +264,8 @@ const ContactCard: React.FC<ContactCardProps> = ({ contact, onViewQRCode, onWebh
           </div>
         </div>
 
-        {/* 卡片右下角装饰 - 减小并降低透明度 */}
-        <div className="absolute top-1/2 right-0 -translate-y-1/2 w-12 h-12 opacity-[0.04]">
+        {/* 右下角装饰 */}
+        <div className="absolute bottom-3 right-3 w-10 h-10 opacity-[0.05]">
           {contact.icon}
         </div>
       </div>
@@ -473,48 +449,40 @@ const Contact: React.FC = () => {
   const emailContacts = contactData.filter(c => ['email'].includes(c.id));
   const webhookContacts = contactData.filter(c => ['feishu-webhook'].includes(c.id));
 
-  // 分类标题组件 - 更新为与朋友们页面一致的样式
-  const SectionTitle = ({ icon, title, color = "blue" }: { icon: React.ReactNode, title: string, color?: string }) => {
-    // 根据颜色参数返回对应的渐变色
-    const getGradientColor = () => {
-      switch (color) {
-        case 'purple':
-          return 'from-purple-500/50';
-        case 'teal':
-          return 'from-teal-500/50';
-        case 'red':
-          return 'from-red-500/50';
-        default:
-          return 'from-blue-500/50';
-      }
-    };
-
-    return (
-      <div className="flex items-center mb-6">
-        <h2 className="text-2xl font-bold dark:text-white text-gray-900 tracking-tight flex items-center">
-          <div className="w-5 h-5 mr-2 text-[#007AFF] dark:text-[#0063CC] flex-shrink-0">
-            {icon}
-          </div>
-          {title}
-        </h2>
-        <div className={`h-0.5 bg-gradient-to-r ${getGradientColor()} to-transparent ml-4 flex-grow`}></div>
-      </div>
-    );
-  };
+  // 分类标题组件
+  const SectionTitle = ({ title }: { icon?: React.ReactNode, title: string, count?: number, color?: string }) => (
+    <h2 className="text-[22px] font-bold text-[#1d1d1f] dark:text-white tracking-tight mb-5">{title}</h2>
+  );
 
   return (
-    <div className="max-w-7xl mx-auto px-4 flex flex-col min-h-[calc(100vh-200px)]">
+    <div className="max-w-5xl mx-auto px-4 flex flex-col min-h-[calc(100vh-200px)]">
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="mb-8 border-b pb-4 border-gray-200/50 dark:border-gray-700/50"
+        transition={{ duration: 0.6 }}
+        className="mb-12"
       >
-        <h1 className="text-3xl md:text-4xl font-bold mb-2 text-[#2c2c2e] dark:text-white tracking-tight">
+        <div className="flex items-center gap-2 mb-3">
+          <span className="inline-flex items-center px-3 py-1 rounded-full bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 text-xs font-semibold tracking-wide border border-blue-200/50 dark:border-blue-700/50">
+            GET IN TOUCH
+          </span>
+        </div>
+        <h1 className="text-4xl md:text-5xl font-bold mb-3 text-[#2c2c2e] dark:text-white tracking-tight">
           联系方式
         </h1>
-        <p className="text-base md:text-lg text-[#3c3c3e] dark:text-gray-300">
+        <p className="text-base md:text-lg text-[#6c6c6e] dark:text-gray-400 max-w-xl leading-relaxed">
           选择您喜欢的方式与我取得联系，无论技术讨论、项目合作还是随便聊聊，我都很期待！
         </p>
+        <div className="mt-5 flex flex-wrap gap-2">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gray-100/60 dark:bg-gray-800/60 border border-gray-200/50 dark:border-gray-700/50 text-xs text-gray-600 dark:text-gray-400 backdrop-blur-sm">
+            <div className="w-1.5 h-1.5 rounded-full bg-green-500"></div>
+            通常 24 小时内回复
+          </div>
+          <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gray-100/60 dark:bg-gray-800/60 border border-gray-200/50 dark:border-gray-700/50 text-xs text-gray-600 dark:text-gray-400 backdrop-blur-sm">
+            <div className="w-1.5 h-1.5 rounded-full bg-blue-500"></div>
+            开放技术交流与合作
+          </div>
+        </div>
       </motion.div>
 
       {/* 所有联系方式按分类合并展示 */}
@@ -522,19 +490,11 @@ const Contact: React.FC = () => {
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2 }}
-        className="flex-grow space-y-12"
+        className="flex-grow space-y-14"
       >
         {/* 社交媒体 */}
         <div>
-          <SectionTitle
-            icon={
-              <svg className="w-full h-full" viewBox="0 0 20 20" fill="currentColor">
-                <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z" />
-              </svg>
-            }
-            title="社交媒体"
-            color="blue"
-          />
+          <SectionTitle title="社交媒体" count={socialContacts.length} color="blue" />
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {socialContacts.map((contact) => (
               <ContactCard
@@ -548,15 +508,7 @@ const Contact: React.FC = () => {
 
         {/* 内容平台 */}
         <div>
-          <SectionTitle
-            icon={
-              <svg className="w-full h-full" viewBox="0 0 20 20" fill="currentColor">
-                <path fillRule="evenodd" d="M12.316 3.051a1 1 0 01.633 1.265l-4 12a1 1 0 11-1.898-.632l4-12a1 1 0 011.265-.633zM5.707 6.293a1 1 0 010 1.414L3.414 10l2.293 2.293a1 1 0 11-1.414 1.414l-3-3a1 1 0 010-1.414l3-3a1 1 0 011.414 0zm8.586 0a1 1 0 011.414 0l3 3a1 1 0 010 1.414l-3 3a1 1 0 11-1.414-1.414L16.586 10l-2.293-2.293a1 1 0 010-1.414z" clipRule="evenodd" />
-              </svg>
-            }
-            title="内容平台"
-            color="purple"
-          />
+          <SectionTitle title="内容平台" count={platformContacts.length} color="purple" />
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {platformContacts.map((contact) => (
               <ContactCard
@@ -570,16 +522,7 @@ const Contact: React.FC = () => {
 
         {/* 电子邮件 */}
         <div>
-          <SectionTitle
-            icon={
-              <svg className="w-full h-full" viewBox="0 0 20 20" fill="currentColor">
-                <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
-                <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
-              </svg>
-            }
-            title="电子邮件"
-            color="teal"
-          />
+          <SectionTitle title="电子邮件" count={emailContacts.length} color="teal" />
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {emailContacts.map((contact) => (
               <ContactCard
@@ -593,16 +536,7 @@ const Contact: React.FC = () => {
 
         {/* 智能推送 */}
         <div>
-          <SectionTitle
-            icon={
-              <svg className="w-full h-full" viewBox="0 0 20 20" fill="currentColor">
-                <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
-                <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
-              </svg>
-            }
-            title="站内联系"
-            color="red"
-          />
+          <SectionTitle title="站内联系" count={webhookContacts.length} color="red" />
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {webhookContacts.map((contact) => (
               <ContactCard
@@ -614,6 +548,29 @@ const Contact: React.FC = () => {
             ))}
           </div>
         </div>
+
+        {/* 底部提示 */}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.5 }}
+          className="bg-gradient-to-br from-gray-100/30 to-gray-200/30 dark:from-gray-800/30 dark:to-gray-900/30 backdrop-blur-xl rounded-2xl p-5 border border-gray-200/50 dark:border-gray-700/30"
+          style={{ backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)' }}
+        >
+          <div className="flex items-start gap-4">
+            <div className="w-10 h-10 rounded-xl bg-amber-100/60 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 flex items-center justify-center flex-shrink-0">
+              <svg className="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
+                <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+              </svg>
+            </div>
+            <div>
+              <h3 className="font-semibold text-gray-900 dark:text-white mb-1 text-sm">关于回复</h3>
+              <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
+                我会尽量在 24 小时内回复消息。<span className="text-gray-800 dark:text-gray-300 font-medium">微信和飞书</span>是最快的联系方式，如有紧急事宜建议优先使用。若通过邮件联系，请注意检查垃圾邮件箱。
+              </p>
+            </div>
+          </div>
+        </motion.div>
       </motion.div>
 
       {/* 二维码弹窗 */}

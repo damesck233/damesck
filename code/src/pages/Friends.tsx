@@ -266,71 +266,60 @@ const Friends = () => {
     <div className="container mx-auto px-4 py-8 max-w-5xl">
       {/* 页面标题 */}
       <motion.div
-        initial={{ opacity: 0, y: -20 }}
+        initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-        className="mb-12"
+        transition={{ delay: 0.2 }}
       >
-        <h1 className="text-4xl font-bold dark:text-white text-gray-900 mb-4 tracking-tight">朋友们</h1>
-        <p className="text-lg dark:text-gray-300 text-gray-600 font-medium">海内存知己，天涯若比邻</p>
+      <div className="mb-14">
+        <h1 className="text-[40px] md:text-[48px] font-bold text-[#1d1d1f] dark:text-white tracking-tight leading-none mb-3">朋友们</h1>
+        <p className="text-[15px] text-[#1d1d1f]/60 dark:text-white/60 font-medium mb-6">海内存知己，天涯若比邻</p>
 
         {/* 状态指示器说明 */}
-        <div className="mt-4 flex flex-wrap items-center gap-4 bg-gray-100/40 dark:bg-gray-800/40 p-3 rounded-xl backdrop-blur-md border border-gray-200/30 dark:border-gray-700/30">
-          <p className="text-sm dark:text-gray-300 text-gray-600">网站状态指示：</p>
-          <div className="flex items-center gap-4">
-            <div className="flex items-center">
-              <div className="relative h-5 w-5 flex items-center justify-center mr-1.5">
-                <div className="absolute w-4 h-4 rounded-full bg-gradient-to-br from-green-400/90 to-green-600/90 shadow-md shadow-green-500/20 dark:shadow-green-900/30 ring-1 ring-green-200/60 dark:ring-green-800/60 backdrop-blur-md"></div>
-                <div className="absolute w-1.5 h-1.5 rounded-full bg-white/90 dark:bg-green-200/90 backdrop-blur-sm"></div>
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-2 bg-gray-100/40 dark:bg-gray-800/40 px-4 py-3 rounded-xl backdrop-blur-md border border-gray-200/30 dark:border-gray-700/30">
+          <span className="text-[13px] text-[#1d1d1f]/40 dark:text-white/40 font-medium">网站状态</span>
+          <div className="flex items-center gap-3">
+            <div className="flex items-center gap-1.5">
+              <div className="relative h-4 w-4 flex items-center justify-center">
+                <div className="absolute w-3.5 h-3.5 rounded-full bg-gradient-to-br from-green-400/90 to-green-600/90"></div>
+                <div className="absolute w-1 h-1 rounded-full bg-white/90"></div>
               </div>
-              <span className="text-xs dark:text-gray-300 text-gray-600">畅通</span>
+              <span className="text-[12px] text-[#1d1d1f]/60 dark:text-white/60">畅通</span>
             </div>
-
-            <div className="flex items-center">
-              <div className="relative h-5 w-5 flex items-center justify-center mr-1.5">
-                <div className="absolute w-4 h-4 rounded-full bg-gradient-to-br from-yellow-400/90 to-amber-500/90 shadow-md shadow-yellow-500/20 dark:shadow-yellow-900/30 ring-1 ring-yellow-200/60 dark:ring-yellow-800/60 backdrop-blur-md"></div>
-                <div className="absolute w-1.5 h-1.5 rounded-full bg-white/90 dark:bg-yellow-200/90 backdrop-blur-sm"></div>
+            <div className="flex items-center gap-1.5">
+              <div className="relative h-4 w-4 flex items-center justify-center">
+                <div className="absolute w-3.5 h-3.5 rounded-full bg-gradient-to-br from-yellow-400/90 to-amber-500/90"></div>
+                <div className="absolute w-1 h-1 rounded-full bg-white/90"></div>
               </div>
-              <span className="text-xs dark:text-gray-300 text-gray-600">良好</span>
+              <span className="text-[12px] text-[#1d1d1f]/60 dark:text-white/60">良好</span>
             </div>
-
-            <div className="flex items-center">
-              <div className="relative h-5 w-5 flex items-center justify-center mr-1.5">
-                <div className="absolute w-4 h-4 rounded-full bg-gradient-to-br from-orange-400/90 to-red-500/90 shadow-md shadow-orange-500/20 dark:shadow-orange-900/30 ring-1 ring-orange-200/60 dark:ring-orange-800/60 backdrop-blur-md"></div>
-                <div className="absolute w-1.5 h-1.5 rounded-full bg-white/90 dark:bg-orange-200/90 backdrop-blur-sm"></div>
+            <div className="flex items-center gap-1.5">
+              <div className="relative h-4 w-4 flex items-center justify-center">
+                <div className="absolute w-3.5 h-3.5 rounded-full bg-gradient-to-br from-orange-400/90 to-red-500/90"></div>
+                <div className="absolute w-1 h-1 rounded-full bg-white/90"></div>
               </div>
-              <span className="text-xs dark:text-gray-300 text-gray-600">较慢</span>
+              <span className="text-[12px] text-[#1d1d1f]/60 dark:text-white/60">较慢</span>
             </div>
-
-            <div className="flex items-center">
-              <div className="relative h-5 w-5 flex items-center justify-center mr-1.5">
-                <div className="absolute w-4 h-4 rounded-full bg-gradient-to-br from-red-500/90 to-red-700/90 shadow-md shadow-red-500/20 dark:shadow-red-900/30 ring-1 ring-red-200/60 dark:ring-red-800/60 backdrop-blur-md"></div>
-                <div className="absolute w-3 h-3 flex items-center justify-center backdrop-blur-sm">
-                  <svg className="w-2 h-2 text-white/90" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="4">
-                    <path d="M18 6L6 18M6 6l12 12" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                </div>
+            <div className="flex items-center gap-1.5">
+              <div className="relative h-4 w-4 flex items-center justify-center">
+                <div className="absolute w-3.5 h-3.5 rounded-full bg-gradient-to-br from-red-500/90 to-red-700/90"></div>
+                <div className="absolute w-1 h-1 rounded-full bg-white/90"></div>
               </div>
-              <span className="text-xs dark:text-gray-300 text-gray-600">无法访问</span>
+              <span className="text-[12px] text-[#1d1d1f]/60 dark:text-white/60">无法访问</span>
             </div>
           </div>
-          <div className="flex items-center ml-auto">
-            <div className="flex items-center mr-3">
-              <ExclamationCircleIcon className="w-3.5 h-3.5 text-amber-500 mr-1" />
-              <p className="text-xs text-gray-500 dark:text-gray-400">头像加载失败会显示首字母</p>
-            </div>
-            <p className="text-xs text-gray-500 dark:text-gray-400 mr-2">状态每24小时自动更新一次</p>
+          <div className="flex items-center gap-3 ml-auto">
+            <span className="text-[12px] text-[#1d1d1f]/40 dark:text-white/40 hidden sm:block">每24小时自动更新</span>
             <button
               onClick={handleRefresh}
               disabled={isRefreshing}
-              className={`text-xs px-3 py-1.5 rounded-full flex items-center transition-all duration-300 shadow-sm backdrop-blur-sm
+              className={`text-[12px] px-3 py-1.5 rounded-full flex items-center gap-1.5 transition-colors font-medium
                 ${isRefreshing
-                  ? 'bg-gray-400/80 text-gray-100 cursor-not-allowed'
-                  : 'bg-gradient-to-r from-blue-500/90 to-blue-600/90 hover:from-blue-600/90 hover:to-blue-700/90 text-white hover:shadow transform hover:-translate-y-0.5'
+                  ? 'bg-[#1d1d1f]/10 dark:bg-white/10 text-[#1d1d1f]/40 dark:text-white/40 cursor-not-allowed'
+                  : 'bg-[#007AFF] dark:bg-[#0063CC] text-white hover:bg-[#0063CC] dark:hover:bg-[#0052AA]'
                 }`}
             >
               <svg
-                className={`w-3 h-3 mr-1.5 ${isRefreshing ? 'animate-spin' : ''}`}
+                className={`w-3 h-3 ${isRefreshing ? 'animate-spin' : ''}`}
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
@@ -343,21 +332,12 @@ const Friends = () => {
             </button>
           </div>
         </div>
-      </motion.div>
+      </div>
 
-      {/* 友链列表容器 */}
       <div className="space-y-16">
         {/* 置顶朋友 */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-        >
-          {/* 分区标题 */}
-          <div className="flex items-center mb-6">
-            <h2 className="text-2xl font-bold dark:text-white text-gray-900 tracking-tight">置顶</h2>
-            <div className="h-0.5 bg-gradient-to-r from-blue-500/50 to-transparent ml-4 flex-grow"></div>
-          </div>
+        <div>
+          <h2 className="text-[22px] font-bold text-[#1d1d1f] dark:text-white tracking-tight mb-6">置顶</h2>
 
           {/* 置顶友链卡片 - 大尺寸设计 */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -414,19 +394,11 @@ const Friends = () => {
               </motion.a>
             ))}
           </div>
-        </motion.div>
+        </div>
 
         {/* 朋友列表 */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5, delay: 0.4 }}
-        >
-          {/* 分区标题 */}
-          <div className="flex items-center mb-6">
-            <h2 className="text-2xl font-bold dark:text-white text-gray-900 tracking-tight">朋友们</h2>
-            <div className="h-0.5 bg-gradient-to-r from-purple-500/50 to-transparent ml-4 flex-grow"></div>
-          </div>
+        <div>
+          <h2 className="text-[22px] font-bold text-[#1d1d1f] dark:text-white tracking-tight mb-6">朋友们</h2>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
             {moreFriends.map((friend, index) => (
@@ -482,15 +454,10 @@ const Friends = () => {
               </motion.a>
             ))}
           </div>
-        </motion.div>
+        </div>
 
         {/* 我的收藏 - 已注释掉 */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5, delay: 0.6 }}
-          className="mb-12"
-        >
+        <div className="mb-12">
           {/* <h2 className="text-2xl font-bold dark:text-white text-gray-900 mb-6 tracking-tight">我的收藏</h2> */}
 
           {/* <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
@@ -543,27 +510,17 @@ const Friends = () => {
               </motion.a>
             ))}
           </div> */}
-        </motion.div>
+        </div>
 
         {/* 申请友链说明 */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5, delay: 0.8 }}
+        <div
           className={`bg-gradient-to-br from-gray-100/30 to-gray-200/30 dark:from-gray-800/30 dark:to-gray-900/30 backdrop-blur-xl rounded-2xl p-6 border border-gray-200/50 dark:border-gray-700/30 shadow-sm`}
           style={{
             backdropFilter: 'blur(10px)',
             WebkitBackdropFilter: 'blur(10px)'
           }}
         >
-          {/* 申请友链标题 */}
-          <div className="flex items-center mb-6">
-            <h3 className="text-xl font-bold dark:text-white text-gray-900 tracking-tight flex items-center">
-              <UserIcon className="w-5 h-5 mr-2 dark:text-blue-400 text-blue-600" />
-              申请友链须知
-            </h3>
-            <div className="h-0.5 bg-gradient-to-r from-teal-500/50 to-transparent ml-4 flex-grow"></div>
-          </div>
+          <h3 className="text-[22px] font-bold text-[#1d1d1f] dark:text-white tracking-tight mb-6">申请友链须知</h3>
 
           <ul className="space-y-4 text-base dark:text-gray-300 text-gray-700 leading-relaxed max-w-3xl mx-auto">
             <li className="flex items-start">
@@ -591,170 +548,67 @@ const Friends = () => {
               暂时不同意商业及非个人的网站的友链申请
             </li>
           </ul>
-        </motion.div>
+        </div>
       </div>
 
       {/* 友链申请与站点信息 - 左右并排布局 */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.5, delay: 1 }}
-        className="mt-12 mb-8"
-      >
-        <div className="flex items-center mb-6">
-          <h2 className="text-2xl font-bold dark:text-white text-gray-900 tracking-tight flex items-center">
-            <svg className="w-5 h-5 mr-2 text-blue-600 dark:text-blue-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18z"></path>
-              <path d="M12 13V9"></path>
-              <path d="M12 17h.01"></path>
-            </svg>
-            友链申请与站点信息
-          </h2>
-          <div className="h-0.5 bg-gradient-to-r from-blue-500/50 to-transparent ml-4 flex-grow"></div>
-        </div>
+      <div className="mt-12 mb-8">
+        <h2 className="text-[22px] font-bold text-[#1d1d1f] dark:text-white tracking-tight mb-6">友链申请与站点信息</h2>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* 左侧：添加方式 */}
-          <div className="bg-gradient-to-br from-gray-100/30 to-gray-200/30 dark:from-gray-800/30 dark:to-gray-900/30 
-                        backdrop-blur-xl rounded-2xl p-6 border border-gray-200/50 dark:border-gray-700/30 
-                        shadow-sm h-full transform hover:scale-[1.01] transition-all duration-300"
-            style={{
-              backdropFilter: 'blur(12px)',
-              WebkitBackdropFilter: 'blur(12px)',
-              willChange: 'transform'
-            }}>
-            <h3 className="text-xl font-bold dark:text-white text-gray-900 mb-4 tracking-tight flex items-center">
-              <svg className="w-5 h-5 mr-2 text-teal-600 dark:text-teal-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
-              </svg>
-              提交申请
-            </h3>
-            <div className="h-0.5 bg-gradient-to-r from-teal-500/50 to-transparent mb-6"></div>
+          {/* 左侧：提交申请 */}
+          <div className="bg-gradient-to-br from-gray-100/30 to-gray-200/30 dark:from-gray-800/30 dark:to-gray-900/30
+                        backdrop-blur-xl rounded-2xl p-6 border border-gray-200/50 dark:border-gray-700/30
+                        shadow-sm flex flex-col"
+            style={{ backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)' }}>
+            <h3 className="text-[18px] font-bold text-[#1d1d1f] dark:text-white tracking-tight mb-1">提交申请</h3>
+            <p className="text-[13px] text-[#1d1d1f]/50 dark:text-white/50 mb-6">填写以下信息，通过飞书机器人提交您的友链申请。</p>
 
-            <div className="space-y-4">
-
-              <div className="bg-white/10 dark:bg-gray-900/20 rounded-xl p-4 border border-gray-200/30 dark:border-gray-700/30">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center">
-                    <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center mr-3">
-                      <svg className="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
-                      </svg>
-                    </div>
-                    <div>
-                      <h4 className="font-medium dark:text-white text-gray-900">站内提交</h4>
-                      <p className="text-sm text-gray-500 dark:text-gray-400">快速提交友链申请</p>
-                    </div>
-                  </div>
-                  <button
-                    onClick={() => setShowFeishuWebhook(true)}
-                    className="px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all duration-200 font-medium text-sm shadow-md hover:shadow-lg transform hover:scale-105"
-                    style={{ willChange: 'transform' }}
-                  >
-                    提交申请
-                  </button>
-                </div>
-              </div>
-
-              <p className="text-base dark:text-gray-300 text-gray-700 font-medium mt-4">需要提供的信息：</p>
-              <div className="space-y-2.5">
-                <div className="flex items-center space-x-2">
-                  <div className="w-2.5 h-2.5 rounded-full bg-blue-500"></div>
-                  <p className="text-sm dark:text-gray-300 text-gray-700">昵称</p>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <div className="w-2.5 h-2.5 rounded-full bg-purple-500"></div>
-                  <p className="text-sm dark:text-gray-300 text-gray-700">站点标题</p>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <div className="w-2.5 h-2.5 rounded-full bg-teal-500"></div>
-                  <p className="text-sm dark:text-gray-300 text-gray-700">网站</p>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <div className="w-2.5 h-2.5 rounded-full bg-amber-500"></div>
-                  <p className="text-sm dark:text-gray-300 text-gray-700">头像</p>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <div className="w-2.5 h-2.5 rounded-full bg-green-500"></div>
-                  <p className="text-sm dark:text-gray-300 text-gray-700">描述</p>
-                </div>
-              </div>
+            <p className="text-[11px] font-semibold text-[#1d1d1f]/40 dark:text-white/40 uppercase tracking-widest mb-3">需要提供</p>
+            <div className="flex flex-wrap gap-2 mb-8">
+              {['昵称', '站点标题', '网站 URL', '头像链接', '一句话描述'].map(item => (
+                <span key={item} className="px-3 py-1 rounded-full bg-[#007AFF]/10 dark:bg-[#007AFF]/15 text-[#007AFF] dark:text-blue-400 text-[13px] font-medium">
+                  {item}
+                </span>
+              ))}
             </div>
+
+            <button
+              onClick={() => setShowFeishuWebhook(true)}
+              className="mt-auto w-full py-2.5 bg-[#007AFF] dark:bg-[#0063CC] text-white rounded-full hover:bg-[#0063CC] dark:hover:bg-[#0052AA] transition-colors font-semibold text-sm"
+            >
+              提交友链申请
+            </button>
           </div>
 
           {/* 右侧：站点信息 */}
-          <div className="bg-gradient-to-br from-gray-100/30 to-gray-200/30 dark:from-gray-800/30 dark:to-gray-900/30 
-                        backdrop-blur-xl rounded-2xl p-6 border border-gray-200/50 dark:border-gray-700/30 
-                        shadow-sm h-full transform hover:scale-[1.01] transition-all duration-300"
-            style={{
-              backdropFilter: 'blur(12px)',
-              WebkitBackdropFilter: 'blur(12px)'
-            }}>
-            <h3 className="text-xl font-bold dark:text-white text-gray-900 mb-4 tracking-tight flex items-center">
-              <svg className="w-5 h-5 mr-2 text-blue-600 dark:text-blue-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M5 3a2 2 0 0 0-2 2v14c0 1.1.9 2 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2H5z"></path>
-                <path d="M12 15a2 2 0 1 0 0-4 2 2 0 0 0 0 4z"></path>
-              </svg>
-              站点信息
-            </h3>
-            <div className="h-0.5 bg-gradient-to-r from-blue-500/50 to-transparent mb-6"></div>
+          <div className="bg-gradient-to-br from-gray-100/30 to-gray-200/30 dark:from-gray-800/30 dark:to-gray-900/30
+                        backdrop-blur-xl rounded-2xl p-6 border border-gray-200/50 dark:border-gray-700/30
+                        shadow-sm"
+            style={{ backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)' }}>
+            <h3 className="text-[18px] font-bold text-[#1d1d1f] dark:text-white tracking-tight mb-1">站点信息</h3>
+            <p className="text-[13px] text-[#1d1d1f]/50 dark:text-white/50 mb-6">申请时请使用以下信息添加本站友链。</p>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="flex items-center bg-white/10 dark:bg-gray-900/20 rounded-xl p-4 border border-gray-200/30 dark:border-gray-700/30">
-                <div className="flex-shrink-0 w-10 h-10 flex items-center justify-center rounded-full bg-blue-100/50 dark:bg-blue-900/30">
-                  <svg className="w-5 h-5 text-blue-600 dark:text-blue-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-                    <polyline points="9 22 9 12 15 12 15 22"></polyline>
-                  </svg>
+            <div className="space-y-0">
+              {[
+                { label: '站点标题', value: 'damesck的小屋' },
+                { label: '站点描述', value: '致不完美的明天_' },
+                { label: 'URL', value: 'damesck.net' },
+                { label: '头像', value: null },
+              ].map((item, idx, arr) => (
+                <div key={item.label} className={`flex items-center justify-between py-3.5 ${idx < arr.length - 1 ? 'border-b border-black/5 dark:border-white/5' : ''}`}>
+                  <span className="text-[13px] text-[#1d1d1f]/40 dark:text-white/40">{item.label}</span>
+                  {item.label === '头像' ? (
+                    <a href="https://api.damesck.net/avatar.png" className="text-[14px] font-medium text-[#007AFF] dark:text-blue-400 hover:underline transition-colors" target="_blank" rel="noopener noreferrer">点击下载</a>
+                  ) : (
+                    <span className="text-[14px] font-medium text-[#1d1d1f] dark:text-white">{item.value}</span>
+                  )}
                 </div>
-                <div className="ml-3">
-                  <p className="text-xs text-gray-500 dark:text-gray-400">站点标题</p>
-                  <p className="font-medium dark:text-white text-gray-900">damesck的小屋</p>
-                </div>
-              </div>
-
-              <div className="flex items-center bg-white/10 dark:bg-gray-900/20 rounded-xl p-4 border border-gray-200/30 dark:border-gray-700/30">
-                <div className="flex-shrink-0 w-10 h-10 flex items-center justify-center rounded-full bg-purple-100/50 dark:bg-purple-900/30">
-                  <svg className="w-5 h-5 text-purple-600 dark:text-purple-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
-                    <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
-                  </svg>
-                </div>
-                <div className="ml-3">
-                  <p className="text-xs text-gray-500 dark:text-gray-400">站点描述</p>
-                  <p className="font-medium dark:text-white text-gray-900">致不完美的明天_</p>
-                </div>
-              </div>
-
-              <div className="flex items-center bg-white/10 dark:bg-gray-900/20 rounded-xl p-4 border border-gray-200/30 dark:border-gray-700/30">
-                <div className="flex-shrink-0 w-10 h-10 flex items-center justify-center rounded-full bg-amber-100/50 dark:bg-amber-900/30">
-                  <svg className="w-5 h-5 text-amber-600 dark:text-amber-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <circle cx="12" cy="8" r="5"></circle>
-                    <path d="M20 21a8 8 0 0 0-16 0"></path>
-                  </svg>
-                </div>
-                <div className="ml-3">
-                  <p className="text-xs text-gray-500 dark:text-gray-400">URL</p>
-                  <p className="font-medium dark:text-white text-gray-900">damesck.net</p>
-                </div>
-              </div>
-
-              <div className="flex items-center bg-white/10 dark:bg-gray-900/20 rounded-xl p-4 border border-gray-200/30 dark:border-gray-700/30">
-                <div className="flex-shrink-0 w-10 h-10 flex items-center justify-center rounded-full bg-teal-100/50 dark:bg-teal-900/30">
-                  <svg className="w-5 h-5 text-teal-600 dark:text-teal-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                    <circle cx="8.5" cy="8.5" r="1.5"></circle>
-                    <polyline points="21 15 16 10 5 21"></polyline>
-                  </svg>
-                </div>
-                <div className="ml-3">
-                  <p className="text-xs text-gray-500 dark:text-gray-400">头像</p>
-                  <a href="https://api.damesck.net/avatar.png" className="font-medium text-blue-600 dark:text-blue-400 hover:underline transition-colors" target="_blank" rel="noopener noreferrer">点击下载</a>
-                </div>
-              </div>
+              ))}
             </div>
           </div>
         </div>
+      </div>
       </motion.div>
 
       {/* 飞书机器人弹窗 */}

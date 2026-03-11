@@ -250,7 +250,7 @@ export default function DynamicIslandNav() {
 
                             <div className="px-3 py-2 flex items-center justify-between text-xs text-gray-400">
                                 <span>© 2026 damesck</span>
-                                <span>Beta v0.0.14</span>
+                                <span>Beta v0.0.15</span>
                             </div>
                         </motion.div>
                     )}
