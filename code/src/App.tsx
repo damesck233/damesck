@@ -29,7 +29,7 @@ import DynamicIslandNav from './components/DynamicIslandNav'
 import RestrictedAccess from './components/RestrictedAccess'
 import ScrollToTop from './components/ScrollToTop'
 import { preloadResourcesWithMinTime } from './utils/preloader'
-import bgImage from './img/Background_image.webp'
+const bgImage = '/img/Background_image.webp'
 
 // 将背景图片组件分离，减少重渲染
 const BackgroundImage = memo(({ bgUrl }: { bgUrl: string }) => (
