@@ -142,7 +142,7 @@ export default function DynamicIslandNav() {
                             transition={springTransition}
                         />
 
-                        <AnimatePresence mode="popLayout">
+                        <AnimatePresence mode="popLayout" initial={false}>
                             {displayItems.map((item, index) => {
                                 const isActive = location.pathname === item.path ||
                                     (item.path !== '/' && location.pathname.startsWith(item.path));
