@@ -7,7 +7,8 @@ const input = path.join(__dirname, '../src/img/Background_image.jpg');
 const output = path.join(__dirname, '../src/img/Background_image.webp');
 
 sharp(input)
-  .webp({ quality: 85 })
+  .resize({ width: 1920, withoutEnlargement: true })
+  .webp({ quality: 70 })
   .toFile(output)
   .then(info => console.log('压缩完成:', info))
   .catch(err => console.error('压缩失败:', err));
