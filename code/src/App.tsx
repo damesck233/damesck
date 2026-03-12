@@ -29,6 +29,7 @@ import DynamicIslandNav from './components/DynamicIslandNav'
 import RestrictedAccess from './components/RestrictedAccess'
 import ScrollToTop from './components/ScrollToTop'
 import { preloadResourcesWithMinTime } from './utils/preloader'
+import bgImage from './img/Background_image.webp'
 
 // 将背景图片组件分离，减少重渲染
 const BackgroundImage = memo(({ bgUrl }: { bgUrl: string }) => (
@@ -42,7 +43,7 @@ const BackgroundImage = memo(({ bgUrl }: { bgUrl: string }) => (
     }}
   >
     {/* 亮色模式使用粉色遮罩，暗色模式使用深蓝色遮罩 */}
-    <div className="absolute inset-0 bg-pink-200/30 dark:bg-slate-900/60"></div>
+    <div className="absolute inset-0 bg-white/20 dark:bg-gray-900/55"></div>
   </div>
 ));
 
@@ -118,9 +119,7 @@ function App() {
   useEffect(() => {
     if (!themeInitialized) return; // 等待主题初始化
 
-    // 预缓存背景图片 URL
-    const bgUrl = 'https://www.loliapi.com/acg/';
-    setBgImageUrl(bgUrl);
+    setBgImageUrl(bgImage);
   }, [themeInitialized]); // 依赖于主题初始化
 
   return (
