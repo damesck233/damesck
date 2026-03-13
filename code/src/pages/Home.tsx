@@ -1,7 +1,7 @@
 // @ts-ignore - 暂时忽略LaptopIcon未导出错误
 // @ts-ignore - 暂时忽略找不到../components/Icons错误
 import { motion, AnimatePresence } from 'framer-motion';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, lazy, Suspense } from 'react';
 import {
   WrenchScrewdriverIcon,
   DocumentTextIcon,
@@ -20,7 +20,7 @@ import {
 
 // 导入博客数据
 import BlogCard from '../components/home/BlogCard';
-import BlogModal from '../components/home/modals/BlogModal';
+const BlogModal = lazy(() => import('../components/home/modals/BlogModal'));
 import { blogData as localBlogData } from '../data/blog/data';
 
 // 导入卡片数据
@@ -35,11 +35,11 @@ const { personalInfo, socialLinks } = myData;
 import ProfileCard from '../components/home/ProfileCard';
 import ActivityCard from '../components/home/ActivityCard';
 import DevicesCard from '../components/home/DevicesCard';
-import ActivityModal from '../components/home/modals/ActivityModal';
-import ProfileModal from '../components/home/modals/ProfileModal';
-import DevicesModal from '../components/home/modals/DevicesModal';
+const ActivityModal = lazy(() => import('../components/home/modals/ActivityModal'));
+const ProfileModal = lazy(() => import('../components/home/modals/ProfileModal'));
+const DevicesModal = lazy(() => import('../components/home/modals/DevicesModal'));
 import CountdownCard from '../components/home/CountdownCard';
-import CountdownModal from '../components/home/modals/CountdownModal';
+const CountdownModal = lazy(() => import('../components/home/modals/CountdownModal'));
 
 // 定义博客文章接口
 interface BlogPost {
@@ -791,46 +791,53 @@ const Home = () => {
 
 
       {/* 模态框 - Activity Details (Skills & Learning) */}
-      <ActivityModal
-        isOpen={modalOpen.skills}
-        onClose={() => closeModal('skills')}
-        timelineEvents={myData.timelineEvents}
-        layoutId={enableMorph ? 'activity-card' : undefined}
-      />
+      <Suspense fallback={null}>
+        <ActivityModal
+          isOpen={modalOpen.skills}
+          onClose={() => closeModal('skills')}
+          timelineEvents={myData.timelineEvents}
+          layoutId={enableMorph ? 'activity-card' : undefined}
+        />
+      </Suspense>
 
       {/* 模态框 - 个人资料 */}
-      <ProfileModal
-        isOpen={modalOpen.personal}
-        onClose={() => closeModal('personal')}
-        layoutId={enableMorph ? 'profile-card' : undefined}
-      />
-
+      <Suspense fallback={null}>
+        <ProfileModal
+          isOpen={modalOpen.personal}
+          onClose={() => closeModal('personal')}
+          layoutId={enableMorph ? 'profile-card' : undefined}
+        />
+      </Suspense>
 
       {/* 模态框 - 我的设备 */}
-      <DevicesModal
-        isOpen={modalOpen.devices}
-        onClose={() => closeModal('devices')}
-        devices={devices}
-        layoutId={enableMorph ? 'devices-card' : undefined}
-      />
-
-
+      <Suspense fallback={null}>
+        <DevicesModal
+          isOpen={modalOpen.devices}
+          onClose={() => closeModal('devices')}
+          devices={devices}
+          layoutId={enableMorph ? 'devices-card' : undefined}
+        />
+      </Suspense>
 
       {/* 模态框 - 倒计时 */}
-      <CountdownModal
-        isOpen={modalOpen.countdown}
-        onClose={() => closeModal('countdown')}
-        events={countdownData}
-        layoutId={enableMorph ? 'countdown-card' : undefined}
-      />
+      <Suspense fallback={null}>
+        <CountdownModal
+          isOpen={modalOpen.countdown}
+          onClose={() => closeModal('countdown')}
+          events={countdownData}
+          layoutId={enableMorph ? 'countdown-card' : undefined}
+        />
+      </Suspense>
 
       {/* 模态框 - 最新博客 */}
-      <BlogModal
-        isOpen={modalOpen.blogs}
-        onClose={() => closeModal('blogs')}
-        blogPosts={blogPosts}
-        layoutId={enableMorph ? 'blog-card' : undefined}
-      />
+      <Suspense fallback={null}>
+        <BlogModal
+          isOpen={modalOpen.blogs}
+          onClose={() => closeModal('blogs')}
+          blogPosts={blogPosts}
+          layoutId={enableMorph ? 'blog-card' : undefined}
+        />
+      </Suspense>
 
     </motion.div >
   );

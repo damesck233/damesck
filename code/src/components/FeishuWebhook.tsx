@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import axios from 'axios';
 import { Turnstile } from '@marsidev/react-turnstile';
 
 interface FeishuWebhookProps {
@@ -140,11 +139,12 @@ const FeishuWebhook: React.FC<FeishuWebhookProps> = ({ isOpen, onClose, type = '
       }
 
       // 发送到飞书机器人
-      await axios.post(FEISHU_WEBHOOK_URL, feishuMessage, {
-        headers: {
-          'Content-Type': 'application/json'
-        }
+      const res = await fetch(FEISHU_WEBHOOK_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(feishuMessage)
       });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
       setSubmitStatus('success');
       // 清空表单
