@@ -183,27 +183,21 @@ function App() {
           <PageContent />
         </motion.div>
 
-        {/* 底部栏 */}
+        {/* 底部胶囊 */}
         <motion.footer
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
           transition={{
             duration: 0.8,
             ease: appleEaseOut,
             delay: 0.5
           }}
-          className="dark:bg-gray-900/40 dark:border-gray-800/30 bg-white/20 backdrop-blur-md border-t border-white/30 p-4 mt-auto shadow-md"
+          className="flex justify-center pb-6 mt-auto"
         >
-          <div className="max-w-7xl mx-auto">
-            <div className="flex flex-wrap justify-center items-center gap-3 text-base font-medium text-gray-700 dark:text-gray-200">
-              <span className="text-gray-800 dark:text-white">©️ 2025</span>
-              <span className="mx-1 text-gray-500 dark:text-gray-400">|</span>
-              <a href="/" className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">damesck.net</a>
-              <span className="mx-1 text-gray-500 dark:text-gray-400">|</span>
-              <a href="https://github.com/damesck233/damesck" target="_blank" rel="noopener noreferrer" className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">GitHub</a>
-              {/* <span className="mx-1 text-gray-500 dark:text-gray-400">|</span>
-              <a href="https://qwq.my" target="_blank" rel="noopener noreferrer" className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">雪球qwq.my</a> */}
-            </div>
+          <div className="inline-flex items-center px-5 h-10 bg-white/30 dark:bg-[#1c1c1e]/30 backdrop-blur-xl border border-white/20 dark:border-white/10 shadow-lg shadow-black/5 rounded-full text-sm text-gray-500 dark:text-gray-400">
+            Designed By damesck &nbsp;·&nbsp; Copyright © 2026 &nbsp;
+            <a href="/" className="text-gray-700 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 transition-colors font-medium">damesck.net</a>
+            &nbsp; All Right Reserved.
           </div>
         </motion.footer>
       </motion.div>
