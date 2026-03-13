@@ -63,7 +63,7 @@ const Friends = () => {
     },
     {
       name: "M397749490",
-      avatar: "https://M397749490.com/logo.png",
+      avatar: "https://m397749490.com/_next/image?url=%2Favatar.png&w=256&q=75",
       url: "https://M397749490.com",
       description: "M397749490.com"
     },
@@ -270,197 +270,197 @@ const Friends = () => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2 }}
       >
-      <div className="mb-14">
-        <h1 className="text-[40px] md:text-[48px] font-bold text-[#1d1d1f] dark:text-white tracking-tight leading-none mb-3">朋友们</h1>
-        <p className="text-[15px] text-[#1d1d1f]/60 dark:text-white/60 font-medium mb-6">海内存知己，天涯若比邻</p>
+        <div className="mb-14">
+          <h1 className="text-[40px] md:text-[48px] font-bold text-[#1d1d1f] dark:text-white tracking-tight leading-none mb-3">朋友们</h1>
+          <p className="text-[15px] text-[#1d1d1f]/60 dark:text-white/60 font-medium mb-6">海内存知己，天涯若比邻</p>
 
-        {/* 状态指示器说明 */}
-        <div className="flex flex-wrap items-center gap-x-4 gap-y-2 bg-gray-100/40 dark:bg-gray-800/40 px-4 py-3 rounded-xl backdrop-blur-md border border-gray-200/30 dark:border-gray-700/30">
-          <span className="text-[13px] text-[#1d1d1f]/40 dark:text-white/40 font-medium">网站状态</span>
-          <div className="flex items-center gap-3">
-            <div className="flex items-center gap-1.5">
-              <div className="relative h-4 w-4 flex items-center justify-center">
-                <div className="absolute w-3.5 h-3.5 rounded-full bg-gradient-to-br from-green-400/90 to-green-600/90"></div>
-                <div className="absolute w-1 h-1 rounded-full bg-white/90"></div>
+          {/* 状态指示器说明 */}
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-2 bg-gray-100/40 dark:bg-gray-800/40 px-4 py-3 rounded-xl backdrop-blur-md border border-gray-200/30 dark:border-gray-700/30">
+            <span className="text-[13px] text-[#1d1d1f]/40 dark:text-white/40 font-medium">网站状态</span>
+            <div className="flex items-center gap-3">
+              <div className="flex items-center gap-1.5">
+                <div className="relative h-4 w-4 flex items-center justify-center">
+                  <div className="absolute w-3.5 h-3.5 rounded-full bg-gradient-to-br from-green-400/90 to-green-600/90"></div>
+                  <div className="absolute w-1 h-1 rounded-full bg-white/90"></div>
+                </div>
+                <span className="text-[12px] text-[#1d1d1f]/60 dark:text-white/60">畅通</span>
               </div>
-              <span className="text-[12px] text-[#1d1d1f]/60 dark:text-white/60">畅通</span>
-            </div>
-            <div className="flex items-center gap-1.5">
-              <div className="relative h-4 w-4 flex items-center justify-center">
-                <div className="absolute w-3.5 h-3.5 rounded-full bg-gradient-to-br from-yellow-400/90 to-amber-500/90"></div>
-                <div className="absolute w-1 h-1 rounded-full bg-white/90"></div>
+              <div className="flex items-center gap-1.5">
+                <div className="relative h-4 w-4 flex items-center justify-center">
+                  <div className="absolute w-3.5 h-3.5 rounded-full bg-gradient-to-br from-yellow-400/90 to-amber-500/90"></div>
+                  <div className="absolute w-1 h-1 rounded-full bg-white/90"></div>
+                </div>
+                <span className="text-[12px] text-[#1d1d1f]/60 dark:text-white/60">良好</span>
               </div>
-              <span className="text-[12px] text-[#1d1d1f]/60 dark:text-white/60">良好</span>
-            </div>
-            <div className="flex items-center gap-1.5">
-              <div className="relative h-4 w-4 flex items-center justify-center">
-                <div className="absolute w-3.5 h-3.5 rounded-full bg-gradient-to-br from-orange-400/90 to-red-500/90"></div>
-                <div className="absolute w-1 h-1 rounded-full bg-white/90"></div>
+              <div className="flex items-center gap-1.5">
+                <div className="relative h-4 w-4 flex items-center justify-center">
+                  <div className="absolute w-3.5 h-3.5 rounded-full bg-gradient-to-br from-orange-400/90 to-red-500/90"></div>
+                  <div className="absolute w-1 h-1 rounded-full bg-white/90"></div>
+                </div>
+                <span className="text-[12px] text-[#1d1d1f]/60 dark:text-white/60">较慢</span>
               </div>
-              <span className="text-[12px] text-[#1d1d1f]/60 dark:text-white/60">较慢</span>
-            </div>
-            <div className="flex items-center gap-1.5">
-              <div className="relative h-4 w-4 flex items-center justify-center">
-                <div className="absolute w-3.5 h-3.5 rounded-full bg-gradient-to-br from-red-500/90 to-red-700/90"></div>
-                <div className="absolute w-1 h-1 rounded-full bg-white/90"></div>
+              <div className="flex items-center gap-1.5">
+                <div className="relative h-4 w-4 flex items-center justify-center">
+                  <div className="absolute w-3.5 h-3.5 rounded-full bg-gradient-to-br from-red-500/90 to-red-700/90"></div>
+                  <div className="absolute w-1 h-1 rounded-full bg-white/90"></div>
+                </div>
+                <span className="text-[12px] text-[#1d1d1f]/60 dark:text-white/60">无法访问</span>
               </div>
-              <span className="text-[12px] text-[#1d1d1f]/60 dark:text-white/60">无法访问</span>
             </div>
-          </div>
-          <div className="flex items-center gap-3 ml-auto">
-            <span className="text-[12px] text-[#1d1d1f]/40 dark:text-white/40 hidden sm:block">每24小时自动更新</span>
-            <button
-              onClick={handleRefresh}
-              disabled={isRefreshing}
-              className={`text-[12px] px-3 py-1.5 rounded-full flex items-center gap-1.5 transition-colors font-medium
+            <div className="flex items-center gap-3 ml-auto">
+              <span className="text-[12px] text-[#1d1d1f]/40 dark:text-white/40 hidden sm:block">每24小时自动更新</span>
+              <button
+                onClick={handleRefresh}
+                disabled={isRefreshing}
+                className={`text-[12px] px-3 py-1.5 rounded-full flex items-center gap-1.5 transition-colors font-medium
                 ${isRefreshing
-                  ? 'bg-[#1d1d1f]/10 dark:bg-white/10 text-[#1d1d1f]/40 dark:text-white/40 cursor-not-allowed'
-                  : 'bg-[#007AFF] dark:bg-[#0063CC] text-white hover:bg-[#0063CC] dark:hover:bg-[#0052AA]'
-                }`}
-            >
-              <svg
-                className={`w-3 h-3 ${isRefreshing ? 'animate-spin' : ''}`}
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2.5"
+                    ? 'bg-[#1d1d1f]/10 dark:bg-white/10 text-[#1d1d1f]/40 dark:text-white/40 cursor-not-allowed'
+                    : 'bg-[#007AFF] dark:bg-[#0063CC] text-white hover:bg-[#0063CC] dark:hover:bg-[#0052AA]'
+                  }`}
               >
-                <path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
-                  strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-              {isRefreshing ? '刷新中...' : '刷新状态'}
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <div className="space-y-16">
-        {/* 置顶朋友 */}
-        <div>
-          <h2 className="text-[22px] font-bold text-[#1d1d1f] dark:text-white tracking-tight mb-6">置顶</h2>
-
-          {/* 置顶友链卡片 - 大尺寸设计 */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {myFriends.map((friend, index) => (
-              <motion.a
-                key={index}
-                href={friend.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                variants={fadeIn}
-                custom={index}
-                initial="hidden"
-                animate="visible"
-                whileHover={{ scale: 1.02, y: -5 }}
-                transition={{ type: "spring", stiffness: 300, damping: 15 }}
-                className="block h-full"
-                style={{ willChange: 'transform' }}
-              >
-                <div
-                  style={cardStyle}
-                  className={`h-full bg-gradient-to-br ${getFriendColor(friend.name).bg} backdrop-blur-xl ${getFriendColor(friend.name).border} ${getFriendColor(friend.name).shadow}`}
+                <svg
+                  className={`w-3 h-3 ${isRefreshing ? 'animate-spin' : ''}`}
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2.5"
                 >
-                  <div className="p-5 flex items-center h-full">
-                    <div className="w-16 h-16 md:w-20 md:h-20 rounded-full overflow-hidden border-2 dark:border-gray-700 border-white shadow-md flex-shrink-0 relative">
-                      {avatarErrors[friend.name] ? (
-                        <div className="w-full h-full flex items-center justify-center bg-gray-200 dark:bg-gray-700">
-                          <div className="flex flex-col items-center justify-center">
-                            <span className="text-xl font-bold text-gray-500 dark:text-gray-400">
-                              {getInitials(friend.name)}
-                            </span>
-                            <ExclamationCircleIcon className="w-5 h-5 text-amber-500 mt-1" />
-                          </div>
-                        </div>
-                      ) : (
-                        <img
-                          src={friend.avatar}
-                          alt={friend.name}
-                          className="w-full h-full object-cover transform transition-transform duration-300 hover:scale-110"
-                          style={{ willChange: 'transform' }}
-                          onError={() => handleAvatarError(friend.name)}
-                        />
-                      )}
-                      <div className={`absolute -bottom-0.5 -right-0.5 w-4 h-4 rounded-full ${getFriendColor(friend.name).text.replace('text-', 'bg-').replace('dark:', '')}`}></div>
-                    </div>
-                    <div className="ml-4 flex-1">
-                      <h3 className={`text-lg md:text-xl font-semibold ${getFriendColor(friend.name).text} truncate tracking-tight`}>{friend.name}</h3>
-                      {friend.description && (
-                        <p className="text-sm dark:text-gray-300 text-gray-600 mt-1 line-clamp-2 leading-relaxed">{friend.description}</p>
-                      )}
-                    </div>
-                    <StatusIndicator url={friend.url} avatarUrl={friend.avatar} />
-                  </div>
-                </div>
-              </motion.a>
-            ))}
+                  <path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                    strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+                {isRefreshing ? '刷新中...' : '刷新状态'}
+              </button>
+            </div>
           </div>
         </div>
 
-        {/* 朋友列表 */}
-        <div>
-          <h2 className="text-[22px] font-bold text-[#1d1d1f] dark:text-white tracking-tight mb-6">朋友们</h2>
+        <div className="space-y-16">
+          {/* 置顶朋友 */}
+          <div>
+            <h2 className="text-[22px] font-bold text-[#1d1d1f] dark:text-white tracking-tight mb-6">置顶</h2>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-            {moreFriends.map((friend, index) => (
-              <motion.a
-                key={index}
-                href={friend.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                variants={fadeIn}
-                custom={index}
-                initial="hidden"
-                animate="visible"
-                whileHover={{ scale: 1.02, y: -5 }}
-                transition={{ type: "spring", stiffness: 300, damping: 15 }}
-                className="block h-full"
-                style={{ willChange: 'transform' }}
-              >
-                <div
-                  style={cardStyle}
-                  className={`h-full bg-gradient-to-br ${getFriendColor(friend.name).bg} backdrop-blur-xl ${getFriendColor(friend.name).border} ${getFriendColor(friend.name).shadow}`}
+            {/* 置顶友链卡片 - 大尺寸设计 */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {myFriends.map((friend, index) => (
+                <motion.a
+                  key={index}
+                  href={friend.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  variants={fadeIn}
+                  custom={index}
+                  initial="hidden"
+                  animate="visible"
+                  whileHover={{ scale: 1.02, y: -5 }}
+                  transition={{ type: "spring", stiffness: 300, damping: 15 }}
+                  className="block h-full"
+                  style={{ willChange: 'transform' }}
                 >
-                  <div className="p-4 flex items-center h-full">
-                    <div className="w-12 h-12 rounded-full overflow-hidden border-2 dark:border-gray-700 border-white shadow-md flex-shrink-0 relative">
-                      {avatarErrors[friend.name] ? (
-                        <div className="w-full h-full flex items-center justify-center bg-gray-200 dark:bg-gray-700">
-                          <div className="flex flex-col items-center justify-center">
-                            <span className="text-sm font-bold text-gray-500 dark:text-gray-400">
-                              {getInitials(friend.name)}
-                            </span>
-                            <ExclamationCircleIcon className="w-3 h-3 text-amber-500 mt-0.5" />
+                  <div
+                    style={cardStyle}
+                    className={`h-full bg-gradient-to-br ${getFriendColor(friend.name).bg} backdrop-blur-xl ${getFriendColor(friend.name).border} ${getFriendColor(friend.name).shadow}`}
+                  >
+                    <div className="p-5 flex items-center h-full">
+                      <div className="w-16 h-16 md:w-20 md:h-20 rounded-full overflow-hidden border-2 dark:border-gray-700 border-white shadow-md flex-shrink-0 relative">
+                        {avatarErrors[friend.name] ? (
+                          <div className="w-full h-full flex items-center justify-center bg-gray-200 dark:bg-gray-700">
+                            <div className="flex flex-col items-center justify-center">
+                              <span className="text-xl font-bold text-gray-500 dark:text-gray-400">
+                                {getInitials(friend.name)}
+                              </span>
+                              <ExclamationCircleIcon className="w-5 h-5 text-amber-500 mt-1" />
+                            </div>
                           </div>
-                        </div>
-                      ) : (
-                        <img
-                          src={friend.avatar}
-                          alt={friend.name}
-                          className="w-full h-full object-cover transform transition-transform duration-300 hover:scale-110"
-                          style={{ willChange: 'transform' }}
-                          onError={() => handleAvatarError(friend.name)}
-                        />
-                      )}
-                      <div className={`absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full ${getFriendColor(friend.name).text.replace('text-', 'bg-').replace('dark:', '')}`}></div>
+                        ) : (
+                          <img
+                            src={friend.avatar}
+                            alt={friend.name}
+                            className="w-full h-full object-cover transform transition-transform duration-300 hover:scale-110"
+                            style={{ willChange: 'transform' }}
+                            onError={() => handleAvatarError(friend.name)}
+                          />
+                        )}
+                        <div className={`absolute -bottom-0.5 -right-0.5 w-4 h-4 rounded-full ${getFriendColor(friend.name).text.replace('text-', 'bg-').replace('dark:', '')}`}></div>
+                      </div>
+                      <div className="ml-4 flex-1">
+                        <h3 className={`text-lg md:text-xl font-semibold ${getFriendColor(friend.name).text} truncate tracking-tight`}>{friend.name}</h3>
+                        {friend.description && (
+                          <p className="text-sm dark:text-gray-300 text-gray-600 mt-1 line-clamp-2 leading-relaxed">{friend.description}</p>
+                        )}
+                      </div>
+                      <StatusIndicator url={friend.url} avatarUrl={friend.avatar} />
                     </div>
-                    <div className="ml-3 flex-1">
-                      <h3 className={`text-sm font-semibold ${getFriendColor(friend.name).text} truncate tracking-tight`}>{friend.name}</h3>
-                      {friend.description && (
-                        <p className="text-xs dark:text-gray-300 text-gray-600 mt-0.5 line-clamp-1 leading-relaxed">{friend.description}</p>
-                      )}
-                    </div>
-                    <StatusIndicator url={friend.url} avatarUrl={friend.avatar} />
                   </div>
-                </div>
-              </motion.a>
-            ))}
+                </motion.a>
+              ))}
+            </div>
           </div>
-        </div>
 
-        {/* 我的收藏 - 已注释掉 */}
-        <div className="mb-12">
-          {/* <h2 className="text-2xl font-bold dark:text-white text-gray-900 mb-6 tracking-tight">我的收藏</h2> */}
+          {/* 朋友列表 */}
+          <div>
+            <h2 className="text-[22px] font-bold text-[#1d1d1f] dark:text-white tracking-tight mb-6">朋友们</h2>
 
-          {/* <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+              {moreFriends.map((friend, index) => (
+                <motion.a
+                  key={index}
+                  href={friend.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  variants={fadeIn}
+                  custom={index}
+                  initial="hidden"
+                  animate="visible"
+                  whileHover={{ scale: 1.02, y: -5 }}
+                  transition={{ type: "spring", stiffness: 300, damping: 15 }}
+                  className="block h-full"
+                  style={{ willChange: 'transform' }}
+                >
+                  <div
+                    style={cardStyle}
+                    className={`h-full bg-gradient-to-br ${getFriendColor(friend.name).bg} backdrop-blur-xl ${getFriendColor(friend.name).border} ${getFriendColor(friend.name).shadow}`}
+                  >
+                    <div className="p-4 flex items-center h-full">
+                      <div className="w-12 h-12 rounded-full overflow-hidden border-2 dark:border-gray-700 border-white shadow-md flex-shrink-0 relative">
+                        {avatarErrors[friend.name] ? (
+                          <div className="w-full h-full flex items-center justify-center bg-gray-200 dark:bg-gray-700">
+                            <div className="flex flex-col items-center justify-center">
+                              <span className="text-sm font-bold text-gray-500 dark:text-gray-400">
+                                {getInitials(friend.name)}
+                              </span>
+                              <ExclamationCircleIcon className="w-3 h-3 text-amber-500 mt-0.5" />
+                            </div>
+                          </div>
+                        ) : (
+                          <img
+                            src={friend.avatar}
+                            alt={friend.name}
+                            className="w-full h-full object-cover transform transition-transform duration-300 hover:scale-110"
+                            style={{ willChange: 'transform' }}
+                            onError={() => handleAvatarError(friend.name)}
+                          />
+                        )}
+                        <div className={`absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full ${getFriendColor(friend.name).text.replace('text-', 'bg-').replace('dark:', '')}`}></div>
+                      </div>
+                      <div className="ml-3 flex-1">
+                        <h3 className={`text-sm font-semibold ${getFriendColor(friend.name).text} truncate tracking-tight`}>{friend.name}</h3>
+                        {friend.description && (
+                          <p className="text-xs dark:text-gray-300 text-gray-600 mt-0.5 line-clamp-1 leading-relaxed">{friend.description}</p>
+                        )}
+                      </div>
+                      <StatusIndicator url={friend.url} avatarUrl={friend.avatar} />
+                    </div>
+                  </div>
+                </motion.a>
+              ))}
+            </div>
+          </div>
+
+          {/* 我的收藏 - 已注释掉 */}
+          <div className="mb-12">
+            {/* <h2 className="text-2xl font-bold dark:text-white text-gray-900 mb-6 tracking-tight">我的收藏</h2> */}
+
+            {/* <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
             {myLinks.map((link, index) => (
               <motion.a
                 key={index}
@@ -510,105 +510,105 @@ const Friends = () => {
               </motion.a>
             ))}
           </div> */}
+          </div>
+
+          {/* 申请友链说明 */}
+          <div
+            className={`bg-gradient-to-br from-gray-100/30 to-gray-200/30 dark:from-gray-800/30 dark:to-gray-900/30 backdrop-blur-xl rounded-2xl p-6 border border-gray-200/50 dark:border-gray-700/30 shadow-sm`}
+            style={{
+              backdropFilter: 'blur(10px)',
+              WebkitBackdropFilter: 'blur(10px)'
+            }}
+          >
+            <h3 className="text-[22px] font-bold text-[#1d1d1f] dark:text-white tracking-tight mb-6">申请友链须知</h3>
+
+            <ul className="space-y-4 text-base dark:text-gray-300 text-gray-700 leading-relaxed max-w-3xl mx-auto">
+              <li className="flex items-start">
+                <span className="mr-2 text-lg dark:text-blue-400 text-blue-600">•</span>
+                申请友链前请务必确保贵站有我站的友链，若审批通过后移除本站链接，本站也将移除友链，并加入黑名单。
+              </li>
+              <li className="flex items-start">
+                <span className="mr-2 text-lg dark:text-purple-400 text-purple-600">•</span>
+                若站点长时间无法访问，我会删除您的友链，恢复后可再次申请。
+              </li>
+              <li className="flex items-start">
+                <span className="mr-2 text-lg dark:text-teal-400 text-teal-600">•</span>
+                请保证您的网站不存在被治安管制的内容及违法内容，没有过多广告、无恶意软件、脚本，且链文章原创出处。
+              </li>
+              <li className="flex items-start">
+                <span className="mr-2 text-lg dark:text-blue-400 text-blue-600">•</span>
+                请保站点全局启用HTTPS
+              </li>
+              <li className="flex items-start">
+                <span className="mr-2 text-lg dark:text-purple-400 text-purple-600">•</span>
+                您需要有自己的独立域名，暂且不同公开子域名或免费域名类的友链申请（如github.io、vercel.app、eu.org、js.cool、tk、ml、cf等）
+              </li>
+              <li className="flex items-start">
+                <span className="mr-2 text-lg dark:text-teal-400 text-teal-600">•</span>
+                暂时不同意商业及非个人的网站的友链申请
+              </li>
+            </ul>
+          </div>
         </div>
 
-        {/* 申请友链说明 */}
-        <div
-          className={`bg-gradient-to-br from-gray-100/30 to-gray-200/30 dark:from-gray-800/30 dark:to-gray-900/30 backdrop-blur-xl rounded-2xl p-6 border border-gray-200/50 dark:border-gray-700/30 shadow-sm`}
-          style={{
-            backdropFilter: 'blur(10px)',
-            WebkitBackdropFilter: 'blur(10px)'
-          }}
-        >
-          <h3 className="text-[22px] font-bold text-[#1d1d1f] dark:text-white tracking-tight mb-6">申请友链须知</h3>
+        {/* 友链申请与站点信息 - 左右并排布局 */}
+        <div className="mt-12 mb-8">
+          <h2 className="text-[22px] font-bold text-[#1d1d1f] dark:text-white tracking-tight mb-6">友链申请与站点信息</h2>
 
-          <ul className="space-y-4 text-base dark:text-gray-300 text-gray-700 leading-relaxed max-w-3xl mx-auto">
-            <li className="flex items-start">
-              <span className="mr-2 text-lg dark:text-blue-400 text-blue-600">•</span>
-              申请友链前请务必确保贵站有我站的友链，若审批通过后移除本站链接，本站也将移除友链，并加入黑名单。
-            </li>
-            <li className="flex items-start">
-              <span className="mr-2 text-lg dark:text-purple-400 text-purple-600">•</span>
-              若站点长时间无法访问，我会删除您的友链，恢复后可再次申请。
-            </li>
-            <li className="flex items-start">
-              <span className="mr-2 text-lg dark:text-teal-400 text-teal-600">•</span>
-              请保证您的网站不存在被治安管制的内容及违法内容，没有过多广告、无恶意软件、脚本，且链文章原创出处。
-            </li>
-            <li className="flex items-start">
-              <span className="mr-2 text-lg dark:text-blue-400 text-blue-600">•</span>
-              请保站点全局启用HTTPS
-            </li>
-            <li className="flex items-start">
-              <span className="mr-2 text-lg dark:text-purple-400 text-purple-600">•</span>
-              您需要有自己的独立域名，暂且不同公开子域名或免费域名类的友链申请（如github.io、vercel.app、eu.org、js.cool、tk、ml、cf等）
-            </li>
-            <li className="flex items-start">
-              <span className="mr-2 text-lg dark:text-teal-400 text-teal-600">•</span>
-              暂时不同意商业及非个人的网站的友链申请
-            </li>
-          </ul>
-        </div>
-      </div>
-
-      {/* 友链申请与站点信息 - 左右并排布局 */}
-      <div className="mt-12 mb-8">
-        <h2 className="text-[22px] font-bold text-[#1d1d1f] dark:text-white tracking-tight mb-6">友链申请与站点信息</h2>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* 左侧：提交申请 */}
-          <div className="bg-gradient-to-br from-gray-100/30 to-gray-200/30 dark:from-gray-800/30 dark:to-gray-900/30
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* 左侧：提交申请 */}
+            <div className="bg-gradient-to-br from-gray-100/30 to-gray-200/30 dark:from-gray-800/30 dark:to-gray-900/30
                         backdrop-blur-xl rounded-2xl p-6 border border-gray-200/50 dark:border-gray-700/30
                         shadow-sm flex flex-col"
-            style={{ backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)' }}>
-            <h3 className="text-[18px] font-bold text-[#1d1d1f] dark:text-white tracking-tight mb-1">提交申请</h3>
-            <p className="text-[13px] text-[#1d1d1f]/50 dark:text-white/50 mb-6">填写以下信息，通过飞书机器人提交您的友链申请。</p>
+              style={{ backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)' }}>
+              <h3 className="text-[18px] font-bold text-[#1d1d1f] dark:text-white tracking-tight mb-1">提交申请</h3>
+              <p className="text-[13px] text-[#1d1d1f]/50 dark:text-white/50 mb-6">填写以下信息，通过飞书机器人提交您的友链申请。</p>
 
-            <p className="text-[11px] font-semibold text-[#1d1d1f]/40 dark:text-white/40 uppercase tracking-widest mb-3">需要提供</p>
-            <div className="flex flex-wrap gap-2 mb-8">
-              {['昵称', '站点标题', '网站 URL', '头像链接', '一句话描述'].map(item => (
-                <span key={item} className="px-3 py-1 rounded-full bg-[#007AFF]/10 dark:bg-[#007AFF]/15 text-[#007AFF] dark:text-blue-400 text-[13px] font-medium">
-                  {item}
-                </span>
-              ))}
+              <p className="text-[11px] font-semibold text-[#1d1d1f]/40 dark:text-white/40 uppercase tracking-widest mb-3">需要提供</p>
+              <div className="flex flex-wrap gap-2 mb-8">
+                {['昵称', '站点标题', '网站 URL', '头像链接', '一句话描述'].map(item => (
+                  <span key={item} className="px-3 py-1 rounded-full bg-[#007AFF]/10 dark:bg-[#007AFF]/15 text-[#007AFF] dark:text-blue-400 text-[13px] font-medium">
+                    {item}
+                  </span>
+                ))}
+              </div>
+
+              <button
+                onClick={() => setShowFeishuWebhook(true)}
+                className="mt-auto w-full py-2.5 bg-[#007AFF] dark:bg-[#0063CC] text-white rounded-full hover:bg-[#0063CC] dark:hover:bg-[#0052AA] transition-colors font-semibold text-sm"
+              >
+                提交友链申请
+              </button>
             </div>
 
-            <button
-              onClick={() => setShowFeishuWebhook(true)}
-              className="mt-auto w-full py-2.5 bg-[#007AFF] dark:bg-[#0063CC] text-white rounded-full hover:bg-[#0063CC] dark:hover:bg-[#0052AA] transition-colors font-semibold text-sm"
-            >
-              提交友链申请
-            </button>
-          </div>
-
-          {/* 右侧：站点信息 */}
-          <div className="bg-gradient-to-br from-gray-100/30 to-gray-200/30 dark:from-gray-800/30 dark:to-gray-900/30
+            {/* 右侧：站点信息 */}
+            <div className="bg-gradient-to-br from-gray-100/30 to-gray-200/30 dark:from-gray-800/30 dark:to-gray-900/30
                         backdrop-blur-xl rounded-2xl p-6 border border-gray-200/50 dark:border-gray-700/30
                         shadow-sm"
-            style={{ backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)' }}>
-            <h3 className="text-[18px] font-bold text-[#1d1d1f] dark:text-white tracking-tight mb-1">站点信息</h3>
-            <p className="text-[13px] text-[#1d1d1f]/50 dark:text-white/50 mb-6">申请时请使用以下信息添加本站友链。</p>
+              style={{ backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)' }}>
+              <h3 className="text-[18px] font-bold text-[#1d1d1f] dark:text-white tracking-tight mb-1">站点信息</h3>
+              <p className="text-[13px] text-[#1d1d1f]/50 dark:text-white/50 mb-6">申请时请使用以下信息添加本站友链。</p>
 
-            <div className="space-y-0">
-              {[
-                { label: '站点标题', value: 'damesck的小屋' },
-                { label: '站点描述', value: '致不完美的明天_' },
-                { label: 'URL', value: 'damesck.net' },
-                { label: '头像', value: null },
-              ].map((item, idx, arr) => (
-                <div key={item.label} className={`flex items-center justify-between py-3.5 ${idx < arr.length - 1 ? 'border-b border-black/5 dark:border-white/5' : ''}`}>
-                  <span className="text-[13px] text-[#1d1d1f]/40 dark:text-white/40">{item.label}</span>
-                  {item.label === '头像' ? (
-                    <a href="https://api.damesck.net/avatar.png" className="text-[14px] font-medium text-[#007AFF] dark:text-blue-400 hover:underline transition-colors" target="_blank" rel="noopener noreferrer">点击下载</a>
-                  ) : (
-                    <span className="text-[14px] font-medium text-[#1d1d1f] dark:text-white">{item.value}</span>
-                  )}
-                </div>
-              ))}
+              <div className="space-y-0">
+                {[
+                  { label: '站点标题', value: 'damesck的小屋' },
+                  { label: '站点描述', value: '致不完美的明天_' },
+                  { label: 'URL', value: 'damesck.net' },
+                  { label: '头像', value: null },
+                ].map((item, idx, arr) => (
+                  <div key={item.label} className={`flex items-center justify-between py-3.5 ${idx < arr.length - 1 ? 'border-b border-black/5 dark:border-white/5' : ''}`}>
+                    <span className="text-[13px] text-[#1d1d1f]/40 dark:text-white/40">{item.label}</span>
+                    {item.label === '头像' ? (
+                      <a href="https://api.damesck.net/avatar.png" className="text-[14px] font-medium text-[#007AFF] dark:text-blue-400 hover:underline transition-colors" target="_blank" rel="noopener noreferrer">点击下载</a>
+                    ) : (
+                      <span className="text-[14px] font-medium text-[#1d1d1f] dark:text-white">{item.value}</span>
+                    )}
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>
-      </div>
       </motion.div>
 
       {/* 飞书机器人弹窗 */}
