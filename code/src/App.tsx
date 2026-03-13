@@ -83,9 +83,14 @@ const PageContent = memo(() => (
   // 增加顶部内边距，防止内容被灵动岛遮挡 (pt-20 ~ pt-24)
   <main className="flex-grow px-4 md:px-6 lg:px-8 pt-20 md:pt-24 pb-8">
     <Suspense fallback={
-      <div className="flex items-center justify-center h-full">
-        <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500 dark:border-blue-400"></div>
-        <span className="ml-2 text-blue-500 dark:text-blue-400">加载中...</span>
+      <div className="flex items-center justify-center h-full min-h-[40vh]">
+        <div className="flex flex-col items-center gap-4 px-8 py-6 bg-white/40 dark:bg-[#1c1c1e]/60 backdrop-blur-xl border border-white/30 dark:border-white/10 rounded-[24px] shadow-lg shadow-black/5">
+          <svg className="animate-spin w-8 h-8" viewBox="0 0 32 32" fill="none">
+            <circle cx="16" cy="16" r="12" stroke="currentColor" strokeWidth="2.5" className="text-black/10 dark:text-white/10" />
+            <path d="M16 4 A12 12 0 0 1 28 16" stroke="#007AFF" strokeWidth="2.5" strokeLinecap="round" />
+          </svg>
+          <span className="text-sm font-medium text-[#6c6c6e] dark:text-gray-400 tracking-wide">Loading</span>
+        </div>
       </div>
     }>
       <Routes>
