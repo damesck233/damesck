@@ -207,27 +207,26 @@ const FeishuWebhook: React.FC<FeishuWebhookProps> = ({ isOpen, onClose, type = '
           className="bg-white/95 dark:bg-[#1c1c1e]/95 backdrop-blur-2xl rounded-[20px] overflow-hidden max-w-md w-full mx-2 sm:mx-4 shadow-2xl border border-white/30 dark:border-white/10 max-h-[90vh] sm:max-h-[85vh] flex flex-col my-auto"
           onClick={(e) => e.stopPropagation()}
         >
+          {/* Title bar */}
+          <div className="flex items-center gap-2 px-4 h-9 bg-black/[0.03] dark:bg-white/[0.03] border-b border-black/[0.06] dark:border-white/[0.06] flex-shrink-0">
+            <button onClick={handleClose} disabled={isSubmitting} className="w-3.5 h-3.5 rounded-full bg-[#ff5f56] border-[0.5px] border-[#e0443e] hover:brightness-90 transition-all flex items-center justify-center group disabled:opacity-50" aria-label="Close">
+              <XMarkIcon className="w-2 h-2 text-black/50 opacity-0 group-hover:opacity-100" />
+            </button>
+            <button className="w-3.5 h-3.5 rounded-full bg-[#ffbd2e] border-[0.5px] border-[#dea123] hover:brightness-90 transition-all flex items-center justify-center group cursor-default" aria-label="Minimize">
+              <MinusIcon className="w-2 h-2 text-black/50 opacity-0 group-hover:opacity-100" />
+            </button>
+            <button className="w-3.5 h-3.5 rounded-full bg-[#27c93f] border-[0.5px] border-[#1aab29] hover:brightness-90 transition-all flex items-center justify-center group cursor-default" aria-label="Maximize">
+              <ArrowTopRightOnSquareIcon className="w-2 h-2 text-black/50 opacity-0 group-hover:opacity-100" />
+            </button>
+          </div>
           {/* 头部 - 固定不滚动 */}
-          <div className="flex items-center justify-between p-4 sm:p-6 pb-2 sm:pb-4 flex-shrink-0">
-            <div className="flex items-center gap-2">
-              <button onClick={handleClose} disabled={isSubmitting} className="w-3.5 h-3.5 rounded-full bg-[#ff5f56] border-[0.5px] border-[#e0443e] hover:brightness-90 transition-all flex items-center justify-center group disabled:opacity-50" aria-label="Close">
-                <XMarkIcon className="w-2 h-2 text-black/50 opacity-0 group-hover:opacity-100" />
-              </button>
-              <button className="w-3.5 h-3.5 rounded-full bg-[#ffbd2e] border-[0.5px] border-[#dea123] hover:brightness-90 transition-all flex items-center justify-center group cursor-default" aria-label="Minimize">
-                <MinusIcon className="w-2 h-2 text-black/50 opacity-0 group-hover:opacity-100" />
-              </button>
-              <button className="w-3.5 h-3.5 rounded-full bg-[#27c93f] border-[0.5px] border-[#1aab29] hover:brightness-90 transition-all flex items-center justify-center group cursor-default" aria-label="Maximize">
-                <ArrowTopRightOnSquareIcon className="w-2 h-2 text-black/50 opacity-0 group-hover:opacity-100" />
-              </button>
+          <div className="flex items-center p-4 sm:p-6 pb-2 sm:pb-4 flex-shrink-0">
+            <div className="p-2 rounded-full bg-[#00D6B9]/10 dark:bg-[#00D6B9]/20 mr-3">
+              <svg className="w-6 h-6 text-[#00D6B9]" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M11.861 2c-4.426 0-8.05 3.241-8.715 7.439-.015.107-.03.214-.041.321a.493.493 0 0 0 .339.497c.903.266 2.666.885 4.254 2.062H3.649c-.901 0-1.601.781-1.515 1.679.155 1.627.928 5.219 4.334 9.158a.513.513 0 0 0 .765.042c.267-.267.553-.535.853-.802.262-.234.294-.626.112-.922-.535-.867-.888-1.772-1.048-2.692-.085-.491.299-.95.792-.95h4.544c.357 0 .681-.215.823-.545a10.665 10.665 0 0 1 2.913-3.835c.233-.205.525-.318.827-.318h1.780a.84.84 0 0 0 .839-.839v-.322c-.002-4.687-3.803-8.496-8.493-8.496h-.314zm2.376 1.954c2.311 0 4.184 1.873 4.184 4.183 0 .229-.186.415-.415.415H10.05a.415.415 0 0 1-.415-.415v-3.768c0-.229.186-.415.416-.415h4.185z" />
+              </svg>
             </div>
-            <div className="flex items-center">
-              <div className="p-2 rounded-full bg-[#00D6B9]/10 dark:bg-[#00D6B9]/20 mr-3">
-                <svg className="w-6 h-6 text-[#00D6B9]" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M11.861 2c-4.426 0-8.05 3.241-8.715 7.439-.015.107-.03.214-.041.321a.493.493 0 0 0 .339.497c.903.266 2.666.885 4.254 2.062H3.649c-.901 0-1.601.781-1.515 1.679.155 1.627.928 5.219 4.334 9.158a.513.513 0 0 0 .765.042c.267-.267.553-.535.853-.802.262-.234.294-.626.112-.922-.535-.867-.888-1.772-1.048-2.692-.085-.491.299-.95.792-.95h4.544c.357 0 .681-.215.823-.545a10.665 10.665 0 0 1 2.913-3.835c.233-.205.525-.318.827-.318h1.780a.84.84 0 0 0 .839-.839v-.322c-.002-4.687-3.803-8.496-8.493-8.496h-.314zm2.376 1.954c2.311 0 4.184 1.873 4.184 4.183 0 .229-.186.415-.415.415H10.05a.415.415 0 0 1-.415-.415v-3.768c0-.229.186-.415.416-.415h4.185z" />
-                </svg>
-              </div>
-              <h3 className="text-xl font-bold text-[#2c2c2e] dark:text-white">飞书推送</h3>
-            </div>
+            <h3 className="text-xl font-bold text-[#2c2c2e] dark:text-white">飞书推送</h3>
           </div>
 
           {/* 内容区域 - 可滚动 */}
