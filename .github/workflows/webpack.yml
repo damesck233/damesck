@@ -34,4 +34,5 @@ jobs:
           mv dist_new dist
           rm -rf dist_old
           cd ..
+          docker compose down
           docker compose up -d
