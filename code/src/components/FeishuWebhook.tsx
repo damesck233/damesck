@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Turnstile } from '@marsidev/react-turnstile';
+import { XMarkIcon, MinusIcon, ArrowTopRightOnSquareIcon } from '@heroicons/react/24/outline';
 
 interface FeishuWebhookProps {
   isOpen: boolean;
@@ -207,7 +208,18 @@ const FeishuWebhook: React.FC<FeishuWebhookProps> = ({ isOpen, onClose, type = '
           onClick={(e) => e.stopPropagation()}
         >
           {/* 头部 - 固定不滚动 */}
-          <div className="flex items-center justify-between p-4 sm:p-6 pb-2 sm:pb-4 flex-shrink-0">
+          <div className="p-4 sm:p-6 pb-2 sm:pb-4 flex-shrink-0">
+            <div className="flex items-center gap-2.5 mb-3">
+              <button onClick={handleClose} disabled={isSubmitting} className="w-4 h-4 rounded-full bg-[#ff5f56] border-[0.5px] border-[#e0443e] hover:brightness-90 transition-all flex items-center justify-center group disabled:opacity-50" aria-label="Close">
+                <XMarkIcon className="w-2.5 h-2.5 text-black/50 opacity-0 group-hover:opacity-100" />
+              </button>
+              <button className="w-4 h-4 rounded-full bg-[#ffbd2e] border-[0.5px] border-[#dea123] hover:brightness-90 transition-all flex items-center justify-center group cursor-default" aria-label="Minimize">
+                <MinusIcon className="w-2.5 h-2.5 text-black/50 opacity-0 group-hover:opacity-100" />
+              </button>
+              <button className="w-4 h-4 rounded-full bg-[#27c93f] border-[0.5px] border-[#1aab29] hover:brightness-90 transition-all flex items-center justify-center group cursor-default" aria-label="Maximize">
+                <ArrowTopRightOnSquareIcon className="w-2.5 h-2.5 text-black/50 opacity-0 group-hover:opacity-100" />
+              </button>
+            </div>
             <div className="flex items-center">
               <div className="p-2 rounded-full bg-[#00D6B9]/10 dark:bg-[#00D6B9]/20 mr-3">
                 <svg className="w-6 h-6 text-[#00D6B9]" viewBox="0 0 24 24" fill="currentColor">
@@ -216,15 +228,6 @@ const FeishuWebhook: React.FC<FeishuWebhookProps> = ({ isOpen, onClose, type = '
               </div>
               <h3 className="text-xl font-bold text-[#2c2c2e] dark:text-white">飞书推送</h3>
             </div>
-            <button
-              onClick={handleClose}
-              disabled={isSubmitting}
-              className="w-8 h-8 rounded-full bg-gray-200/80 dark:bg-gray-600/80 flex items-center justify-center transition-all hover:bg-gray-300 dark:hover:bg-gray-500 disabled:opacity-50"
-            >
-              <svg className="w-4 h-4 text-gray-500 dark:text-gray-300" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </button>
           </div>
 
           {/* 内容区域 - 可滚动 */}
