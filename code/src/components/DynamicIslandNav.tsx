@@ -7,7 +7,8 @@ import {
     MapPinIcon,
     PhoneIcon,
     EllipsisHorizontalIcon,
-    UserGroupIcon
+    UserGroupIcon,
+    InformationCircleIcon
 } from '@heroicons/react/24/outline';
 import ThemeToggle from './ThemeToggle';
 
@@ -22,6 +23,7 @@ const NAV_ITEMS = [
 // Define secondary routes that should act as temporary tabs when visited
 const SECONDARY_ITEMS = [
     { id: 'friends', path: '/friends', label: '朋友们', icon: UserGroupIcon },
+    { id: 'about', path: '/about', label: '关于', icon: InformationCircleIcon },
 ];
 
 // Spring animation configuration for that "bouncy" Apple feel
@@ -232,6 +234,17 @@ export default function DynamicIslandNav() {
                             >
                                 <UserGroupIcon className="w-5 h-5" />
                                 <span className="font-medium">朋友们</span>
+                            </NavLink>
+
+                            <NavLink
+                                to="/about"
+                                className={({ isActive }) => `flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all ${isActive
+                                    ? 'bg-blue-500/10 text-blue-600 dark:text-blue-400'
+                                    : 'text-gray-700 dark:text-gray-300 hover:bg-black/5 dark:hover:bg-white/10'
+                                    }`}
+                            >
+                                <InformationCircleIcon className="w-5 h-5" />
+                                <span className="font-medium">关于本站</span>
                             </NavLink>
 
                             <a

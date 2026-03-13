@@ -24,6 +24,7 @@ const Blog = lazy(() => import('./pages/Blog'))
 const Contact = lazy(() => import('./pages/Contact'))
 const Friends = lazy(() => import('./pages/Friends'))
 const Travels = lazy(() => import('./pages/Travels'))
+const About = lazy(() => import('./pages/About'))
 import WebWalker from './components/WebWalker'
 import DynamicIslandNav from './components/DynamicIslandNav'
 import RestrictedAccess from './components/RestrictedAccess'
@@ -93,6 +94,7 @@ const PageContent = memo(() => (
         <Route path="/contact" element={<Contact />} />
         <Route path="/friends" element={<Friends />} />
         <Route path="/travels" element={<RestrictedAccess />} />
+          <Route path="/about" element={<About />} />
       </Routes>
     </Suspense>
   </main>
@@ -132,6 +134,7 @@ function App() {
         import('./pages/Travels')
       ];
 
+      preloadPromises.push(import('./pages/About'));
       // 使用Promise.all并行加载
       Promise.all(preloadPromises).catch(err => {
         console.warn('组件预加载错误:', err);
