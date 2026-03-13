@@ -32,7 +32,7 @@ const contactData: ContactItem[] = [
     description: '扫一扫添加微信好友',
     color: 'bg-[#07C160]/10 dark:bg-[#07C160]/20',
     qrCode: true,
-    qrCodeImage: 'https://data.klpbbs.com/file/tc/img/2025/04/25/680b7051c3431.jpg',
+    qrCodeImage: 'https://img.klpz.net/file/tc/img/2025/04/25/680b7051c3431.jpg',
   },
   {
     id: 'qq',
@@ -46,7 +46,7 @@ const contactData: ContactItem[] = [
     description: '通过QQ添加我',
     color: 'bg-[#12B7F5]/10 dark:bg-[#12B7F5]/20',
     qrCode: true,
-    qrCodeImage: 'https://data.klpbbs.com/file/tc/img/2025/04/25/680b70bc687ab.jpg',
+    qrCodeImage: 'https://img.klpz.net/file/tc/img/2025/04/25/680b70bc687ab.jpg',
   },
   {
     id: 'email',
@@ -99,7 +99,7 @@ const contactData: ContactItem[] = [
     description: '通过飞书联系我',
     color: 'bg-[#00D6B9]/10 dark:bg-[#00D6B9]/20',
     qrCode: true,
-    qrCodeImage: 'https://data.klpbbs.com/file/tc/img/2025/04/25/680b70e38674c.jpg',
+    qrCodeImage: 'https://img.klpz.net/file/tc/img/2025/04/25/680b70e38674c.jpg',
   },
   {
     id: 'feishu-webhook',
