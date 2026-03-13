@@ -93,7 +93,7 @@ const PageContent = memo(() => (
         <Route path="/blog" element={<Blog />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/friends" element={<Friends />} />
-        <Route path="/travels" element={<RestrictedAccess />} />
+        <Route path="/travels" element={<Travels />} />
           <Route path="/about" element={<About />} />
       </Routes>
     </Suspense>
