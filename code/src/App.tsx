@@ -42,19 +42,31 @@ const BackgroundImage = memo(() => {
     img.onload = () => setLoaded(true);
   }, []);
 
+  const bgStyle: React.CSSProperties = {
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+    backgroundRepeat: 'no-repeat',
+  };
+
   return (
-    <div
-      className="fixed inset-0 w-full h-full z-[-1] animate-element bg-image"
-      style={{
-        backgroundImage: `url(${loaded ? bgImage : bgPlaceholder})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat',
-        filter: loaded ? 'none' : 'blur(8px)',
-        transform: loaded ? 'none' : 'scale(1.05)',
-        transition: 'filter 0.6s ease, transform 0.6s ease',
-      }}
-    >
+    <div className="fixed inset-0 w-full h-full z-[-1]">
+      {/* 底层：高清图，始终存在 */}
+      <div
+        className="absolute inset-0"
+        style={{ ...bgStyle, backgroundImage: `url(${bgImage})` }}
+      />
+      {/* 顶层：模糊占位图，高清图加载完后淡出 */}
+      <div
+        className="absolute inset-0"
+        style={{
+          ...bgStyle,
+          backgroundImage: `url(${bgPlaceholder})`,
+          filter: 'blur(8px)',
+          transform: 'scale(1.05)',
+          opacity: loaded ? 0 : 1,
+          transition: 'opacity 0.6s ease',
+        }}
+      />
       {/* 亮色模式使用粉色遮罩，暗色模式使用深蓝色遮罩 */}
       <div className="absolute inset-0 bg-white/20 dark:bg-gray-900/55"></div>
     </div>
