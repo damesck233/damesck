@@ -28,6 +28,10 @@ jobs:
           git fetch --all
           git reset --hard origin/main
           pnpm install --frozen-lockfile
-          NODE_OPTIONS=--max-old-space-size=2048 pnpm build
+          pnpm vite build --outDir dist_new
+          rm -rf dist_old
+          [ -d dist ] && mv dist dist_old
+          mv dist_new dist
+          rm -rf dist_old
           cd ..
-          docker compose up -d --build
+          docker compose up -d
