@@ -653,9 +653,9 @@ const FlightTicketCard: React.FC<TicketProps> = React.memo(({ ticket }) => {
       }}
       className="relative overflow-hidden rounded-xl backdrop-blur-xl flex mb-4 will-change-transform"
       style={{
-        background: 'linear-gradient(135deg, #f0f9ff 0%, #e1f5fe 100%)',
-        border: '1px solid rgba(0,0,0,0.1)',
-        boxShadow: '0 4px 16px rgba(0,0,0,0.1), 0 2px 4px rgba(0,0,0,0.05)',
+        background: 'var(--glass-bg)',
+        border: '1px solid var(--card-border)',
+        boxShadow: '0 4px 16px var(--glass-shadow), 0 2px 4px rgba(0,0,0,0.04)',
       }}
     >
       {/* 左侧彩色边条 */}
@@ -665,11 +665,11 @@ const FlightTicketCard: React.FC<TicketProps> = React.memo(({ ticket }) => {
         {/* 顶部航空信息 */}
         <div className="flex justify-between items-center mb-4">
           <div className="flex items-center">
-            <div className="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold mr-2">
+            <div className="w-8 h-8 rounded-full bg-[#007AFF] flex items-center justify-center text-white font-bold mr-2">
               {ticket.number.substring(0, 2)}
             </div>
             <div>
-              <div className="text-sm font-semibold text-gray-700">
+              <div className="text-sm font-semibold text-[#1d1d1f] dark:text-white">
                 {hasAirline ? ticket.airline :
                   (ticket.number.substring(0, 2) === 'CA' ? '中国国际航空' :
                     ticket.number.substring(0, 2) === 'MU' ? '东方航空' :
@@ -677,12 +677,12 @@ const FlightTicketCard: React.FC<TicketProps> = React.memo(({ ticket }) => {
                         ticket.number.substring(0, 2) === 'JL' ? '日本航空' :
                           ticket.number.substring(0, 2) === 'BK' ? '天津航空' : '航空公司')}
               </div>
-              <div className="text-xs text-gray-500">
+              <div className="text-xs text-[#6c6c6e] dark:text-gray-400">
                 航班号：{ticket.number}
               </div>
             </div>
           </div>
-          <div className="text-xs px-2 py-1 bg-blue-50 border border-blue-200 rounded text-blue-600">
+          <div className="text-xs px-2 py-1 bg-[#007AFF]/10 border border-[#007AFF]/20 rounded-full text-[#007AFF] dark:text-blue-400">
             电子客票
           </div>
         </div>
@@ -690,43 +690,43 @@ const FlightTicketCard: React.FC<TicketProps> = React.memo(({ ticket }) => {
         {/* 主要航班信息 */}
         <div className="flex items-center justify-between mb-6">
           <div className="text-center">
-            <div className="text-xl font-bold text-gray-800">{ticket.from}</div>
+            <div className="text-xl font-bold text-[#1d1d1f] dark:text-white">{ticket.from}</div>
             {hasValidTimes && ticket.depart_time && (
-              <div className="text-xs text-gray-500 mt-1">{ticket.depart_time}</div>
+              <div className="text-xs text-[#6c6c6e] dark:text-gray-400 mt-1">{ticket.depart_time}</div>
             )}
           </div>
 
           <div className="flex-1 px-2 flex flex-col items-center mx-2">
             <div className="w-full flex items-center">
-              <div className="h-px bg-gray-300 flex-grow"></div>
+              <div className="h-px bg-gray-300 dark:bg-white/10 flex-grow"></div>
               <div className="flex flex-col items-center mx-2">
-                <svg className="w-5 h-5 text-blue-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <svg className="w-5 h-5 text-[#007AFF]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <path d="M22.9878 9.33785L17.4878 13.3378L21.9878 19.8378" strokeLinecap="round" strokeLinejoin="round" />
                   <path d="M21 13.5H7" strokeLinecap="round" />
                   <path d="M7 3.33785L2 6.83785L7 13.8378" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
-                <div className="text-xs text-gray-500 mt-1">
+                <div className="text-xs text-[#6c6c6e] dark:text-gray-400 mt-1">
                   {hasDuration ? ticket.flight_duration : ""}
                   {ticket.trip_type && <span className="ml-1">({ticket.trip_type})</span>}
                 </div>
               </div>
-              <div className="h-px bg-gray-300 flex-grow"></div>
+              <div className="h-px bg-gray-300 dark:bg-white/10 flex-grow"></div>
             </div>
           </div>
 
           <div className="text-center">
-            <div className="text-xl font-bold text-gray-800">{ticket.to}</div>
+            <div className="text-xl font-bold text-[#1d1d1f] dark:text-white">{ticket.to}</div>
             {hasValidTimes && ticket.arrive_time && (
-              <div className="text-xs text-gray-500 mt-1">{ticket.arrive_time}</div>
+              <div className="text-xs text-[#6c6c6e] dark:text-gray-400 mt-1">{ticket.arrive_time}</div>
             )}
           </div>
         </div>
 
         {/* 底部信息 */}
-        <div className="grid grid-cols-3 gap-2 border-t border-dashed border-gray-300 pt-3">
+        <div className="grid grid-cols-3 gap-2 border-t border-dashed border-gray-200 dark:border-white/10 pt-3">
           <div>
-            <div className="text-xs text-gray-500">日期</div>
-            <div className="text-sm font-medium text-gray-700 flex items-center">
+            <div className="text-xs text-[#6c6c6e] dark:text-gray-400">日期</div>
+            <div className="text-sm font-medium text-[#1d1d1f] dark:text-white flex items-center">
               <CalendarIcon className="w-3 h-3 mr-1" />
               {ticket.date}
             </div>
@@ -734,29 +734,29 @@ const FlightTicketCard: React.FC<TicketProps> = React.memo(({ ticket }) => {
 
           {ticket.seat_type && (
             <div>
-              <div className="text-xs text-gray-500">舱位</div>
-              <div className="text-sm font-medium text-gray-700">{ticket.seat_type}</div>
+              <div className="text-xs text-[#6c6c6e] dark:text-gray-400">舱位</div>
+              <div className="text-sm font-medium text-[#1d1d1f] dark:text-white">{ticket.seat_type}</div>
             </div>
           )}
 
           {hasGate && (
             <div>
-              <div className="text-xs text-gray-500">登机口</div>
-              <div className="text-sm font-medium text-gray-700">{ticket.gate}</div>
+              <div className="text-xs text-[#6c6c6e] dark:text-gray-400">登机口</div>
+              <div className="text-sm font-medium text-[#1d1d1f] dark:text-white">{ticket.gate}</div>
             </div>
           )}
 
           {hasPrice && (
             <div>
-              <div className="text-xs text-gray-500">票价</div>
+              <div className="text-xs text-[#6c6c6e] dark:text-gray-400">票价</div>
               <div className="text-sm font-medium text-orange-500">{ticket.price}</div>
             </div>
           )}
         </div>
 
         {/* 底部装饰 - 票据两侧的锯齿 */}
-        <div className="absolute -left-2 top-1/2 w-4 h-4 bg-gray-100 rounded-full border border-gray-300 transform -translate-y-1/2"></div>
-        <div className="absolute -right-2 top-1/2 w-4 h-4 bg-gray-100 rounded-full border border-gray-300 transform -translate-y-1/2"></div>
+        <div className="absolute -left-2 top-1/2 w-4 h-4 bg-white/60 dark:bg-[#1c1c1e]/60 rounded-full border border-white/30 dark:border-white/10 transform -translate-y-1/2"></div>
+        <div className="absolute -right-2 top-1/2 w-4 h-4 bg-white/60 dark:bg-[#1c1c1e]/60 rounded-full border border-white/30 dark:border-white/10 transform -translate-y-1/2"></div>
       </div>
     </motion.div>
   );
@@ -901,7 +901,7 @@ const DestinationModal: React.FC<DestinationModalProps> = React.memo(({ destinat
             duration: 0.2,
             ease: [0.25, 0.1, 0.25, 1]
           }}
-          className="relative w-full max-w-2xl max-h-[80vh] overflow-auto rounded-2xl bg-white dark:bg-gray-900 shadow-xl will-change-transform"
+          className="relative w-full max-w-2xl max-h-[80vh] overflow-auto rounded-[28px] bg-white/90 dark:bg-[#1c1c1e]/90 backdrop-blur-2xl border border-white/30 dark:border-white/10 shadow-2xl will-change-transform"
           onClick={(e) => e.stopPropagation()}
         >
           {/* 关闭按钮 */}
@@ -931,19 +931,19 @@ const DestinationModal: React.FC<DestinationModalProps> = React.memo(({ destinat
           <div className="p-5">
             {/* 日期和描述 */}
             <div className="mb-5">
-              <div className="text-sm text-gray-500 dark:text-gray-400 mb-2 flex items-center">
-                <CalendarIcon className="w-4 h-4 mr-1 text-blue-500" />
+              <div className="text-sm text-[#6c6c6e] dark:text-gray-400 mb-2 flex items-center">
+                <CalendarIcon className="w-4 h-4 mr-1 text-[#007AFF]" />
                 游玩日期: {new Date(destination.date).toLocaleDateString('zh-CN')}
               </div>
               <p
-                className="text-gray-700 dark:text-gray-300"
+                className="text-[#1d1d1f] dark:text-gray-200"
                 dangerouslySetInnerHTML={{ __html: destination.description }}
               ></p>
             </div>
 
             {/* 照片区域 */}
             <div>
-              <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-3 flex items-center">
+              <h3 className="text-lg font-semibold text-[#1d1d1f] dark:text-white mb-3 flex items-center">
                 <svg className="w-5 h-5 mr-2 text-blue-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
                   <circle cx="8.5" cy="8.5" r="1.5" />
@@ -1202,27 +1202,14 @@ const Travels: React.FC = () => {
     );
   };
 
-  const SectionTitle = ({ icon, title, color = "blue" }: { icon: React.ReactNode, title: string, color?: string }) => {
-    const getGradientColor = () => {
-      switch (color) {
-        case 'green': return 'from-green-500 to-emerald-700';
-        case 'orange': return 'from-orange-500 to-amber-700';
-        case 'purple': return 'from-purple-500 to-indigo-700';
-        case 'pink': return 'from-pink-500 to-rose-700';
-        case 'red': return 'from-red-500 to-rose-700';
-        default: return 'from-blue-500 to-indigo-700';
-      }
-    };
-
-    return (
-      <div className="flex items-center mb-5">
-        <div className={`flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-xl mr-3 bg-gradient-to-br ${getGradientColor()} shadow-lg`}>
-          <div className="text-white">{icon}</div>
-        </div>
-        <h2 className="text-2xl font-bold text-gray-800 dark:text-white">{title}</h2>
+  const SectionTitle = ({ icon, title }: { icon: React.ReactNode, title: string }) => (
+    <div className="flex items-center gap-3 mb-6">
+      <div className="w-10 h-10 rounded-xl bg-white/50 dark:bg-white/10 backdrop-blur-md flex items-center justify-center shadow-sm border border-white/20 dark:border-white/5">
+        {icon}
       </div>
-    );
-  };
+      <h2 className="text-[22px] font-bold text-[#1d1d1f] dark:text-white tracking-tight">{title}</h2>
+    </div>
+  );
 
   return (
     <div className="max-w-5xl mx-auto">
@@ -1233,8 +1220,8 @@ const Travels: React.FC = () => {
         transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
         className="mb-8"
       >
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">我的旅行足迹</h1>
-        <p className="mt-2 text-gray-600 dark:text-gray-300">记录我去过的地方和难忘的旅行经历</p>
+        <h1 className="text-4xl md:text-5xl font-bold text-[#1d1d1f] dark:text-white tracking-tight">我的旅行足迹</h1>
+        <p className="mt-2 text-[#6c6c6e] dark:text-gray-400">记录我去过的地方和难忘的旅行经历</p>
       </motion.div>
 
       {/* 地图区域 */}
@@ -1245,9 +1232,8 @@ const Travels: React.FC = () => {
         className="mb-10"
       >
         <SectionTitle
-          icon={<GlobeEuropeAfricaIcon className="w-6 h-6" />}
+          icon={<GlobeEuropeAfricaIcon className="w-5 h-5 text-[#007AFF]" />}
           title="旅行地图"
-          color="blue"
         />
         <MapComponent />
       </motion.section>
@@ -1259,9 +1245,8 @@ const Travels: React.FC = () => {
         transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1], delay: 0.2 }}
       >
         <SectionTitle
-          icon={<MapPinIcon className="w-6 h-6" />}
+          icon={<MapPinIcon className="w-5 h-5 text-orange-500" />}
           title="旅行目的地"
-          color="orange"
         />
 
         <div className="mb-6 flex items-center text-sm text-gray-500 dark:text-gray-400">
@@ -1281,13 +1266,13 @@ const Travels: React.FC = () => {
           </>
         )}
 
-        <div className="grid grid-cols-1 gap-8">
+        <div className="grid grid-cols-1 gap-6">
           {travelData.map((destination) => (
             <motion.div
               key={destination.id}
-              whileHover={{ y: -5 }}
-              transition={{ type: "spring", stiffness: 300, damping: 15 }}
-              className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-lg rounded-xl overflow-hidden shadow-lg border border-white/20 dark:border-gray-700/30"
+              whileHover={{ y: -4, scale: 1.005 }}
+              transition={{ type: "spring", stiffness: 300, damping: 20 }}
+              className="bg-white/40 dark:bg-[#1c1c1e]/60 backdrop-blur-xl rounded-[24px] overflow-hidden border border-white/30 dark:border-white/10 shadow-lg shadow-black/5"
               onMouseEnter={() => preloadDestinationImages(destination.id)}
               style={{ willChange: 'transform' }}
             >
@@ -1319,8 +1304,8 @@ const Travels: React.FC = () => {
                 {/* 票据展示区 */}
                 <div className="w-full md:w-2/3 p-4 md:p-6">
                   <div className="flex items-center mb-4">
-                    <TicketIcon className="w-5 h-5 text-blue-500 mr-2" />
-                    <h4 className="text-lg font-semibold text-gray-800 dark:text-white">旅行票据</h4>
+                    <TicketIcon className="w-5 h-5 text-[#007AFF] mr-2" />
+                    <h4 className="text-lg font-semibold text-[#1d1d1f] dark:text-white">旅行票据</h4>
                   </div>
 
                   {/* 直接展示票据 */}
@@ -1331,7 +1316,7 @@ const Travels: React.FC = () => {
                   {/* 查看详情按钮 */}
                   <button
                     onClick={() => handleSelectDestination(destination)}
-                    className="mt-2 flex items-center text-blue-500 dark:text-blue-400 text-sm font-medium hover:text-blue-600 dark:hover:text-blue-300 transition-colors"
+                    className="mt-2 flex items-center text-[#007AFF] text-sm font-medium hover:opacity-70 transition-opacity"
                   >
                     查看更多详情
                     <ChevronRightIcon className="w-4 h-4 ml-1" />
