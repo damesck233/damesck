@@ -222,9 +222,7 @@ const FeishuWebhook: React.FC<FeishuWebhookProps> = ({ isOpen, onClose, type = '
           {/* 头部 - 固定不滚动 */}
           <div className="flex items-center p-4 sm:p-6 pb-2 sm:pb-4 flex-shrink-0">
             <div className="p-2 rounded-full bg-[#00D6B9]/10 dark:bg-[#00D6B9]/20 mr-3">
-              <svg className="w-6 h-6 text-[#00D6B9]" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M11.861 2c-4.426 0-8.05 3.241-8.715 7.439-.015.107-.03.214-.041.321a.493.493 0 0 0 .339.497c.903.266 2.666.885 4.254 2.062H3.649c-.901 0-1.601.781-1.515 1.679.155 1.627.928 5.219 4.334 9.158a.513.513 0 0 0 .765.042c.267-.267.553-.535.853-.802.262-.234.294-.626.112-.922-.535-.867-.888-1.772-1.048-2.692-.085-.491.299-.95.792-.95h4.544c.357 0 .681-.215.823-.545a10.665 10.665 0 0 1 2.913-3.835c.233-.205.525-.318.827-.318h1.780a.84.84 0 0 0 .839-.839v-.322c-.002-4.687-3.803-8.496-8.493-8.496h-.314zm2.376 1.954c2.311 0 4.184 1.873 4.184 4.183 0 .229-.186.415-.415.415H10.05a.415.415 0 0 1-.415-.415v-3.768c0-.229.186-.415.416-.415h4.185z" />
-              </svg>
+              <img src="https://api.damesck.net/api/svg/blog/feishu_push.svg" alt="飞书" className="w-6 h-6" />
             </div>
             <h3 className="text-xl font-bold text-[#2c2c2e] dark:text-white">飞书推送</h3>
           </div>
