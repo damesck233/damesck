@@ -30,22 +30,36 @@ import RestrictedAccess from './components/RestrictedAccess'
 import ScrollToTop from './components/ScrollToTop'
 import { preloadResourcesWithMinTime } from './utils/preloader'
 const bgImage = '/img/Background_image.webp'
+const bgPlaceholder = 'data:image/webp;base64,UklGRnYAAABXRUJQVlA4IGoAAADwAwCdASoUAA0APzmEuVOvKKWisAgB4CcJZgCdEf/gPjzNvF5J8s1wAPfa9nR9ymMZZjBVj6isAgWQSgCrEdElEDGRKAq8rb0S2RWQUQoT7MFnf4HPdmIsTiW+I5Tryd7G1yX8IYDqAAAA'
 
 // 将背景图片组件分离，减少重渲染
-const BackgroundImage = memo(({ bgUrl }: { bgUrl: string }) => (
-  <div
-    className="fixed inset-0 w-full h-full z-[-1] animate-element bg-image"
-    style={{
-      backgroundImage: `url(${bgUrl})`,
-      backgroundSize: 'cover',
-      backgroundPosition: 'center',
-      backgroundRepeat: 'no-repeat'
-    }}
-  >
-    {/* 亮色模式使用粉色遮罩，暗色模式使用深蓝色遮罩 */}
-    <div className="absolute inset-0 bg-white/20 dark:bg-gray-900/55"></div>
-  </div>
-));
+const BackgroundImage = memo(() => {
+  const [loaded, setLoaded] = useState(false);
+
+  useEffect(() => {
+    const img = new Image();
+    img.src = bgImage;
+    img.onload = () => setLoaded(true);
+  }, []);
+
+  return (
+    <div
+      className="fixed inset-0 w-full h-full z-[-1] animate-element bg-image"
+      style={{
+        backgroundImage: `url(${loaded ? bgImage : bgPlaceholder})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+        filter: loaded ? 'none' : 'blur(8px)',
+        transform: loaded ? 'none' : 'scale(1.05)',
+        transition: 'filter 0.6s ease, transform 0.6s ease',
+      }}
+    >
+      {/* 亮色模式使用粉色遮罩，暗色模式使用深蓝色遮罩 */}
+      <div className="absolute inset-0 bg-white/20 dark:bg-gray-900/55"></div>
+    </div>
+  );
+});
 
 // 将菜单组件分离 - 已替换为 DynamicIslandNav
 // const Menu = ... 移除
@@ -73,7 +87,6 @@ const PageContent = memo(() => (
 ));
 
 function App() {
-  const [bgImageUrl, setBgImageUrl] = useState('');
   const mainContentRef = useRef<HTMLDivElement>(null);
   const [themeInitialized, setThemeInitialized] = useState(false);
   const componentsPreloaded = useRef(false);
@@ -116,12 +129,6 @@ function App() {
     }
   }, []);
 
-  useEffect(() => {
-    if (!themeInitialized) return; // 等待主题初始化
-
-    setBgImageUrl(bgImage);
-  }, [themeInitialized]); // 依赖于主题初始化
-
   return (
     <Router>
       <ScrollToTop />
@@ -129,7 +136,7 @@ function App() {
       <WebWalker />
 
       {/* 背景图片可以放在外部，确保在组件间过渡时保持显示 */}
-      {bgImageUrl && <BackgroundImage bgUrl={bgImageUrl} />}
+      <BackgroundImage />
 
       {/* 主内容区域 - 使用Apple风格的动画 */}
       <motion.div
