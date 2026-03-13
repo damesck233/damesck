@@ -204,20 +204,20 @@ const FeishuWebhook: React.FC<FeishuWebhookProps> = ({ isOpen, onClose, type = '
             stiffness: 300,
             duration: 0.4
           }}
-          className="bg-white/95 dark:bg-gray-800/95 backdrop-blur-md rounded-2xl max-w-md w-full mx-2 sm:mx-4 shadow-2xl border border-white/20 dark:border-gray-700/30 max-h-[90vh] sm:max-h-[85vh] flex flex-col my-auto"
+          className="bg-white/95 dark:bg-[#1c1c1e]/95 backdrop-blur-2xl rounded-[20px] overflow-hidden max-w-md w-full mx-2 sm:mx-4 shadow-2xl border border-white/30 dark:border-white/10 max-h-[90vh] sm:max-h-[85vh] flex flex-col my-auto"
           onClick={(e) => e.stopPropagation()}
         >
           {/* 头部 - 固定不滚动 */}
-          <div className="p-4 sm:p-6 pb-2 sm:pb-4 flex-shrink-0">
-            <div className="flex items-center gap-2.5 mb-3">
-              <button onClick={handleClose} disabled={isSubmitting} className="w-4 h-4 rounded-full bg-[#ff5f56] border-[0.5px] border-[#e0443e] hover:brightness-90 transition-all flex items-center justify-center group disabled:opacity-50" aria-label="Close">
-                <XMarkIcon className="w-2.5 h-2.5 text-black/50 opacity-0 group-hover:opacity-100" />
+          <div className="flex items-center justify-between p-4 sm:p-6 pb-2 sm:pb-4 flex-shrink-0">
+            <div className="flex items-center gap-2">
+              <button onClick={handleClose} disabled={isSubmitting} className="w-3.5 h-3.5 rounded-full bg-[#ff5f56] border-[0.5px] border-[#e0443e] hover:brightness-90 transition-all flex items-center justify-center group disabled:opacity-50" aria-label="Close">
+                <XMarkIcon className="w-2 h-2 text-black/50 opacity-0 group-hover:opacity-100" />
               </button>
-              <button className="w-4 h-4 rounded-full bg-[#ffbd2e] border-[0.5px] border-[#dea123] hover:brightness-90 transition-all flex items-center justify-center group cursor-default" aria-label="Minimize">
-                <MinusIcon className="w-2.5 h-2.5 text-black/50 opacity-0 group-hover:opacity-100" />
+              <button className="w-3.5 h-3.5 rounded-full bg-[#ffbd2e] border-[0.5px] border-[#dea123] hover:brightness-90 transition-all flex items-center justify-center group cursor-default" aria-label="Minimize">
+                <MinusIcon className="w-2 h-2 text-black/50 opacity-0 group-hover:opacity-100" />
               </button>
-              <button className="w-4 h-4 rounded-full bg-[#27c93f] border-[0.5px] border-[#1aab29] hover:brightness-90 transition-all flex items-center justify-center group cursor-default" aria-label="Maximize">
-                <ArrowTopRightOnSquareIcon className="w-2.5 h-2.5 text-black/50 opacity-0 group-hover:opacity-100" />
+              <button className="w-3.5 h-3.5 rounded-full bg-[#27c93f] border-[0.5px] border-[#1aab29] hover:brightness-90 transition-all flex items-center justify-center group cursor-default" aria-label="Maximize">
+                <ArrowTopRightOnSquareIcon className="w-2 h-2 text-black/50 opacity-0 group-hover:opacity-100" />
               </button>
             </div>
             <div className="flex items-center">

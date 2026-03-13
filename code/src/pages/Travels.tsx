@@ -904,19 +904,6 @@ const DestinationModal: React.FC<DestinationModalProps> = React.memo(({ destinat
           className="relative w-full max-w-2xl max-h-[80vh] overflow-auto rounded-[28px] bg-white/90 dark:bg-[#1c1c1e]/90 backdrop-blur-2xl border border-white/30 dark:border-white/10 shadow-2xl will-change-transform"
           onClick={(e) => e.stopPropagation()}
         >
-          {/* Mac 红绿灯 */}
-          <div className="flex items-center gap-2.5 px-5 h-11 flex-shrink-0">
-            <button onClick={onClose} className="w-4 h-4 rounded-full bg-[#ff5f56] border-[0.5px] border-[#e0443e] hover:brightness-90 transition-all flex items-center justify-center group" aria-label="Close">
-              <XMarkIcon className="w-2.5 h-2.5 text-black/50 opacity-0 group-hover:opacity-100" />
-            </button>
-            <button onClick={onClose} className="w-4 h-4 rounded-full bg-[#ffbd2e] border-[0.5px] border-[#dea123] hover:brightness-90 transition-all flex items-center justify-center group" aria-label="Minimize">
-              <MinusIcon className="w-2.5 h-2.5 text-black/50 opacity-0 group-hover:opacity-100" />
-            </button>
-            <button className="w-4 h-4 rounded-full bg-[#27c93f] border-[0.5px] border-[#1aab29] hover:brightness-90 transition-all flex items-center justify-center group cursor-default" aria-label="Maximize">
-              <ArrowTopRightOnSquareIcon className="w-2.5 h-2.5 text-black/50 opacity-0 group-hover:opacity-100" />
-            </button>
-          </div>
-
           {/* 封面图片 */}
           <div className="w-full h-48 relative">
             <img
@@ -927,6 +914,18 @@ const DestinationModal: React.FC<DestinationModalProps> = React.memo(({ destinat
               decoding="async"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
+            {/* 红绿灯 - 叠在封面图左上角 */}
+            <div className="absolute top-3 left-4 flex items-center gap-2">
+              <button onClick={onClose} className="w-3.5 h-3.5 rounded-full bg-[#ff5f56] border-[0.5px] border-[#e0443e] hover:brightness-90 transition-all flex items-center justify-center group" aria-label="Close">
+                <XMarkIcon className="w-2 h-2 text-black/50 opacity-0 group-hover:opacity-100" />
+              </button>
+              <button onClick={onClose} className="w-3.5 h-3.5 rounded-full bg-[#ffbd2e] border-[0.5px] border-[#dea123] hover:brightness-90 transition-all flex items-center justify-center group" aria-label="Minimize">
+                <MinusIcon className="w-2 h-2 text-black/50 opacity-0 group-hover:opacity-100" />
+              </button>
+              <button className="w-3.5 h-3.5 rounded-full bg-[#27c93f] border-[0.5px] border-[#1aab29] hover:brightness-90 transition-all flex items-center justify-center group cursor-default" aria-label="Maximize">
+                <ArrowTopRightOnSquareIcon className="w-2 h-2 text-black/50 opacity-0 group-hover:opacity-100" />
+              </button>
+            </div>
             <div className="absolute bottom-4 left-4 text-white">
               <h2 className="text-xl font-bold">{destination.city}</h2>
               <p className="text-white/90">{destination.country}</p>

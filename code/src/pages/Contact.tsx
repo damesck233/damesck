@@ -317,23 +317,24 @@ const QRCodeModal: React.FC<QRCodeModalProps> = ({ contact, onClose }) => {
           stiffness: 300,
           duration: 0.4
         }}
-        className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-md rounded-2xl p-5 max-w-xs w-full mx-4 shadow-2xl border border-white/20 dark:border-gray-700/30"
+        className="bg-white/90 dark:bg-[#1c1c1e]/90 backdrop-blur-2xl rounded-[20px] overflow-hidden max-w-xs w-full mx-4 shadow-2xl border border-white/30 dark:border-white/10"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="mb-4">
-          <div className="flex items-center gap-2.5 mb-3">
-            <button onClick={onClose} className="w-4 h-4 rounded-full bg-[#ff5f56] border-[0.5px] border-[#e0443e] hover:brightness-90 transition-all flex items-center justify-center group" aria-label="Close">
-              <XMarkIcon className="w-2.5 h-2.5 text-black/50 opacity-0 group-hover:opacity-100" />
+        <div className="p-5">
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-2">
+            <button onClick={onClose} className="w-3.5 h-3.5 rounded-full bg-[#ff5f56] border-[0.5px] border-[#e0443e] hover:brightness-90 transition-all flex items-center justify-center group" aria-label="Close">
+              <XMarkIcon className="w-2 h-2 text-black/50 opacity-0 group-hover:opacity-100" />
             </button>
-            <button onClick={onClose} className="w-4 h-4 rounded-full bg-[#ffbd2e] border-[0.5px] border-[#dea123] hover:brightness-90 transition-all flex items-center justify-center group" aria-label="Minimize">
-              <MinusIcon className="w-2.5 h-2.5 text-black/50 opacity-0 group-hover:opacity-100" />
+            <button onClick={onClose} className="w-3.5 h-3.5 rounded-full bg-[#ffbd2e] border-[0.5px] border-[#dea123] hover:brightness-90 transition-all flex items-center justify-center group" aria-label="Minimize">
+              <MinusIcon className="w-2 h-2 text-black/50 opacity-0 group-hover:opacity-100" />
             </button>
-            <button className="w-4 h-4 rounded-full bg-[#27c93f] border-[0.5px] border-[#1aab29] hover:brightness-90 transition-all flex items-center justify-center group cursor-default" aria-label="Maximize">
-              <ArrowTopRightOnSquareIcon className="w-2.5 h-2.5 text-black/50 opacity-0 group-hover:opacity-100" />
+            <button className="w-3.5 h-3.5 rounded-full bg-[#27c93f] border-[0.5px] border-[#1aab29] hover:brightness-90 transition-all flex items-center justify-center group cursor-default" aria-label="Maximize">
+              <ArrowTopRightOnSquareIcon className="w-2 h-2 text-black/50 opacity-0 group-hover:opacity-100" />
             </button>
           </div>
           <div className="flex items-center">
-            <div className={`p-2 rounded-full ${contact.color} mr-3`}>
+            <div className={`p-2 rounded-full ${contact.color} mr-2`}>
               {contact.icon}
             </div>
             <h3 className="text-lg font-bold text-[#2c2c2e] dark:text-white">{getTitle()}</h3>
@@ -427,6 +428,7 @@ const QRCodeModal: React.FC<QRCodeModalProps> = ({ contact, onClose }) => {
               </button>
             )}
           </div>
+        </div>
         </div>
       </motion.div>
     </motion.div>
