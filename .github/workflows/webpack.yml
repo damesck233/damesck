@@ -24,13 +24,24 @@ jobs:
         cache: 'pnpm'
         cache-dependency-path: code/pnpm-lock.yaml
 
-    - name: 安装依赖（验证构建）
+    - name: 安装依赖
       run: cd code && pnpm install --frozen-lockfile
 
-    - name: 构建验证
+    - name: 构建
       run: cd code && pnpm run build
 
-    - name: 连接服务器并部署
+    - name: 上传 dist 到服务器
+      uses: appleboy/scp-action@v0.1.7
+      with:
+        host: ${{ secrets.SERVER_IP }}
+        username: ${{ secrets.SERVER_USER }}
+        password: ${{ secrets.SERVER_PASSWORD }}
+        port: ${{ secrets.SERVER_PORT }}
+        source: "code/dist/"
+        target: "/root/damesck/code/dist_new"
+        strip_components: 2
+
+    - name: 替换 dist 并重启服务
       uses: appleboy/ssh-action@v1.0.0
       with:
         host: ${{ secrets.SERVER_IP }}
@@ -38,13 +49,9 @@ jobs:
         password: ${{ secrets.SERVER_PASSWORD }}
         port: ${{ secrets.SERVER_PORT }}
         script: |
-          export NVM_DIR="$HOME/.nvm"
-          source $NVM_DIR/nvm.sh
-          nvm use 22
-          cd ~/damesck/code
-          git fetch --all
-          git reset --hard origin/main
-          pnpm install --frozen-lockfile
-          pnpm build
-          cd ..
-          docker compose up -d --build --wait
+          rm -rf ~/damesck/code/dist_old
+          [ -d ~/damesck/code/dist ] && mv ~/damesck/code/dist ~/damesck/code/dist_old
+          mv ~/damesck/code/dist_new ~/damesck/code/dist
+          rm -rf ~/damesck/code/dist_old
+          cd ~/damesck
+          docker compose up -d
