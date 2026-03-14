@@ -2,6 +2,17 @@
 @tailwind components;
 @tailwind utilities;
 
+/* iOS Safari viewport fix: extend background behind browser toolbar */
+html {
+  height: -webkit-fill-available;
+}
+
+body {
+  min-height: 100vh;
+  min-height: -webkit-fill-available;
+  min-height: 100dvh;
+}
+
 /* 暗黑模式颜色变量 */
 :root {
   --bg-primary: white;

@@ -170,7 +170,7 @@ function App() {
           opacity: { duration: 1.2 }
         }}
         className="min-h-screen flex flex-col relative"
-        style={{ minHeight: '100vh' }}
+        style={{ minHeight: '100dvh' }}
         ref={mainContentRef}
       >
         {/* 顶部导航栏 - Dynamic Island */}
