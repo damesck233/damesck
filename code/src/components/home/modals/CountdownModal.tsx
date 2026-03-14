@@ -64,7 +64,8 @@ const CountdownModal: React.FC<CountdownModalProps> = ({
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
                         transition={{ duration: layoutId ? 0.3 : 0.2 }}
-                        className="fixed inset-0 bg-black/50 dark:bg-black/65 z-[999]"
+                        className="fixed inset-0 bg-black/40 dark:bg-black/60 backdrop-blur-md z-[999]"
+                        style={{ willChange: "backdrop-filter" }}
                         onClick={onClose}
                     />
 
