@@ -81,7 +81,7 @@ const BackgroundImage = memo(() => {
 // 将页面内容组件分离
 const PageContent = memo(() => (
   // 增加顶部内边距，防止内容被灵动岛遮挡 (pt-20 ~ pt-24)
-  <main className="flex-grow px-4 md:px-6 lg:px-8 pt-6 md:pt-24 pb-28 md:pb-8">
+  <main className="flex-grow px-4 md:px-6 lg:px-8 pt-8 md:pt-24 pb-28 md:pb-8">
     <Suspense fallback={
       <div className="flex items-center justify-center h-full min-h-[40vh]">
         <div className="flex flex-col items-center gap-4 px-8 py-6 bg-white/40 dark:bg-[#1c1c1e]/60 backdrop-blur-xl border border-white/30 dark:border-white/10 rounded-[24px] shadow-lg shadow-black/5">
