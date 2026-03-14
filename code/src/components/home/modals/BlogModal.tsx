@@ -63,10 +63,11 @@ const BlogModal: React.FC<BlogModalProps> = ({
 
                     <div className="fixed inset-0 flex items-center justify-center z-[1000] pointer-events-none p-4">
                         <motion.div
-                            initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                            layoutId={layoutId}
+                            initial={layoutId ? undefined : { opacity: 0, scale: 0.95, y: 20 }}
                             animate={{ opacity: 1, scale: 1, y: 0 }}
-                            exit={{ opacity: 0, scale: 0.95, y: 20 }}
-                            transition={layoutId ? { type: "spring", duration: 0.5, bounce: 0.3 } : { duration: 0.2, ease: "easeOut" }}
+                            exit={layoutId ? undefined : { opacity: 0, scale: 0.95, y: 20 }}
+                            transition={layoutId ? { type: "spring", stiffness: 250, damping: 28, mass: 1.0 } : { duration: 0.2, ease: "easeOut" }}
                             className="w-full md:max-w-[1100px] h-[90vh] md:h-[750px] bg-white/95 dark:bg-[#1c1c1e]/95 backdrop-blur-2xl rounded-[32px] shadow-2xl overflow-y-auto md:overflow-hidden pointer-events-auto flex flex-col md:flex-row relative"
                             onClick={(e) => e.stopPropagation()}
                         >
@@ -92,25 +93,27 @@ const BlogModal: React.FC<BlogModalProps> = ({
                                 <div className="flex-1 p-6 flex flex-col overflow-hidden">
                                     <div className="mb-6 flex-shrink-0">
                                         {/* Icon Box */}
-                                        <div
-                                            className="w-16 h-16 rounded-2xl bg-gradient-to-br from-pink-500 to-rose-600 flex items-center justify-center text-white shadow-lg mb-4"
-                                        >
-                                            <DocumentTextIcon className="w-8 h-8" />
-                                        </div>
-
-                                        {/* Title - Removed layoutId for stability */}
                                         <motion.div
-                                            initial={{ opacity: 0, x: -10 }}
-                                            animate={{ opacity: 1, x: 0 }}
-                                            transition={{ delay: 0.1 }}
+                                            layoutId={`${layoutId}-icon-box`}
+                                            className="w-16 h-16 rounded-2xl bg-gradient-to-br from-pink-500 to-rose-600 flex items-center justify-center text-white shadow-lg shadow-pink-500/20 mb-4"
                                         >
-                                            <h2 className="text-2xl font-bold text-[#1d1d1f] dark:text-white mb-1">
-                                                My Blog
-                                            </h2>
-                                            <p className="text-[#86868b] dark:text-gray-400 text-sm">
-                                                blog.damesck.net
-                                            </p>
+                                            <motion.div layoutId={`${layoutId}-icon`}>
+                                                <DocumentTextIcon className="w-8 h-8" />
+                                            </motion.div>
                                         </motion.div>
+
+                                        <motion.h2
+                                            layoutId={`${layoutId}-title`}
+                                            className="text-2xl font-bold text-[#1d1d1f] dark:text-white mb-1"
+                                        >
+                                            My Blog
+                                        </motion.h2>
+                                        <motion.p
+                                            layoutId={`${layoutId}-subtitle`}
+                                            className="text-[#86868b] dark:text-gray-400 text-xs uppercase tracking-wider font-medium"
+                                        >
+                                            Updates & Tutorials
+                                        </motion.p>
                                     </div>
 
                                     {/* Categories List */}
