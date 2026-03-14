@@ -57,7 +57,7 @@ const BlogModal: React.FC<BlogModalProps> = ({
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
                         transition={{ duration: layoutId ? 0.3 : 0.2 }}
-                        className="fixed inset-0 bg-black/40 dark:bg-black/60 backdrop-blur-md z-[999]"
+                        className="fixed inset-0 bg-black/50 dark:bg-black/65 z-[999]"
                         onClick={onClose}
                     />
 
@@ -67,8 +67,9 @@ const BlogModal: React.FC<BlogModalProps> = ({
                             initial={!layoutId ? { opacity: 0, scale: 0.95, y: 20 } : undefined}
                             animate={!layoutId ? { opacity: 1, scale: 1, y: 0 } : undefined}
                             exit={!layoutId ? { opacity: 0, scale: 0.95, y: 20 } : undefined}
-                            transition={layoutId ? { type: "spring", stiffness: 250, damping: 25, mass: 1.0 } : { duration: 0.2, ease: "easeOut" }}
-                            className="w-full md:max-w-[1100px] h-[90vh] md:h-[750px] bg-white/95 dark:bg-[#1c1c1e]/95 backdrop-blur-2xl rounded-[32px] shadow-2xl overflow-y-auto md:overflow-hidden pointer-events-auto flex flex-col md:flex-row relative"
+                            transition={layoutId ? { type: "spring", stiffness: 300, damping: 30, mass: 1.0 } : { duration: 0.2, ease: "easeOut" }}
+                            className="w-full md:max-w-[1100px] h-[90vh] md:h-[750px] bg-white/95 dark:bg-[#1c1c1e]/95 rounded-[32px] shadow-2xl overflow-y-auto md:overflow-hidden pointer-events-auto flex flex-col md:flex-row relative"
+                            style={{ willChange: "transform" }}
                             onClick={(e) => e.stopPropagation()}
                         >
                             {/* Sidebar */}
