@@ -49,9 +49,7 @@ const BlogCard: React.FC<BlogCardProps> = ({
                             layoutId={`${layoutId}-icon-box`}
                             className="w-12 h-12 rounded-2xl bg-gradient-to-br from-pink-500 to-rose-600 flex items-center justify-center text-white shadow-lg shadow-pink-500/20 mb-4"
                         >
-                            <motion.div layoutId={`${layoutId}-icon`}>
-                                <DocumentTextIcon className="w-6 h-6" />
-                            </motion.div>
+                            <DocumentTextIcon className="w-6 h-6" />
                         </motion.div>
 
                         <div className="mb-1">

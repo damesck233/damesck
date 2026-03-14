@@ -64,10 +64,10 @@ const BlogModal: React.FC<BlogModalProps> = ({
                     <div className="fixed inset-0 flex items-center justify-center z-[1000] pointer-events-none p-4">
                         <motion.div
                             layoutId={layoutId}
-                            initial={layoutId ? undefined : { opacity: 0, scale: 0.95, y: 20 }}
-                            animate={{ opacity: 1, scale: 1, y: 0 }}
-                            exit={layoutId ? undefined : { opacity: 0, scale: 0.95, y: 20 }}
-                            transition={layoutId ? { type: "spring", stiffness: 250, damping: 28, mass: 1.0 } : { duration: 0.2, ease: "easeOut" }}
+                            initial={!layoutId ? { opacity: 0, scale: 0.95, y: 20 } : undefined}
+                            animate={!layoutId ? { opacity: 1, scale: 1, y: 0 } : undefined}
+                            exit={!layoutId ? { opacity: 0, scale: 0.95, y: 20 } : undefined}
+                            transition={layoutId ? { type: "spring", stiffness: 250, damping: 25, mass: 1.0 } : { duration: 0.2, ease: "easeOut" }}
                             className="w-full md:max-w-[1100px] h-[90vh] md:h-[750px] bg-white/95 dark:bg-[#1c1c1e]/95 backdrop-blur-2xl rounded-[32px] shadow-2xl overflow-y-auto md:overflow-hidden pointer-events-auto flex flex-col md:flex-row relative"
                             onClick={(e) => e.stopPropagation()}
                         >
@@ -97,9 +97,7 @@ const BlogModal: React.FC<BlogModalProps> = ({
                                             layoutId={`${layoutId}-icon-box`}
                                             className="w-16 h-16 rounded-2xl bg-gradient-to-br from-pink-500 to-rose-600 flex items-center justify-center text-white shadow-lg shadow-pink-500/20 mb-4"
                                         >
-                                            <motion.div layoutId={`${layoutId}-icon`}>
-                                                <DocumentTextIcon className="w-8 h-8" />
-                                            </motion.div>
+                                            <DocumentTextIcon className="w-8 h-8" />
                                         </motion.div>
 
                                         <motion.h2
