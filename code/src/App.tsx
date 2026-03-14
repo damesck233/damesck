@@ -50,7 +50,7 @@ const BackgroundImage = memo(() => {
   };
 
   return (
-    <div className="fixed top-0 left-0 right-0 w-full z-[-1]" style={{ bottom: 'calc(-1 * env(safe-area-inset-bottom, 50px))' }}>
+    <div className="fixed inset-0 w-full z-[-1]">
       {/* 底层：高清图，始终存在 */}
       <div
         className="absolute inset-0"

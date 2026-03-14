@@ -2,15 +2,22 @@
 @tailwind components;
 @tailwind utilities;
 
-/* iOS Safari viewport fix: extend background behind browser toolbar */
+/* iOS Safari viewport fix: set background on html so browser renders it behind toolbar */
 html {
   height: -webkit-fill-available;
+  /* Mounting the background on html itself is the only reliable way to fill
+     the area behind iOS Safari's toolbar (z-index:-1 fixed divs get clipped) */
+  background-image: url('https://img.klpz.net/file/tc/2026/03/13/69b3cbfa2648f_1773390842.webp');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
 body {
   min-height: 100vh;
   min-height: -webkit-fill-available;
   min-height: 100dvh;
+  background: transparent;
 }
 
 /* 暗黑模式颜色变量 */
