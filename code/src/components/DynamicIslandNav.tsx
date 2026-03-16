@@ -47,10 +47,21 @@ export default function DynamicIslandNav() {
     const navRef = useRef<HTMLDivElement>(null);
     const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
 
+    // isMobile: 懒初始化避免首帧 false→true 触发多余 exit 动画
+    const [isMobile, setIsMobile] = useState(() =>
+        typeof window !== 'undefined' ? window.matchMedia('(max-width: 767px)').matches : false
+    );
+    useEffect(() => {
+        const mq = window.matchMedia('(max-width: 767px)');
+        const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches);
+        mq.addEventListener('change', handler);
+        return () => mq.removeEventListener('change', handler);
+    }, []);
+
     const activeSecondaryItem = SECONDARY_ITEMS.find(item =>
         location.pathname === item.path || location.pathname.startsWith(`${item.path}/`)
     );
-    const displayItems = activeSecondaryItem ? [...NAV_ITEMS, activeSecondaryItem] : NAV_ITEMS;
+    const displayItems = (activeSecondaryItem && !isMobile) ? [...NAV_ITEMS, activeSecondaryItem] : NAV_ITEMS;
 
     const updatePill = () => {
         const activeIndex = displayItems.findIndex(item =>
@@ -92,16 +103,6 @@ export default function DynamicIslandNav() {
 
     useEffect(() => { setIsMoreOpen(false); }, [location.pathname]);
 
-    // isMobile: detect via JS for dropdown direction (CSS handles the position)
-    const [isMobile, setIsMobile] = useState(false);
-    useEffect(() => {
-        const mq = window.matchMedia('(max-width: 767px)');
-        setIsMobile(mq.matches);
-        const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches);
-        mq.addEventListener('change', handler);
-        return () => mq.removeEventListener('change', handler);
-    }, []);
-
     return (
         /* Desktop: top-6 | Mobile: bottom-6 (safe-area aware) */
         <div
@@ -113,9 +114,7 @@ export default function DynamicIslandNav() {
             <div className="pointer-events-auto relative" ref={menuRef}>
 
                 {/* Main Pill */}
-                <motion.div
-                    transition={springTransition}
-                    whileHover={{ scale: 1.03 }}
+                <div
                     className="relative flex items-center bg-white/70 dark:bg-[#1c1c1e]/70 backdrop-blur-xl border border-white/20 dark:border-white/10 shadow-lg shadow-black/5 rounded-full px-2 py-2 overflow-hidden cursor-default"
                     style={{ height: '56px', borderRadius: 9999 }}
                 >
@@ -136,11 +135,10 @@ export default function DynamicIslandNav() {
                                 return (
                                     <motion.div
                                         key={item.id}
-                                        layout
                                         initial={{ opacity: 0, scale: 0.8 }}
                                         animate={{ opacity: 1, scale: 1 }}
                                         exit={{ opacity: 0, scale: 0.8, width: 0, marginLeft: 0, marginRight: 0 }}
-                                        transition={springTransition}
+                                        transition={{ type: "tween", duration: 0.18, ease: "easeOut" }}
                                     >
                                         <NavLink to={item.path} className="relative z-10 block">
                                             <div
@@ -179,7 +177,7 @@ export default function DynamicIslandNav() {
                         {/* More Button */}
                         <button
                             onClick={() => setIsMoreOpen(!isMoreOpen)}
-                            className={`flex items-center justify-center rounded-full w-10 h-10 transition-colors duration-200 ${isMoreOpen
+                            className={`flex items-center justify-center rounded-full w-10 h-10 transition-colors duration-200 ${isMoreOpen || (isMobile && activeSecondaryItem)
                                 ? 'bg-black/5 dark:bg-white/10 text-black dark:text-white'
                                 : 'text-gray-500 hover:bg-black/5 dark:text-gray-400 dark:hover:bg-white/5'
                                 }`}
@@ -192,7 +190,7 @@ export default function DynamicIslandNav() {
                             <ThemeToggle className="w-10 h-10" />
                         </div>
                     </div>
-                </motion.div>
+                </div>
 
                 {/* Dropdown Menu — opens downward on desktop, upward on mobile */}
                 <AnimatePresence>
