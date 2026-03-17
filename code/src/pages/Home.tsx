@@ -495,7 +495,7 @@ const Home = () => {
     try {
       let blogData;
       try {
-        const response = await fetch('https://blog.damesck.net/api/posts');
+        const response = await fetch('https://blog.damesck.net/api/posts?pageSize=9999');
         const contentType = response.headers.get("content-type");
         if (contentType && contentType.includes("application/json")) {
           blogData = await response.json();

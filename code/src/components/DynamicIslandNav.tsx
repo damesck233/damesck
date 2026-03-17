@@ -8,9 +8,11 @@ import {
     PhoneIcon,
     EllipsisHorizontalIcon,
     UserGroupIcon,
-    InformationCircleIcon
+    InformationCircleIcon,
+    BoltIcon,
 } from '@heroicons/react/24/outline';
 import ThemeToggle from './ThemeToggle';
+import { usePerformanceMode } from '../contexts/PerformanceContext';
 
 const NAV_ITEMS = [
     { id: 'home', path: '/', label: '首页', icon: HomeIcon },
@@ -33,6 +35,7 @@ const springTransition = {
 
 export default function DynamicIslandNav() {
     const [isMoreOpen, setIsMoreOpen] = useState(false);
+    const { isLowPerf, togglePerfMode } = usePerformanceMode();
     const location = useLocation();
     const menuRef = useRef<HTMLDivElement>(null);
 
@@ -239,6 +242,19 @@ export default function DynamicIslandNav() {
                                 </svg>
                                 <span className="font-medium">GitHub</span>
                             </a>
+
+                            <div className="h-[1px] bg-gray-200 dark:bg-white/10 my-1 mx-2" />
+
+                            <button
+                                onClick={togglePerfMode}
+                                className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-700 dark:text-gray-300 hover:bg-black/5 dark:hover:bg-white/10 transition-all w-full"
+                            >
+                                <BoltIcon className={`w-5 h-5 ${isLowPerf ? 'text-yellow-500' : ''}`} />
+                                <span className="font-medium">低性能模式</span>
+                                <span className={`ml-auto text-xs font-semibold px-2 py-0.5 rounded-full ${isLowPerf ? 'bg-yellow-100 text-yellow-600 dark:bg-yellow-500/20 dark:text-yellow-400' : 'bg-gray-100 text-gray-400 dark:bg-white/10 dark:text-gray-500'}`}>
+                                    {isLowPerf ? '开' : '关'}
+                                </span>
+                            </button>
 
                             <div className="h-[1px] bg-gray-200 dark:bg-white/10 my-1 mx-2" />
 

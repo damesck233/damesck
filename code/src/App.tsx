@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Routes, Route, NavLink } from 'react-router-dom'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion, AnimatePresence, MotionConfig } from 'framer-motion'
 import { useState, useEffect, lazy, Suspense, memo, useRef } from 'react'
 import {
   HomeIcon,
@@ -27,6 +27,7 @@ const Travels = lazy(() => import('./pages/Travels'))
 const About = lazy(() => import('./pages/About'))
 import WebWalker from './components/WebWalker'
 import DynamicIslandNav from './components/DynamicIslandNav'
+import { PerformanceProvider, usePerformanceMode } from './contexts/PerformanceContext'
 import RestrictedAccess from './components/RestrictedAccess'
 import ScrollToTop from './components/ScrollToTop'
 import { preloadResourcesWithMinTime } from './utils/preloader'
@@ -105,7 +106,17 @@ const PageContent = memo(() => (
   </main>
 ));
 
-function App() {
+function AppContent() {
+  const { isLowPerf } = usePerformanceMode();
+  return (
+    <MotionConfig transition={isLowPerf ? { type: 'tween', duration: 0.08, ease: 'linear' } : undefined}>
+      <AppInner />
+    </MotionConfig>
+  );
+}
+
+function AppInner() {
+  const { isLowPerf } = usePerformanceMode();
   const mainContentRef = useRef<HTMLDivElement>(null);
   const [themeInitialized, setThemeInitialized] = useState(false);
   const componentsPreloaded = useRef(false);
@@ -161,9 +172,9 @@ function App() {
       {/* 主内容区域 - 使用Apple风格的动画 */}
       <motion.div
         key="main-content"
-        initial={{ opacity: 0 }}
+        initial={{ opacity: isLowPerf ? 1 : 0 }}
         animate={{ opacity: 1 }}
-        transition={{
+        transition={isLowPerf ? { duration: 0 } : {
           duration: 1.2,
           ease: appleEaseOut,
           delay: 0.1,
@@ -179,9 +190,9 @@ function App() {
 
         {/* 分离的页面内容组件 */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: isLowPerf ? 1 : 0, y: isLowPerf ? 0 : 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{
+          transition={isLowPerf ? { duration: 0 } : {
             duration: 0.8,
             ease: appleEaseOut,
             delay: 0.2
@@ -193,9 +204,9 @@ function App() {
 
         {/* 底部胶囊 */}
         <motion.footer
-          initial={{ opacity: 0, y: 10 }}
+          initial={{ opacity: isLowPerf ? 1 : 0, y: isLowPerf ? 0 : 10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{
+          transition={isLowPerf ? { duration: 0 } : {
             duration: 0.8,
             ease: appleEaseOut,
             delay: 0.5
@@ -211,6 +222,14 @@ function App() {
       </motion.div>
     </Router>
   )
+}
+
+function App() {
+  return (
+    <PerformanceProvider>
+      <AppContent />
+    </PerformanceProvider>
+  );
 }
 
 export default App

@@ -18,18 +18,17 @@
     })();
   </script>
 
-  <!-- 背景图片预加载 -->
-  <link rel="preload" as="image" href="https://img.klpz.net/file/tc/2026/03/13/69b3cbfa2648f_1773390842.webp" />
-
-  <!-- 51.la 网站统计 -->
-  <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
-  <script>LA.init({id:"3PIE9jNBFVSbIHL5",ck:"3PIE9jNBFVSbIHL5"})</script>
+  <!-- 背景图片预加载，fetchpriority=high 让浏览器优先加载 LCP 图片 -->
+  <link rel="preload" as="image" href="https://img.klpz.net/file/tc/2026/03/13/69b3cbfa2648f_1773390842.webp" fetchpriority="high" />
 
 </head>
 
 <body>
   <div id="root"></div>
   <script type="module" src="/src/main.tsx"></script>
+  <!-- 51.la 网站统计：defer 避免阻塞渲染 -->
+  <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js" defer></script>
+  <script defer>window.addEventListener('load',function(){LA&&LA.init&&LA.init({id:"3PIE9jNBFVSbIHL5",ck:"3PIE9jNBFVSbIHL5"})});</script>
 </body>
 
 </html>

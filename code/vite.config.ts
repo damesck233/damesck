@@ -23,7 +23,7 @@ export default defineConfig({
   },
   build: {
     // 生产环境优化
-    target: 'es2015',
+    target: 'es2020',
     minify: 'terser',
     terserOptions: {
       compress: {
@@ -45,10 +45,10 @@ export default defineConfig({
       output: {
         // 代码分割优化
         manualChunks: {
-          'vendor': ['react', 'react-dom', 'react-router-dom'],
+          'react-core': ['react', 'react-dom'],
+          'router': ['react-router-dom'],
           'motion': ['framer-motion'],
-          'icons': ['@heroicons/react'],
-          'utils': ['./src/utils/preloader.ts']
+          // @heroicons/react 不单独打包，让 Rollup tree-shake 只打用到的图标
         },
         // 减少大型chunk
         chunkFileNames: 'assets/[name]-[hash].js',

@@ -222,6 +222,18 @@ body {
   will-change: transform, opacity;
 }
 
+/* 低性能模式：缩短过渡、降低毛玻璃模糊半径 */
+html[data-perf="low"] *,
+html[data-perf="low"] *::before,
+html[data-perf="low"] *::after {
+  transition-duration: 80ms !important;
+  animation-duration: 80ms !important;
+}
+html[data-perf="low"] [class*="backdrop-blur"] {
+  backdrop-filter: blur(4px) !important;
+  -webkit-backdrop-filter: blur(4px) !important;
+}
+
 @layer base {
   body {
     @apply font-sf-pro;
