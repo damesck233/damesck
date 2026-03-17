@@ -1,15 +1,15 @@
 [
   {
-    "title": "寒假",
-    "Startdate": "2025-09-01",
-    "targetDate": "2026-01-24",
+    "title": "暑假",
+    "Startdate": "2026-03-01",
+    "targetDate": "2026-06-10",
     "totalDays": 900,
     "top": true
   },
   {
-    "title": "国庆节",
-    "Startdate": "2024-10-01",
-    "targetDate": "2025-10-01",
+    "title": "古尔邦节放假",
+    "Startdate": "2025-03-01",
+    "targetDate": "2025-06-05",
     "totalDays": 900,
     "top": false
   }
