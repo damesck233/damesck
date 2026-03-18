@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import { DocumentTextIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
 import { BlogPost, ApiError } from '../../types';
+import { useTiltPress } from '../../hooks/useTiltPress';
 
 interface BlogCardProps {
     blogPosts: BlogPost[];
@@ -10,6 +11,7 @@ interface BlogCardProps {
     onMouseEnter: () => void;
     onMouseLeave: () => void;
     hidden?: boolean;
+    closing?: boolean;
     layoutId?: string;
 }
 
@@ -20,8 +22,10 @@ const BlogCard: React.FC<BlogCardProps> = ({
     onMouseEnter,
     onMouseLeave,
     hidden = false,
+    closing = false,
     layoutId
 }) => {
+    const { tiltStyle, onPointerDown, onPointerUp, onPointerLeave } = useTiltPress();
     const posts = blogPosts.slice(0, 4);
     const featured = posts[0];
     const topRight = posts[1];
@@ -33,7 +37,7 @@ const BlogCard: React.FC<BlogCardProps> = ({
     return (
         <motion.div
             layoutId={layoutId}
-            className={`md:col-span-3 cursor-pointer group relative z-10 overflow-hidden rounded-[32px] duration-200 aspect-auto md:h-[320px] bg-white/40 dark:bg-[#1c1c1e]/60 backdrop-blur-xl transition-colors duration-300 ${hidden ? 'pointer-events-none' : ''}`}
+            className={`md:col-span-3 cursor-pointer group relative z-10 overflow-hidden rounded-[32px] duration-200 aspect-auto md:h-[320px] bg-white/40 dark:bg-[#1c1c1e]/60 backdrop-blur-xl transition-colors duration-300 ${(hidden || closing) ? 'pointer-events-none' : ''}`}
             animate={{ opacity: hidden ? 0 : 1 }}
             onMouseEnter={onMouseEnter}
             onMouseLeave={onMouseLeave}
@@ -41,6 +45,10 @@ const BlogCard: React.FC<BlogCardProps> = ({
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             transition={{ type: "spring", stiffness: 250, damping: 25, mass: 1.0 }}
+            style={tiltStyle}
+            onPointerDown={onPointerDown}
+            onPointerUp={onPointerUp}
+            onPointerLeave={onPointerLeave}
         >
             <div className="absolute inset-0 bg-gradient-to-br from-pink-50/50 to-rose-50/50 dark:from-pink-900/20 dark:to-rose-900/20 z-0 opacity-80" />
 

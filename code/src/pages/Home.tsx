@@ -440,6 +440,7 @@ const Home = () => {
     countdown: false,
     blogs: false
   });
+  const [closingModals, setClosingModals] = useState<Record<string, boolean>>({});
 
   // 存储从API获取的博客文章
   const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
@@ -473,7 +474,11 @@ const Home = () => {
   };
 
   const closeModal = (modal: string) => {
-    setModalOpen({ ...modalOpen, [modal]: false });
+    setModalOpen(prev => ({ ...prev, [modal]: false }));
+    setClosingModals(prev => ({ ...prev, [modal]: true }));
+    setTimeout(() => {
+      setClosingModals(prev => ({ ...prev, [modal]: false }));
+    }, 450);
   };
 
   // 每天更新倒计时
@@ -736,6 +741,7 @@ const Home = () => {
         <ProfileCard
           onClick={() => openModal('personal')}
           hidden={modalOpen.personal}
+          closing={!!closingModals.personal}
           layoutId={enableMorph ? 'profile-card' : undefined}
         />
 
@@ -752,6 +758,7 @@ const Home = () => {
           // variants={fadeIn} // Removed per previous fix
           custom={1}
           hidden={modalOpen.skills}
+          closing={!!closingModals.skills}
           layoutId={enableMorph ? 'activity-card' : undefined}
         />
 
@@ -764,6 +771,7 @@ const Home = () => {
           onMouseLeave={() => handleMouseLeave('devices')}
           layoutId={enableMorph ? 'devices-card' : undefined}
           hidden={modalOpen.devices}
+          closing={!!closingModals.devices}
         />
 
         {/* 倒计时卡片 - 使用新数据 */}
@@ -774,6 +782,7 @@ const Home = () => {
           onMouseLeave={() => handleMouseLeave('countdown')}
           layoutId={enableMorph ? 'countdown-card' : undefined}
           hidden={modalOpen.countdown}
+          closing={!!closingModals.countdown}
         />
 
         {/* 最新博客卡片 */}
@@ -785,6 +794,7 @@ const Home = () => {
           onMouseEnter={() => handleMouseEnter('blogs')}
           onMouseLeave={() => handleMouseLeave('blogs')}
           hidden={modalOpen.blogs}
+          closing={!!closingModals.blogs}
           layoutId={enableMorph ? 'blog-card' : undefined}
         />
       </div>

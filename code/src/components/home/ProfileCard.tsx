@@ -1,23 +1,30 @@
 import { motion } from 'framer-motion';
 import myData from '../../data/my/data.json';
+import { useTiltPress } from '../../hooks/useTiltPress';
 const { personalInfo } = myData;
 
 interface ProfileCardProps {
     onClick: () => void;
     layoutId?: string;
     hidden?: boolean;
+    closing?: boolean;
 }
 
-const ProfileCard = ({ onClick, layoutId, hidden = false }: ProfileCardProps) => {
+const ProfileCard = ({ onClick, layoutId, hidden = false, closing = false }: ProfileCardProps) => {
+    const { tiltStyle, onPointerDown, onPointerUp, onPointerLeave } = useTiltPress();
     return (
         <motion.div
             layoutId={layoutId} // 启用布局动画，实现无缝过渡
-            className={`aspect-square cursor-pointer group relative z-10 overflow-hidden rounded-[32px] duration-200 bg-white/40 dark:bg-[#1c1c1e]/60 backdrop-blur-xl transition-colors duration-300 ${hidden ? 'pointer-events-none' : ''}`}
+            className={`aspect-square cursor-pointer group relative z-10 overflow-hidden rounded-[32px] duration-200 bg-white/40 dark:bg-[#1c1c1e]/60 backdrop-blur-xl transition-colors duration-300 ${(hidden || closing) ? 'pointer-events-none' : ''}`}
             animate={{ opacity: hidden ? 0 : 1 }}
             onClick={onClick}
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             transition={{ type: "spring", stiffness: 250, damping: 25, mass: 1.0 }}
+            style={tiltStyle}
+            onPointerDown={onPointerDown}
+            onPointerUp={onPointerUp}
+            onPointerLeave={onPointerLeave}
         >
             {/* Gradient Overlay for Pink Glassmorphism tint */}
             <div className="absolute inset-0 bg-gradient-to-br from-[#FCE7F3]/80 to-[#FBCFE8]/80 dark:from-[#3a0c25]/40 dark:to-[#4a0e2e]/40 z-0"></div>

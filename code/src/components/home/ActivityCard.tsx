@@ -7,6 +7,7 @@ import {
     RocketLaunchIcon
 } from '@heroicons/react/24/outline';
 import { useState, useEffect } from 'react';
+import { useTiltPress } from '../../hooks/useTiltPress';
 
 // Define Timeline Event Interface
 export interface TimelineEvent {
@@ -26,6 +27,7 @@ interface ActivityCardProps {
     custom: number;
     layoutId?: string;
     hidden?: boolean;
+    closing?: boolean;
 }
 
 const ActivityCard: React.FC<ActivityCardProps> = ({
@@ -34,8 +36,10 @@ const ActivityCard: React.FC<ActivityCardProps> = ({
     onMouseEnter,
     onMouseLeave,
     layoutId,
-    hidden = false
+    hidden = false,
+    closing = false
 }) => {
+    const { tiltStyle, onPointerDown, onPointerUp, onPointerLeave } = useTiltPress();
 
     const [timeStats, setTimeStats] = useState({
         dayOfYear: 0,
@@ -108,7 +112,7 @@ const ActivityCard: React.FC<ActivityCardProps> = ({
     return (
         <motion.div
             layoutId={layoutId}
-            className={`md:col-span-2 cursor-pointer group relative z-10 overflow-hidden rounded-[32px] duration-200 aspect-auto md:h-full bg-white/40 dark:bg-[#1c1c1e]/60 backdrop-blur-xl transition-colors duration-300 ${hidden ? 'pointer-events-none' : ''}`}
+            className={`md:col-span-2 cursor-pointer group relative z-10 overflow-hidden rounded-[32px] duration-200 aspect-auto md:h-full bg-white/40 dark:bg-[#1c1c1e]/60 backdrop-blur-xl transition-colors duration-300 ${(hidden || closing) ? 'pointer-events-none' : ''}`}
             animate={{ opacity: hidden ? 0 : 1 }}
             onMouseEnter={onMouseEnter}
             onMouseLeave={onMouseLeave}
@@ -116,6 +120,10 @@ const ActivityCard: React.FC<ActivityCardProps> = ({
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             transition={{ type: "spring", stiffness: 250, damping: 25, mass: 1.0 }}
+            style={tiltStyle}
+            onPointerDown={onPointerDown}
+            onPointerUp={onPointerUp}
+            onPointerLeave={onPointerLeave}
         >
 
             {/* Gradient Overlay */}

@@ -6,6 +6,7 @@ import {
     CpuChipIcon,
     ChevronRightIcon
 } from '@heroicons/react/24/outline';
+import { useTiltPress } from '../../hooks/useTiltPress';
 
 export interface Device {
     name: string;
@@ -26,6 +27,7 @@ interface DevicesCardProps {
     onMouseLeave: () => void;
     layoutId?: string;
     hidden?: boolean;
+    closing?: boolean;
 }
 
 const DevicesCard: React.FC<DevicesCardProps> = ({
@@ -34,8 +36,10 @@ const DevicesCard: React.FC<DevicesCardProps> = ({
     onMouseEnter,
     onMouseLeave,
     layoutId,
-    hidden = false
+    hidden = false,
+    closing = false
 }) => {
+    const { tiltStyle, onPointerDown, onPointerUp, onPointerLeave } = useTiltPress();
     // Get top 3 devices
     const topDevices = devices ? devices.slice(0, 3) : [];
 
@@ -50,7 +54,7 @@ const DevicesCard: React.FC<DevicesCardProps> = ({
     return (
         <motion.div
             layoutId={layoutId}
-            className={`md:col-span-2 cursor-pointer group relative z-10 overflow-hidden rounded-[32px] duration-200 aspect-auto md:h-full bg-white/40 dark:bg-[#1c1c1e]/60 backdrop-blur-xl transition-colors duration-300 ${hidden ? 'pointer-events-none' : ''}`}
+            className={`md:col-span-2 cursor-pointer group relative z-10 overflow-hidden rounded-[32px] duration-200 aspect-auto md:h-full bg-white/40 dark:bg-[#1c1c1e]/60 backdrop-blur-xl transition-colors duration-300 ${(hidden || closing) ? 'pointer-events-none' : ''}`}
             animate={{ opacity: hidden ? 0 : 1 }}
             onMouseEnter={onMouseEnter}
             onMouseLeave={onMouseLeave}
@@ -58,6 +62,10 @@ const DevicesCard: React.FC<DevicesCardProps> = ({
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             transition={{ type: "spring", stiffness: 250, damping: 25, mass: 1.0 }}
+            style={tiltStyle}
+            onPointerDown={onPointerDown}
+            onPointerUp={onPointerUp}
+            onPointerLeave={onPointerLeave}
         >
             {/* Gradient Overlay */}
             <div className="absolute inset-0 bg-gradient-to-br from-orange-100/50 to-amber-100/50 dark:from-orange-900/20 dark:to-amber-900/20 z-0 opacity-80"></div>

@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import { ClockIcon, CalendarIcon } from '@heroicons/react/24/outline';
 import { useEffect, useState } from 'react';
+import { useTiltPress } from '../../hooks/useTiltPress';
 
 export interface CountdownEvent {
     title: string;
@@ -17,6 +18,7 @@ interface CountdownCardProps {
     onMouseLeave: () => void;
     layoutId?: string;
     hidden?: boolean;
+    closing?: boolean;
 }
 
 const CountdownCard: React.FC<CountdownCardProps> = ({
@@ -25,8 +27,10 @@ const CountdownCard: React.FC<CountdownCardProps> = ({
     onMouseEnter,
     onMouseLeave,
     layoutId,
-    hidden = false
+    hidden = false,
+    closing = false
 }) => {
+    const { tiltStyle, onPointerDown, onPointerUp, onPointerLeave } = useTiltPress();
     // Find top event or nearest event
     const topEvent = events.find(e => e.top) || events[0];
 
@@ -46,7 +50,7 @@ const CountdownCard: React.FC<CountdownCardProps> = ({
     return (
         <motion.div
             layoutId={layoutId}
-            className={`md:col-span-1 cursor-pointer group relative z-10 overflow-hidden rounded-[32px] duration-200 aspect-square md:h-full bg-white/40 dark:bg-[#1c1c1e]/60 backdrop-blur-xl transition-colors duration-300 ${hidden ? 'pointer-events-none' : ''}`}
+            className={`md:col-span-1 cursor-pointer group relative z-10 overflow-hidden rounded-[32px] duration-200 aspect-square md:h-full bg-white/40 dark:bg-[#1c1c1e]/60 backdrop-blur-xl transition-colors duration-300 ${(hidden || closing) ? 'pointer-events-none' : ''}`}
             animate={{ opacity: hidden ? 0 : 1 }}
             onMouseEnter={onMouseEnter}
             onMouseLeave={onMouseLeave}
@@ -54,6 +58,10 @@ const CountdownCard: React.FC<CountdownCardProps> = ({
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             transition={{ type: "spring", stiffness: 250, damping: 25, mass: 1.0 }}
+            style={tiltStyle}
+            onPointerDown={onPointerDown}
+            onPointerUp={onPointerUp}
+            onPointerLeave={onPointerLeave}
         >
             {/* Gradient Overlay (Teal/Blue to match "Time" vibe) */}
             <div className="absolute inset-0 bg-gradient-to-br from-teal-50/50 to-blue-50/50 dark:from-teal-900/20 dark:to-blue-900/20 z-0 opacity-80"></div>
