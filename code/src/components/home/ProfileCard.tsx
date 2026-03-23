@@ -27,11 +27,11 @@ const ProfileCard = ({ onClick, layoutId, hidden = false, closing = false }: Pro
             onPointerLeave={onPointerLeave}
         >
             {/* Gradient Overlay for Pink Glassmorphism tint */}
-            <div className="absolute inset-0 bg-gradient-to-br from-[#FCE7F3]/80 to-[#FBCFE8]/80 dark:from-[#3a0c25]/40 dark:to-[#4a0e2e]/40 z-0"></div>
+            <div className="absolute inset-0 bg-gradient-to-br from-[#FCE7F3]/80 to-[#FBCFE8]/80 dark:from-pink-500/10 dark:to-rose-600/5 z-0"></div>
 
             {/* Cloud Decorations (White Circles) */}
-            <div className="absolute top-[-50px] left-[-50px] z-0 pointer-events-none opacity-60 dark:opacity-30">
-                <div className="w-64 h-64 bg-white/40 dark:bg-white/10 rounded-full blur-[2px] absolute top-10 left-10"></div>
+            <div className="absolute top-[-50px] left-[-50px] z-0 pointer-events-none opacity-60 dark:opacity-20">
+                <div className="w-64 h-64 bg-white/40 dark:bg-pink-300/10 rounded-full blur-[2px] absolute top-10 left-10"></div>
                 <div className="w-48 h-48 bg-white/30 dark:bg-white/5 rounded-full blur-[2px] absolute top-[-10px] left-[80px]"></div>
                 <div className="w-40 h-40 bg-white/20 dark:bg-white/5 rounded-full blur-[2px] absolute top-[80px] left-[-20px]"></div>
             </div>
@@ -42,7 +42,7 @@ const ProfileCard = ({ onClick, layoutId, hidden = false, closing = false }: Pro
                 {/* Avatar Section */}
                 <div className="relative mt-4">
                     {/* Ring/Halo effect around avatar to match the 'cloud' look */}
-                    <div className="w-32 h-32 rounded-full bg-white/50 dark:bg-white/10 absolute -top-2 -left-2 blur-sm transition-colors duration-300"></div>
+                    <div className="w-32 h-32 rounded-full bg-white/50 dark:bg-pink-400/15 absolute -top-2 -left-2 blur-sm transition-colors duration-300"></div>
                     <div className="w-28 h-28 rounded-full shadow-lg overflow-hidden relative z-10 transition-colors duration-300">
                         <img src={personalInfo.avatar} alt="Avatar" className="w-full h-full object-cover" />
                     </div>
@@ -63,7 +63,7 @@ const ProfileCard = ({ onClick, layoutId, hidden = false, closing = false }: Pro
             </div>
 
             {/* Subtle Shine/Reflection */}
-            <div className="absolute top-0 right-0 w-2/3 h-2/3 bg-gradient-to-bl from-white/20 to-transparent pointer-events-none rounded-tr-[32px]"></div>
+            <div className="absolute top-0 right-0 w-2/3 h-2/3 bg-gradient-to-bl from-white/20 dark:from-transparent to-transparent pointer-events-none rounded-tr-[32px]"></div>
 
         </motion.div >
     );
