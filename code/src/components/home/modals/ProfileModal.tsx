@@ -36,6 +36,8 @@ const getSocialIcon = (iconName: string) => {
 };
 
 const ProfileModal = ({ isOpen, onClose, onExitComplete, layoutId }: ProfileModalProps) => {
+    const isWin98 = typeof document !== 'undefined' && document.documentElement.classList.contains('win98');
+
     // 锁定背景滚动
     // Use custom hook for scroll locking with layout shift prevention
     const { lockScroll, unlockScroll } = useScrollLock();
@@ -167,7 +169,7 @@ const ProfileModal = ({ isOpen, onClose, onExitComplete, layoutId }: ProfileModa
 
                                     {/* Footer */}
                                     <div className="mt-8 text-center text-[#86868b] text-[12px] opacity-60">
-                                        Designed by damesck<br />with Windows aesthetic
+                                        Designed by damesck<br />with {isWin98 ? 'Windows' : 'Apple'} aesthetic
                                     </div>
                                 </motion.div>
                             </div>
