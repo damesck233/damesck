@@ -514,5 +514,96 @@ html.win98 .win98-title-button {
 }
 
 html.win98 .win98-taskbar {
+  background: #c0c0c0 !important;
   align-items: center;
+  border-top: 2px solid #ffffff !important;
+  box-shadow: inset 0 1px 0 #dfdfdf !important;
+}
+
+html.win98 .win98-task-button {
+  background: #c0c0c0 !important;
+  border: 2px solid !important;
+  border-color: #ffffff #808080 #808080 #ffffff !important;
+  box-shadow: 1px 1px 0 #000 !important;
+}
+
+html.win98 .win98-task-button--active {
+  background: #b6b6b6 !important;
+  border-color: #808080 #ffffff #ffffff #808080 !important;
+  box-shadow: inset 1px 1px 0 #7a7a7a !important;
+}
+
+html.win98 .win98-taskbar-divider {
+  background: linear-gradient(90deg, #808080 0, #808080 50%, #ffffff 50%, #ffffff 100%) !important;
+}
+
+html.win98 .win98-contact-button {
+  background: #c0c0c0 !important;
+  color: #000000 !important;
+  border: 2px solid !important;
+  border-color: #ffffff #808080 #808080 #ffffff !important;
+  box-shadow: 1px 1px 0 #000 !important;
+  border-radius: 0 !important;
+}
+
+html.win98 .win98-contact-button:hover {
+  background: #d4d0c8 !important;
+}
+
+html.win98 .win98-contact-button:active {
+  border-color: #808080 #ffffff #ffffff #808080 !important;
+  box-shadow: inset 1px 1px 0 #7a7a7a !important;
+}
+
+html.win98 .win98-contact-button svg {
+  stroke-width: 1.6 !important;
+}
+
+html.win98 .win98-logo {
+  display: inline-grid;
+  grid-template-columns: repeat(2, 5px);
+  grid-template-rows: repeat(2, 5px);
+  gap: 1px;
+  width: 11px;
+  height: 11px;
+  transform: skew(-8deg);
+}
+
+html.win98 .win98-logo span:nth-child(1) {
+  background: #f25022;
+}
+
+html.win98 .win98-logo span:nth-child(2) {
+  background: #7fba00;
+}
+
+html.win98 .win98-logo span:nth-child(3) {
+  background: #00a4ef;
+}
+
+html.win98 .win98-logo span:nth-child(4) {
+  background: #ffb900;
+}
+
+html.win98 .win98-alert-icon {
+  position: relative;
+  color: #000;
+  font-weight: 700;
+}
+
+html.win98 .win98-alert-icon::before {
+  content: "";
+  position: absolute;
+  inset: 3px;
+  clip-path: polygon(50% 6%, 4% 94%, 96% 94%);
+  background: #ffd54a;
+  border: 2px solid #000;
+}
+
+html.win98 .win98-alert-icon span {
+  position: relative;
+  z-index: 1;
+  font-size: 24px;
+  line-height: 1;
+  margin-top: 2px;
 }

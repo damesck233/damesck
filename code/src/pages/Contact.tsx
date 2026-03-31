@@ -204,7 +204,7 @@ const ContactCard: React.FC<ContactCardProps> = ({ contact, onViewQRCode, onWebh
                 href={contact.link}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center px-3 py-1.5 rounded-full bg-[#007AFF] dark:bg-[#0063CC] text-white font-medium text-xs transition-all hover:bg-[#0063CC] whitespace-nowrap"
+                className="win98-contact-button inline-flex items-center px-3 py-1.5 rounded-full bg-[#007AFF] dark:bg-[#0063CC] text-white font-medium text-xs transition-all hover:bg-[#0063CC] whitespace-nowrap"
               >
                 访问链接
                 <svg className="ml-1 w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -216,7 +216,7 @@ const ContactCard: React.FC<ContactCardProps> = ({ contact, onViewQRCode, onWebh
             {contact.isEmail && (
               <a
                 href={`mailto:${contact.info}`}
-                className="inline-flex items-center px-3 py-1.5 rounded-full bg-[#007AFF] dark:bg-[#0063CC] text-white font-medium text-xs transition-all hover:bg-[#0063CC] whitespace-nowrap"
+                className="win98-contact-button inline-flex items-center px-3 py-1.5 rounded-full bg-[#007AFF] dark:bg-[#0063CC] text-white font-medium text-xs transition-all hover:bg-[#0063CC] whitespace-nowrap"
               >
                 发送邮件
                 <svg className="ml-1 w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -228,7 +228,7 @@ const ContactCard: React.FC<ContactCardProps> = ({ contact, onViewQRCode, onWebh
             {contact.qrCode && !contact.isLink && (
               <button
                 onClick={() => onViewQRCode(contact)}
-                className="inline-flex items-center px-3 py-1.5 rounded-full bg-[#007AFF] dark:bg-[#0063CC] text-white font-medium text-xs transition-all hover:bg-[#0063CC] whitespace-nowrap"
+                className="win98-contact-button inline-flex items-center px-3 py-1.5 rounded-full bg-[#007AFF] dark:bg-[#0063CC] text-white font-medium text-xs transition-all hover:bg-[#0063CC] whitespace-nowrap"
               >
                 查看二维码
                 <svg className="ml-1 w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -240,7 +240,7 @@ const ContactCard: React.FC<ContactCardProps> = ({ contact, onViewQRCode, onWebh
             {contact.qrCode && contact.isLink && (
               <button
                 onClick={() => onViewQRCode(contact)}
-                className="inline-flex items-center px-3 py-1.5 rounded-full bg-white/30 dark:bg-gray-700/60 text-gray-700 dark:text-gray-200 font-medium text-xs transition-all hover:bg-white/50 dark:hover:bg-gray-600/60 whitespace-nowrap"
+                className="win98-contact-button win98-contact-button--secondary inline-flex items-center px-3 py-1.5 rounded-full bg-white/30 dark:bg-gray-700/60 text-gray-700 dark:text-gray-200 font-medium text-xs transition-all hover:bg-white/50 dark:hover:bg-gray-600/60 whitespace-nowrap"
               >
                 二维码
                 <svg className="ml-1 w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -252,7 +252,7 @@ const ContactCard: React.FC<ContactCardProps> = ({ contact, onViewQRCode, onWebh
             {contact.isWebhook && onWebhookClick && (
               <button
                 onClick={onWebhookClick}
-                className="inline-flex items-center px-3 py-1.5 rounded-full bg-[#00D6B9] dark:bg-[#00B5A0] text-white font-medium text-xs transition-all hover:bg-[#00B5A0] whitespace-nowrap"
+                className="win98-contact-button inline-flex items-center px-3 py-1.5 rounded-full bg-[#00D6B9] dark:bg-[#00B5A0] text-white font-medium text-xs transition-all hover:bg-[#00B5A0] whitespace-nowrap"
               >
                 发送消息
                 <svg className="ml-1 w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -65,7 +65,12 @@ export default function Win98Easter({ isActive, onClose }: Win98EasterProps) {
           <div className="win98-window pointer-events-auto w-full max-w-[520px]">
             <div className="win98-titlebar flex items-center justify-between gap-3 px-2 py-1">
               <div className="flex items-center gap-2 text-sm font-bold">
-                <span aria-hidden="true">🪟</span>
+                <span className="win98-logo" aria-hidden="true">
+                  <span />
+                  <span />
+                  <span />
+                  <span />
+                </span>
                 <span>Windows 98</span>
               </div>
               <button
@@ -80,8 +85,8 @@ export default function Win98Easter({ isActive, onClose }: Win98EasterProps) {
 
             <div className="p-4 sm:p-5">
               <div className="win98-inset flex items-start gap-4 bg-[#c0c0c0] p-4">
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center text-2xl leading-none">
-                  <span aria-hidden="true">⚠</span>
+                <div className="win98-alert-icon flex h-10 w-10 shrink-0 items-center justify-center text-2xl leading-none">
+                  <span aria-hidden="true">!</span>
                 </div>
                 <div className="space-y-3 text-sm leading-6 text-black">
                   <p className="font-bold">欢迎使用 Windows 98！</p>
@@ -111,14 +116,21 @@ export default function Win98Easter({ isActive, onClose }: Win98EasterProps) {
       )}
 
       <div className="win98-taskbar fixed inset-x-0 bottom-0 z-[80] flex h-10 items-center gap-1 px-1.5">
-        <button type="button" className="flex items-center gap-1 px-3 py-1 text-sm font-bold">
-          <span aria-hidden="true">🪟</span>
+        <button type="button" className="win98-task-button flex items-center gap-1 px-3 py-1 text-sm font-bold">
+          <span className="win98-logo" aria-hidden="true">
+            <span />
+            <span />
+            <span />
+            <span />
+          </span>
           <span>开始</span>
         </button>
 
-        <div className="win98-inset min-w-0 flex-1 px-3 py-1 text-sm">
+        <div className="win98-task-button win98-task-button--active min-w-0 flex-1 px-3 py-1 text-sm">
           <span className="block truncate">{pageLabel}</span>
         </div>
+
+        <div className="win98-taskbar-divider h-6 w-px" aria-hidden="true" />
 
         <div className="win98-inset min-w-[72px] px-3 py-1 text-center text-sm tabular-nums">
           {clock}
