@@ -424,3 +424,95 @@ html[data-perf="low"] [class*="backdrop-blur"] {
   --os-handle-border-radius: 10px;
   --os-handle-interactive-area-offset: 4px;
 }
+
+html.win98 {
+  --bg-primary: #c0c0c0;
+  --glass-bg: #c0c0c0;
+  --glass-border: #ffffff;
+  --glass-shadow: none;
+  --card-bg: #c0c0c0;
+  --card-border: #808080;
+  --text-primary: #000000;
+  --text-secondary: #000000;
+  --navbar-bg: #c0c0c0;
+  --scrollbar-thumb: #808080;
+  --scrollbar-thumb-hover: #4d4d4d;
+  background-image: none !important;
+  background-color: #008080 !important;
+}
+
+html.win98 body {
+  background: transparent !important;
+  padding-bottom: 40px !important;
+}
+
+html.win98,
+html.win98 * {
+  font-family: "Tahoma", "MS Sans Serif", Arial, sans-serif !important;
+}
+
+html.win98 *,
+html.win98 *::before,
+html.win98 *::after {
+  border-radius: 0 !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  text-shadow: none !important;
+}
+
+html.win98 [class*="bg-white"],
+html.win98 [class*="glass"],
+html.win98 .content-block,
+html.win98 .split-card,
+html.win98 .split-card-body,
+html.win98 .acrylic-bg,
+html.win98 footer > div {
+  background: #c0c0c0 !important;
+  border: 2px solid !important;
+  border-color: #ffffff #808080 #808080 #ffffff !important;
+  box-shadow: 1px 1px 0 #000 !important;
+}
+
+html.win98 button,
+html.win98 a[class*="btn"],
+html.win98 .win98-window,
+html.win98 .win98-taskbar,
+html.win98 .win98-surface {
+  background: #c0c0c0 !important;
+  border: 2px solid !important;
+  border-color: #ffffff #808080 #808080 #ffffff !important;
+  color: #000 !important;
+  box-shadow: 1px 1px 0 #000 !important;
+  cursor: default !important;
+}
+
+html.win98 button:active,
+html.win98 .win98-inset {
+  background: #c0c0c0 !important;
+  border: 2px solid !important;
+  border-color: #808080 #ffffff #ffffff #808080 !important;
+  box-shadow: inset 1px 1px 0 #dfdfdf !important;
+}
+
+html.win98 nav,
+html.win98 [class*="Nav"] {
+  background: #c0c0c0 !important;
+  border-bottom: 2px solid #808080 !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+}
+
+html.win98 .win98-titlebar {
+  background: linear-gradient(90deg, #000080 0%, #1084d0 100%) !important;
+  color: #ffffff !important;
+}
+
+html.win98 .win98-title-button {
+  min-width: 24px;
+  padding-bottom: 2px;
+  line-height: 1;
+}
+
+html.win98 .win98-taskbar {
+  align-items: center;
+}

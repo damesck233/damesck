@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Routes, Route, NavLink } from 'react-router-dom'
 import { motion, AnimatePresence, MotionConfig } from 'framer-motion'
-import { useState, useEffect, lazy, Suspense, memo, useRef } from 'react'
+import { useState, useEffect, lazy, Suspense, memo, useRef, useCallback } from 'react'
 import {
   HomeIcon,
   BriefcaseIcon,
@@ -27,6 +27,7 @@ const Travels = lazy(() => import('./pages/Travels'))
 const About = lazy(() => import('./pages/About'))
 import WebWalker from './components/WebWalker'
 import DynamicIslandNav from './components/DynamicIslandNav'
+import Win98Easter from './components/Win98Easter'
 import { PerformanceProvider, usePerformanceMode } from './contexts/PerformanceContext'
 import RestrictedAccess from './components/RestrictedAccess'
 import ScrollToTop from './components/ScrollToTop'
@@ -119,8 +120,14 @@ function AppInner() {
   const { isLowPerf } = usePerformanceMode();
   const mainContentRef = useRef<HTMLDivElement>(null);
   const [themeInitialized, setThemeInitialized] = useState(false);
+  const [isWin98, setIsWin98] = useState(false);
   const componentsPreloaded = useRef(false);
 
+  const dismissWin98 = useCallback(() => {
+    sessionStorage.setItem('april-fools-win98-dismissed', 'true');
+    document.documentElement.classList.remove('win98');
+    setIsWin98(false);
+  }, []);
 
   // 立即初始化主题模式，不等待其他资源
   useEffect(() => {
@@ -136,7 +143,26 @@ function AppInner() {
       document.documentElement.classList.add('dark');
     }
 
+    const dismissedWin98 = sessionStorage.getItem('april-fools-win98-dismissed') === 'true';
+    const today = new Date();
+    const isAprilFools = today.getMonth() === 3 && today.getDate() === 1;
+    const searchParams = new URLSearchParams(window.location.search);
+    const hasWin98Query = searchParams.get('win98') === 'true';
+    const shouldEnableWin98 = isAprilFools || hasWin98Query;
+
+    if (shouldEnableWin98 && !dismissedWin98) {
+      document.documentElement.classList.add('win98');
+      setIsWin98(true);
+    } else {
+      document.documentElement.classList.remove('win98');
+      setIsWin98(false);
+    }
+
     setThemeInitialized(true);
+
+    return () => {
+      document.documentElement.classList.remove('win98');
+    };
   }, []);
 
   // 提前预加载组件
@@ -167,7 +193,9 @@ function AppInner() {
       <WebWalker />
 
       {/* 背景图片可以放在外部，确保在组件间过渡时保持显示 */}
-      <BackgroundImage />
+      {!isWin98 && <BackgroundImage />}
+
+      <Win98Easter isActive={isWin98} onClose={dismissWin98} />
 
       {/* 主内容区域 - 使用Apple风格的动画 */}
       <motion.div

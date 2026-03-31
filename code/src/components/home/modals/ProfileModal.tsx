@@ -1,6 +1,5 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { XMarkIcon, ChatBubbleLeftRightIcon, MinusIcon, ArrowTopRightOnSquareIcon } from '@heroicons/react/24/outline';
-import { AppleStyleIcon } from '../../ui/AppleIcons';
 import myData from '../../../data/my/data.json';
 import { useEffect } from 'react';
 import { useScrollLock } from '../../../hooks/useScrollLock';
@@ -168,7 +167,7 @@ const ProfileModal = ({ isOpen, onClose, onExitComplete, layoutId }: ProfileModa
 
                                     {/* Footer */}
                                     <div className="mt-8 text-center text-[#86868b] text-[12px] opacity-60">
-                                        Designed by damesck<br />with Apple aesthetic
+                                        Designed by damesck<br />with Windows aesthetic
                                     </div>
                                 </motion.div>
                             </div>
@@ -185,7 +184,7 @@ const ProfileModal = ({ isOpen, onClose, onExitComplete, layoutId }: ProfileModa
                                         transition={{ delay: 0.1 }}
                                     >
                                         <h3 className="text-[20px] font-bold text-[#1d1d1f] dark:text-white mb-4 flex items-center gap-2">
-                                            <span className="text-[#007aff]"></span> {myData.about.title}
+                                            {myData.about.title}
                                         </h3>
                                         <p className="text-[16px] leading-relaxed text-[#1d1d1f]/80 dark:text-white/80 font-normal">
                                             {myData.about.description}
