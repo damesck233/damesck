@@ -15,6 +15,7 @@ import { Device } from '../DevicesCard';
 interface DevicesModalProps {
     isOpen: boolean;
     onClose: () => void;
+    onExitComplete?: () => void;
     devices: Device[];
     layoutId?: string;
 }
@@ -22,6 +23,7 @@ interface DevicesModalProps {
 const DevicesModal: React.FC<DevicesModalProps> = ({
     isOpen,
     onClose,
+    onExitComplete,
     devices,
     layoutId
 }) => {
@@ -43,8 +45,13 @@ const DevicesModal: React.FC<DevicesModalProps> = ({
         return <CpuChipIcon className="w-8 h-8 text-gray-500" />;
     };
 
+    const handleExitComplete = () => {
+        unlockScroll();
+        onExitComplete?.();
+    };
+
     return (
-        <AnimatePresence onExitComplete={unlockScroll}>
+        <AnimatePresence onExitComplete={handleExitComplete}>
             {isOpen && (
                 <>
                     {/* Backdrop */}

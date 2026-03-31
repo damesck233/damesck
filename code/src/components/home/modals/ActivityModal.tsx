@@ -23,6 +23,7 @@ export interface TimelineEvent {
 interface ActivityModalProps {
     isOpen: boolean;
     onClose: () => void;
+    onExitComplete?: () => void;
     timelineEvents: TimelineEvent[];
     layoutId?: string;
 }
@@ -30,6 +31,7 @@ interface ActivityModalProps {
 const ActivityModal: React.FC<ActivityModalProps> = ({
     isOpen,
     onClose,
+    onExitComplete,
     timelineEvents,
     layoutId
 }) => {
@@ -70,9 +72,14 @@ const ActivityModal: React.FC<ActivityModalProps> = ({
         }
     };
 
+    const handleExitComplete = () => {
+        unlockScroll();
+        onExitComplete?.();
+    };
+
 
     return (
-        <AnimatePresence onExitComplete={unlockScroll}>
+        <AnimatePresence onExitComplete={handleExitComplete}>
             {isOpen && (
                 <>
                     {/* Backdrop */}

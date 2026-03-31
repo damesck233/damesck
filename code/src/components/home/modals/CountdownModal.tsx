@@ -14,6 +14,7 @@ import { CountdownEvent } from '../CountdownCard';
 interface CountdownModalProps {
     isOpen: boolean;
     onClose: () => void;
+    onExitComplete?: () => void;
     events: CountdownEvent[];
     layoutId?: string;
 }
@@ -21,6 +22,7 @@ interface CountdownModalProps {
 const CountdownModal: React.FC<CountdownModalProps> = ({
     isOpen,
     onClose,
+    onExitComplete,
     events,
     layoutId
 }) => {
@@ -54,8 +56,13 @@ const CountdownModal: React.FC<CountdownModalProps> = ({
         return Math.min(Math.max((current / total) * 100, 0), 100);
     };
 
+    const handleExitComplete = () => {
+        unlockScroll();
+        onExitComplete?.();
+    };
+
     return (
-        <AnimatePresence onExitComplete={unlockScroll}>
+        <AnimatePresence onExitComplete={handleExitComplete}>
             {isOpen && (
                 <>
                     {/* Backdrop */}

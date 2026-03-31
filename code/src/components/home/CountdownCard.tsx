@@ -31,6 +31,8 @@ const CountdownCard: React.FC<CountdownCardProps> = ({
     closing = false
 }) => {
     const { tiltStyle, onPointerDown, onPointerUp, onPointerLeave } = useTiltPress();
+    const isSuppressed = hidden || closing;
+    const isVisible = !hidden;
     // Find top event or nearest event
     const topEvent = events.find(e => e.top) || events[0];
 
@@ -50,18 +52,18 @@ const CountdownCard: React.FC<CountdownCardProps> = ({
     return (
         <motion.div
             layoutId={layoutId}
-            className={`md:col-span-1 cursor-pointer group relative z-10 overflow-hidden rounded-[32px] duration-200 aspect-square md:h-full bg-white/40 dark:bg-[#1c1c1e]/60 backdrop-blur-xl transition-colors duration-300 ${(hidden || closing) ? 'pointer-events-none' : ''}`}
-            animate={{ opacity: hidden ? 0 : 1 }}
-            onMouseEnter={onMouseEnter}
-            onMouseLeave={onMouseLeave}
-            onClick={onClick}
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
+            className={`md:col-span-1 cursor-pointer group relative z-10 overflow-hidden rounded-[32px] duration-200 aspect-square md:h-full bg-white/40 dark:bg-[#1c1c1e]/60 backdrop-blur-xl transition-colors duration-300 ${isSuppressed ? 'pointer-events-none' : ''}`}
+            animate={{ opacity: isVisible ? 1 : 0 }}
+            onMouseEnter={isSuppressed ? undefined : onMouseEnter}
+            onMouseLeave={isSuppressed ? undefined : onMouseLeave}
+            onClick={isSuppressed ? undefined : onClick}
+            whileHover={isSuppressed ? undefined : { scale: 1.02 }}
+            whileTap={isSuppressed ? undefined : { scale: 0.98 }}
             transition={{ type: "spring", stiffness: 250, damping: 25, mass: 1.0 }}
             style={tiltStyle}
-            onPointerDown={onPointerDown}
-            onPointerUp={onPointerUp}
-            onPointerLeave={onPointerLeave}
+            onPointerDown={isSuppressed ? undefined : onPointerDown}
+            onPointerUp={isSuppressed ? undefined : onPointerUp}
+            onPointerLeave={isSuppressed ? undefined : onPointerLeave}
         >
             {/* Gradient Overlay (Teal/Blue to match "Time" vibe) */}
             <div className="absolute inset-0 bg-gradient-to-br from-teal-50/50 to-blue-50/50 dark:from-teal-900/20 dark:to-blue-900/20 z-0 opacity-80"></div>

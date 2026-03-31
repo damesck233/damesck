@@ -40,6 +40,8 @@ const ActivityCard: React.FC<ActivityCardProps> = ({
     closing = false
 }) => {
     const { tiltStyle, onPointerDown, onPointerUp, onPointerLeave } = useTiltPress();
+    const isSuppressed = hidden || closing;
+    const isVisible = !hidden;
 
     const [timeStats, setTimeStats] = useState({
         dayOfYear: 0,
@@ -112,18 +114,18 @@ const ActivityCard: React.FC<ActivityCardProps> = ({
     return (
         <motion.div
             layoutId={layoutId}
-            className={`md:col-span-2 cursor-pointer group relative z-10 overflow-hidden rounded-[32px] duration-200 aspect-auto md:h-full bg-white/40 dark:bg-[#1c1c1e]/60 backdrop-blur-xl transition-colors duration-300 ${(hidden || closing) ? 'pointer-events-none' : ''}`}
-            animate={{ opacity: hidden ? 0 : 1 }}
-            onMouseEnter={onMouseEnter}
-            onMouseLeave={onMouseLeave}
-            onClick={onClick}
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
+            className={`md:col-span-2 cursor-pointer group relative z-10 overflow-hidden rounded-[32px] duration-200 aspect-auto md:h-full bg-white/40 dark:bg-[#1c1c1e]/60 backdrop-blur-xl transition-colors duration-300 ${isSuppressed ? 'pointer-events-none' : ''}`}
+            animate={{ opacity: isVisible ? 1 : 0 }}
+            onMouseEnter={isSuppressed ? undefined : onMouseEnter}
+            onMouseLeave={isSuppressed ? undefined : onMouseLeave}
+            onClick={isSuppressed ? undefined : onClick}
+            whileHover={isSuppressed ? undefined : { scale: 1.02 }}
+            whileTap={isSuppressed ? undefined : { scale: 0.98 }}
             transition={{ type: "spring", stiffness: 250, damping: 25, mass: 1.0 }}
             style={tiltStyle}
-            onPointerDown={onPointerDown}
-            onPointerUp={onPointerUp}
-            onPointerLeave={onPointerLeave}
+            onPointerDown={isSuppressed ? undefined : onPointerDown}
+            onPointerUp={isSuppressed ? undefined : onPointerUp}
+            onPointerLeave={isSuppressed ? undefined : onPointerLeave}
         >
 
             {/* Gradient Overlay */}

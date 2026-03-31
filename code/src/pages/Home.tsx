@@ -141,6 +141,35 @@ interface ApiResponse {
   };
 }
 
+type ModalKey = 'personal' | 'skills' | 'stats' | 'devices' | 'countdown' | 'blogs';
+
+const initialHoveredCardsState: Record<ModalKey, boolean> = {
+  personal: false,
+  skills: false,
+  stats: false,
+  devices: false,
+  countdown: false,
+  blogs: false
+};
+
+const initialHoveredHeadersState: Record<ModalKey, boolean> = {
+  personal: false,
+  skills: false,
+  stats: false,
+  devices: false,
+  countdown: false,
+  blogs: false
+};
+
+const initialModalState: Record<ModalKey, boolean> = {
+  personal: false,
+  skills: false,
+  stats: false,
+  devices: false,
+  countdown: false,
+  blogs: false
+};
+
 // 现代化的主题颜色 - 单色设计，减少渐变和紫色
 const appleColors = {
   blue: { start: '#007AFF', end: '#007AFF', shadow: 'rgba(0, 122, 255, 0.25)' },
@@ -412,73 +441,56 @@ const Home = () => {
   });
 
   // 悬停状态管理
-  const [hoveredCards, setHoveredCards] = useState({
-    personal: false,
-    skills: false,
-    stats: false,
-    devices: false,
-    countdown: false,
-    blogs: false
-  });
+  const [hoveredCards, setHoveredCards] = useState(initialHoveredCardsState);
 
   // 标题悬停状态
-  const [hoveredHeaders, setHoveredHeaders] = useState({
-    personal: false,
-    skills: false,
-    stats: false,
-    devices: false,
-    countdown: false,
-    blogs: false
-  });
+  const [hoveredHeaders, setHoveredHeaders] = useState(initialHoveredHeadersState);
 
   // 模态框状态
-  const [modalOpen, setModalOpen] = useState({
-    personal: false,
-    skills: false,
-    stats: false,
-    devices: false,
-    countdown: false,
-    blogs: false
-  });
-  const [closingModals, setClosingModals] = useState<Record<string, boolean>>({});
+  const [modalOpen, setModalOpen] = useState(initialModalState);
+  const [closingModals, setClosingModals] = useState<Record<ModalKey, boolean>>(initialModalState);
 
   // 存储从API获取的博客文章
   const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
   const [loading, setLoading] = useState(true);
   const [apiError, setApiError] = useState<ApiError | null>(null);
 
-  const handleMouseEnter = (card: string) => {
+  const handleMouseEnter = (card: ModalKey) => {
     // 立即设置悬停状态，无需延迟
-    setHoveredCards({ ...hoveredCards, [card]: true });
+    setHoveredCards(prev => ({ ...prev, [card]: true }));
   };
 
-  const handleMouseLeave = (card: string) => {
+  const handleMouseLeave = (card: ModalKey) => {
     // 添加短暂延迟，避免鼠标在卡片边缘移动时状态快速切换
     setTimeout(() => {
       setHoveredCards(prev => ({ ...prev, [card]: false }));
     }, 50);
   };
 
-  const handleHeaderMouseEnter = (header: string) => {
-    setHoveredHeaders({ ...hoveredHeaders, [header]: true });
+  const handleHeaderMouseEnter = (header: ModalKey) => {
+    setHoveredHeaders(prev => ({ ...prev, [header]: true }));
   };
 
-  const handleHeaderMouseLeave = (header: string) => {
+  const handleHeaderMouseLeave = (header: ModalKey) => {
     setTimeout(() => {
       setHoveredHeaders(prev => ({ ...prev, [header]: false }));
     }, 50);
   };
 
-  const openModal = (modal: string) => {
-    setModalOpen({ ...modalOpen, [modal]: true });
+  const openModal = (modal: ModalKey) => {
+    setClosingModals(prev => ({ ...prev, [modal]: false }));
+    setModalOpen(prev => ({ ...prev, [modal]: true }));
   };
 
-  const closeModal = (modal: string) => {
-    setModalOpen(prev => ({ ...prev, [modal]: false }));
+  const closeModal = (modal: ModalKey) => {
+    setHoveredCards(prev => ({ ...prev, [modal]: false }));
+    setHoveredHeaders(prev => ({ ...prev, [modal]: false }));
     setClosingModals(prev => ({ ...prev, [modal]: true }));
-    setTimeout(() => {
-      setClosingModals(prev => ({ ...prev, [modal]: false }));
-    }, 450);
+    setModalOpen(prev => ({ ...prev, [modal]: false }));
+  };
+
+  const handleModalExitComplete = (modal: ModalKey) => {
+    setClosingModals(prev => ({ ...prev, [modal]: false }));
   };
 
   // 每天更新倒计时
@@ -694,14 +706,7 @@ const Home = () => {
       const target = e.target as HTMLElement;
       if (!target.closest('.card-container')) {
         // 如果鼠标不在任何卡片内，重置所有卡片的悬停状态
-        setHoveredCards({
-          personal: false,
-          skills: false,
-          stats: false,
-          devices: false,
-          countdown: false,
-          blogs: false
-        });
+        setHoveredCards(initialHoveredCardsState);
       }
     };
 
@@ -709,14 +714,7 @@ const Home = () => {
     const handleClickOutside = () => {
       if (!modalOpen.personal && !modalOpen.skills && !modalOpen.stats &&
         !modalOpen.devices && !modalOpen.countdown && !modalOpen.blogs) {
-        setHoveredCards({
-          personal: false,
-          skills: false,
-          stats: false,
-          devices: false,
-          countdown: false,
-          blogs: false
-        });
+        setHoveredCards(initialHoveredCardsState);
       }
     };
 
@@ -805,6 +803,7 @@ const Home = () => {
         <ActivityModal
           isOpen={modalOpen.skills}
           onClose={() => closeModal('skills')}
+          onExitComplete={() => handleModalExitComplete('skills')}
           timelineEvents={myData.timelineEvents}
           layoutId={enableMorph ? 'activity-card' : undefined}
         />
@@ -815,6 +814,7 @@ const Home = () => {
         <ProfileModal
           isOpen={modalOpen.personal}
           onClose={() => closeModal('personal')}
+          onExitComplete={() => handleModalExitComplete('personal')}
           layoutId={enableMorph ? 'profile-card' : undefined}
         />
       </Suspense>
@@ -824,6 +824,7 @@ const Home = () => {
         <DevicesModal
           isOpen={modalOpen.devices}
           onClose={() => closeModal('devices')}
+          onExitComplete={() => handleModalExitComplete('devices')}
           devices={devices}
           layoutId={enableMorph ? 'devices-card' : undefined}
         />
@@ -834,6 +835,7 @@ const Home = () => {
         <CountdownModal
           isOpen={modalOpen.countdown}
           onClose={() => closeModal('countdown')}
+          onExitComplete={() => handleModalExitComplete('countdown')}
           events={countdownData}
           layoutId={enableMorph ? 'countdown-card' : undefined}
         />
@@ -844,6 +846,7 @@ const Home = () => {
         <BlogModal
           isOpen={modalOpen.blogs}
           onClose={() => closeModal('blogs')}
+          onExitComplete={() => handleModalExitComplete('blogs')}
           blogPosts={blogPosts}
           layoutId={enableMorph ? 'blog-card' : undefined}
         />

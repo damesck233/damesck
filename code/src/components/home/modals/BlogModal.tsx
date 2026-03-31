@@ -14,6 +14,7 @@ import { useScrollLock } from '../../../hooks/useScrollLock';
 interface BlogModalProps {
     isOpen: boolean;
     onClose: () => void;
+    onExitComplete?: () => void;
     blogPosts: BlogPost[];
     layoutId?: string;
     hidden?: boolean;
@@ -22,6 +23,7 @@ interface BlogModalProps {
 const BlogModal: React.FC<BlogModalProps> = ({
     isOpen,
     onClose,
+    onExitComplete,
     blogPosts,
     layoutId
 }) => {
@@ -47,8 +49,13 @@ const BlogModal: React.FC<BlogModalProps> = ({
         ? blogPosts
         : blogPosts.filter(p => p.categories?.some(c => c.name === selectedCategory));
 
+    const handleExitComplete = () => {
+        unlockScroll();
+        onExitComplete?.();
+    };
+
     return (
-        <AnimatePresence>
+        <AnimatePresence onExitComplete={handleExitComplete}>
             {isOpen && (
                 <>
                     {/* Backdrop */}

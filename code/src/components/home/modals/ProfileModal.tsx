@@ -10,6 +10,7 @@ const { personalInfo, socialLinks } = myData;
 interface ProfileModalProps {
     isOpen: boolean;
     onClose: () => void;
+    onExitComplete?: () => void;
     layoutId?: string;
 }
 
@@ -35,7 +36,7 @@ const getSocialIcon = (iconName: string) => {
     return <svg {...commonProps}><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H6.5A2.5 2.5 0 0 0 4 4.5v15ZM6.5 4H20v11H6.5a4.5 4.5 0 0 0-1.5.26V4.5A.5.5 0 0 1 6.5 4Z" /></svg>;
 };
 
-const ProfileModal = ({ isOpen, onClose, layoutId }: ProfileModalProps) => {
+const ProfileModal = ({ isOpen, onClose, onExitComplete, layoutId }: ProfileModalProps) => {
     // 锁定背景滚动
     // Use custom hook for scroll locking with layout shift prevention
     const { lockScroll, unlockScroll } = useScrollLock();
@@ -51,8 +52,13 @@ const ProfileModal = ({ isOpen, onClose, layoutId }: ProfileModalProps) => {
         };
     }, [isOpen, lockScroll, unlockScroll]);
 
+    const handleExitComplete = () => {
+        unlockScroll();
+        onExitComplete?.();
+    };
+
     return (
-        <AnimatePresence>
+        <AnimatePresence onExitComplete={handleExitComplete}>
             {isOpen && (
                 <>
                     {/* 背景遮罩 */}
