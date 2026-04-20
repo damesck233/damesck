@@ -21,6 +21,7 @@ const appleEaseInOut = [0.4, 0, 0.2, 1]; // Apple风格曲线
 // 使用 lazy 加载页面组件，但预加载以提高速度
 const Home = lazy(() => import('./pages/Home'));
 const Blog = lazy(() => import('./pages/Blog'))
+const BlogPost = lazy(() => import('./pages/BlogPost'))
 const Contact = lazy(() => import('./pages/Contact'))
 const Friends = lazy(() => import('./pages/Friends'))
 const Travels = lazy(() => import('./pages/Travels'))
@@ -32,7 +33,7 @@ import { PerformanceProvider, usePerformanceMode } from './contexts/PerformanceC
 import RestrictedAccess from './components/RestrictedAccess'
 import ScrollToTop from './components/ScrollToTop'
 import { preloadResourcesWithMinTime } from './utils/preloader'
-const bgImage = 'https://img.klpz.net/file/tc/2026/03/13/69b3cbfa2648f_1773390842.webp'
+const bgImage = 'https://img.klpz.net/file/tc/2026/04/02/69ce11d6147ef_1775112662.png'
 const bgPlaceholder = 'data:image/webp;base64,UklGRnYAAABXRUJQVlA4IGoAAADwAwCdASoUAA0APzmEuVOvKKWisAgB4CcJZgCdEf/gPjzNvF5J8s1wAPfa9nR9ymMZZjBVj6isAgWQSgCrEdElEDGRKAq8rb0S2RWQUQoT7MFnf4HPdmIsTiW+I5Tryd7G1yX8IYDqAAAA'
 
 // 将背景图片组件分离，减少重渲染
@@ -98,6 +99,7 @@ const PageContent = memo(() => (
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/blog" element={<Blog />} />
+        <Route path="/blog/:slug" element={<BlogPost />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/friends" element={<Friends />} />
         <Route path="/travels" element={<Travels />} />

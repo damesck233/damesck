@@ -45,6 +45,13 @@
     ],
     "timelineEvents": [
         {
+            "date": "2026-04-18",
+            "title": "maimai DX",
+            "description": "达成W3",
+            "icon": "https://img.klpz.net/file/tc/2026/01/07/695d517bcce5e_1767723387.jpg",
+            "color": "purple"
+        },
+        {
             "date": "2026-02-26",
             "title": "maimai DX",
             "description": "达成W2",

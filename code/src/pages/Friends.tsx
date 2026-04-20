@@ -72,6 +72,12 @@ const Friends = () => {
       avatar: "https://www.mugzx.top/api/avatar.png",
       url: "https://blog.mugzx.top",
       description: "向上革命，向下实践。"
+    },
+    {
+      name: "Viki 写东西的地方",
+      avatar: "https://blog.viki.moe/avatar.png",
+      url: "https://blog.viki.moe",
+      description: "生活需要记录。"
     }
   ]);
 
