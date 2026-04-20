@@ -21,7 +21,6 @@ const appleEaseInOut = [0.4, 0, 0.2, 1]; // Apple风格曲线
 // 使用 lazy 加载页面组件，但预加载以提高速度
 const Home = lazy(() => import('./pages/Home'));
 const Blog = lazy(() => import('./pages/Blog'))
-const BlogPost = lazy(() => import('./pages/BlogPost'))
 const Contact = lazy(() => import('./pages/Contact'))
 const Friends = lazy(() => import('./pages/Friends'))
 const Travels = lazy(() => import('./pages/Travels'))
@@ -99,7 +98,6 @@ const PageContent = memo(() => (
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/blog" element={<Blog />} />
-        <Route path="/blog/:slug" element={<BlogPost />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/friends" element={<Friends />} />
         <Route path="/travels" element={<Travels />} />

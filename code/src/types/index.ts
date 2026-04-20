@@ -17,6 +17,8 @@ export interface BlogPost {
         name: string;
         color?: string;
     }>;
+    cover_image?: string;
+    views?: number;
 }
 
 export interface ApiError {
