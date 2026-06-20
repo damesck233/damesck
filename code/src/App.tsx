@@ -32,8 +32,8 @@ import { PerformanceProvider, usePerformanceMode } from './contexts/PerformanceC
 import RestrictedAccess from './components/RestrictedAccess'
 import ScrollToTop from './components/ScrollToTop'
 import { preloadResourcesWithMinTime } from './utils/preloader'
-const bgImage = 'https://img.klpz.net/file/tc/2026/04/02/69ce11d6147ef_1775112662.png'
-const bgPlaceholder = 'data:image/webp;base64,UklGRnYAAABXRUJQVlA4IGoAAADwAwCdASoUAA0APzmEuVOvKKWisAgB4CcJZgCdEf/gPjzNvF5J8s1wAPfa9nR9ymMZZjBVj6isAgWQSgCrEdElEDGRKAq8rb0S2RWQUQoT7MFnf4HPdmIsTiW+I5Tryd7G1yX8IYDqAAAA'
+const bgImage = '/img/Background_image.avif'
+const bgPlaceholder = '/img/bg-placeholder.webp'
 
 // 将背景图片组件分离，减少重渲染
 const BackgroundImage = memo(() => {
@@ -41,8 +41,9 @@ const BackgroundImage = memo(() => {
 
   useEffect(() => {
     const img = new Image();
-    img.src = bgImage;
     img.onload = () => setLoaded(true);
+    img.onerror = () => { img.src = '/img/Background_image.webp'; };
+    img.src = bgImage;
   }, []);
 
   const bgStyle: React.CSSProperties = {
