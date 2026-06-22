@@ -7,7 +7,7 @@ html {
   height: -webkit-fill-available;
   /* Mounting the background on html itself is the only reliable way to fill
      the area behind iOS Safari's toolbar (z-index:-1 fixed divs get clipped) */
-  background-image: url('https://img.klpz.net/file/tc/2026/03/13/69b3cbfa2648f_1773390842.webp');
+  background-image: url('/img/Background_image.webp?v=2');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
