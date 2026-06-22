@@ -32,8 +32,8 @@ import { PerformanceProvider, usePerformanceMode } from './contexts/PerformanceC
 import RestrictedAccess from './components/RestrictedAccess'
 import ScrollToTop from './components/ScrollToTop'
 import { preloadResourcesWithMinTime } from './utils/preloader'
-const bgImage = '/img/Background_image.avif'
-const bgPlaceholder = '/img/bg-placeholder.webp'
+const bgImage = '/img/Background_image.avif?v=2'
+const bgPlaceholder = '/img/bg-placeholder.webp?v=2'
 
 // 将背景图片组件分离，减少重渲染
 const BackgroundImage = memo(() => {
