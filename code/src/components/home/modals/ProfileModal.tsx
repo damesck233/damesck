@@ -1,4 +1,5 @@
 import { motion, AnimatePresence } from 'framer-motion';
+import { morphSpring } from "../cardMotion";
 import { XMarkIcon, ChatBubbleLeftRightIcon, MinusIcon, ArrowTopRightOnSquareIcon } from '@heroicons/react/24/outline';
 import myData from '../../../data/my/data.json';
 import { useEffect } from 'react';
@@ -81,15 +82,7 @@ const ProfileModal = ({ isOpen, onClose, onExitComplete, layoutId }: ProfileModa
                             exit={!layoutId ? { opacity: 0, scale: 0.95 } : undefined}
                             className="w-full md:max-w-[1000px] h-[90vh] md:h-[750px] bg-white/95 dark:bg-[#1c1c1e]/95 rounded-[32px] shadow-2xl overflow-y-auto md:overflow-hidden pointer-events-auto flex flex-col md:flex-row relative p-2"
                             style={{ willChange: "transform" }}
-                            transition={layoutId ? {
-                                type: "spring",
-                                stiffness: 300,
-                                damping: 30,
-                                mass: 1.0
-                            } : {
-                                duration: 0.2,
-                                ease: "easeOut"
-                            }}
+                            transition={layoutId ? morphSpring : { duration: 0.2, ease: "easeOut" }}
                         >
                             {/* Left Sidebar (Floating Look) */}
                             <div className="w-full md:w-[300px] flex-shrink-0 bg-white/60 dark:bg-white/5 backdrop-blur-xl rounded-[24px] shadow-sm flex flex-col relative overflow-hidden border-b md:border-b-0 md:border-r border-[#FEF9F1] dark:border-white/5 z-20">
@@ -123,29 +116,44 @@ const ProfileModal = ({ isOpen, onClose, onExitComplete, layoutId }: ProfileModa
                                 </div>
 
                                 {/* Sidebar Content: Avatar & Socials */}
-                                <motion.div
-                                    className="flex-1 overflow-y-auto px-5 pb-5 md:px-6 md:pb-6 flex flex-col items-start"
-                                    initial={{ opacity: 0, y: 10 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    transition={{ delay: 0.2, duration: 0.4 }}
-                                >
+                                {/* 头像/名字/邮箱与 ProfileCard 共享 layoutId 做连贯 morph，
+                                    不能被带延迟淡入的父容器包住，否则 morph 起点会被藏住 */}
+                                <div className="flex-1 overflow-y-auto px-5 pb-5 md:px-6 md:pb-6 flex flex-col items-start">
                                     <div className="flex flex-row md:flex-col items-center md:items-start w-full gap-5 md:gap-0 mb-6 md:mb-0">
                                         <div className="w-16 h-16 md:w-32 md:h-32 flex-shrink-0 relative md:mt-4 md:mb-5">
-                                            <div className="w-full h-full rounded-full overflow-hidden shadow-lg">
+                                            <motion.div
+                                                layoutId={layoutId ? `${layoutId}-avatar` : undefined}
+                                                className="w-full h-full rounded-full overflow-hidden shadow-lg"
+                                            >
                                                 <img src={personalInfo.avatar} alt="Avatar" className="w-full h-full object-cover" />
-                                            </div>
+                                            </motion.div>
                                             <div className="absolute bottom-1 right-1 w-3.5 h-3.5 md:w-6 md:h-6 bg-[#34c759] rounded-full border-[2px] md:border-[3px] border-white dark:border-[#2c2c2e] z-10"></div>
                                         </div>
 
                                         <div className="flex flex-col">
-                                            <h2 className="text-xl md:text-2xl font-bold text-[#1d1d1f] dark:text-white mb-0.5 md:mb-1">{personalInfo.name}</h2>
-                                            <p className="text-[#86868b] dark:text-[#98989d] text-[13px] md:text-[14px] font-medium md:mb-6">{personalInfo.email}</p>
+                                            <motion.h2
+                                                layoutId={layoutId ? `${layoutId}-name` : undefined}
+                                                className="text-xl md:text-2xl font-bold text-[#1d1d1f] dark:text-white mb-0.5 md:mb-1"
+                                            >
+                                                {personalInfo.name}
+                                            </motion.h2>
+                                            <motion.p
+                                                layoutId={layoutId ? `${layoutId}-email` : undefined}
+                                                className="text-[#86868b] dark:text-[#98989d] text-[13px] md:text-[14px] font-medium md:mb-6"
+                                            >
+                                                {personalInfo.email}
+                                            </motion.p>
                                         </div>
                                     </div>
 
 
 
-                                    <div className="w-full grid grid-cols-3 gap-3 md:flex md:flex-col md:space-y-3">
+                                    <motion.div
+                                        className="w-full grid grid-cols-3 gap-3 md:flex md:flex-col md:space-y-3"
+                                        initial={{ opacity: 0, y: 10 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        transition={{ delay: 0.2, duration: 0.4 }}
+                                    >
                                         {socialLinks.map((link: SocialLink, idx: number) => (
                                             <a
                                                 key={idx}
@@ -163,7 +171,7 @@ const ProfileModal = ({ isOpen, onClose, onExitComplete, layoutId }: ProfileModa
                                                 </div>
                                             </a>
                                         ))}
-                                    </div>
+                                    </motion.div>
 
                                     <div className="flex-1"></div>
 
@@ -171,7 +179,7 @@ const ProfileModal = ({ isOpen, onClose, onExitComplete, layoutId }: ProfileModa
                                     <div className="mt-8 text-center text-[#86868b] text-[12px] opacity-60">
                                         Designed by damesck<br />with {isWin98 ? 'Windows' : 'Apple'} aesthetic
                                     </div>
-                                </motion.div>
+                                </div>
                             </div>
 
                             {/* Right Content Area */}

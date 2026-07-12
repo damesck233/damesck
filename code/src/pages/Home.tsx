@@ -21,7 +21,6 @@ import {
 // 导入博客数据
 import BlogCard from '../components/home/BlogCard';
 const BlogModal = lazy(() => import('../components/home/modals/BlogModal'));
-import { blogData as localBlogData } from '../data/blog/data';
 
 // 导入卡片数据
 import skills from '../data/cards/skills.json';
@@ -30,6 +29,7 @@ import devices from '../data/cards/devices.json';
 import countdown from '../data/cards/countdown.json';
 import myData from '../data/my/data.json';
 import { usePerformanceMotion } from '../hooks/usePerformanceMotion';
+import { useBlogPosts } from '../hooks/useBlogPosts';
 
 const { personalInfo, socialLinks } = myData;
 import ProfileCard from '../components/home/ProfileCard';
@@ -142,24 +142,6 @@ interface ApiResponse {
 }
 
 type ModalKey = 'personal' | 'skills' | 'stats' | 'devices' | 'countdown' | 'blogs';
-
-const initialHoveredCardsState: Record<ModalKey, boolean> = {
-  personal: false,
-  skills: false,
-  stats: false,
-  devices: false,
-  countdown: false,
-  blogs: false
-};
-
-const initialHoveredHeadersState: Record<ModalKey, boolean> = {
-  personal: false,
-  skills: false,
-  stats: false,
-  devices: false,
-  countdown: false,
-  blogs: false
-};
 
 const initialModalState: Record<ModalKey, boolean> = {
   personal: false,
@@ -440,42 +422,12 @@ const Home = () => {
     return calculateDaysLeft(mainCountdown.targetDate);
   });
 
-  // 悬停状态管理
-  const [hoveredCards, setHoveredCards] = useState(initialHoveredCardsState);
-
-  // 标题悬停状态
-  const [hoveredHeaders, setHoveredHeaders] = useState(initialHoveredHeadersState);
-
   // 模态框状态
   const [modalOpen, setModalOpen] = useState(initialModalState);
   const [closingModals, setClosingModals] = useState<Record<ModalKey, boolean>>(initialModalState);
 
-  // 存储从API获取的博客文章
-  const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [apiError, setApiError] = useState<ApiError | null>(null);
-
-  const handleMouseEnter = (card: ModalKey) => {
-    // 立即设置悬停状态，无需延迟
-    setHoveredCards(prev => ({ ...prev, [card]: true }));
-  };
-
-  const handleMouseLeave = (card: ModalKey) => {
-    // 添加短暂延迟，避免鼠标在卡片边缘移动时状态快速切换
-    setTimeout(() => {
-      setHoveredCards(prev => ({ ...prev, [card]: false }));
-    }, 50);
-  };
-
-  const handleHeaderMouseEnter = (header: ModalKey) => {
-    setHoveredHeaders(prev => ({ ...prev, [header]: true }));
-  };
-
-  const handleHeaderMouseLeave = (header: ModalKey) => {
-    setTimeout(() => {
-      setHoveredHeaders(prev => ({ ...prev, [header]: false }));
-    }, 50);
-  };
+  // 博客文章：与博客页共用同一数据源（自建 API 优先，失败回退本地数据）
+  const { blogPosts, loading, apiError } = useBlogPosts();
 
   const openModal = (modal: ModalKey) => {
     setClosingModals(prev => ({ ...prev, [modal]: false }));
@@ -483,8 +435,6 @@ const Home = () => {
   };
 
   const closeModal = (modal: ModalKey) => {
-    setHoveredCards(prev => ({ ...prev, [modal]: false }));
-    setHoveredHeaders(prev => ({ ...prev, [modal]: false }));
     setClosingModals(prev => ({ ...prev, [modal]: true }));
     setModalOpen(prev => ({ ...prev, [modal]: false }));
   };
@@ -505,104 +455,6 @@ const Home = () => {
     const timer = setInterval(updateDaysLeft, 86400000); // 每24小时更新一次
     return () => clearInterval(timer);
   }, [countdownData]);
-
-  // 博客文章获取函数
-  const fetchBlogPosts = async () => {
-    setLoading(true);
-    try {
-      let blogData;
-      try {
-        const response = await fetch('https://blog.damesck.net/api/posts?pageSize=9999');
-        const contentType = response.headers.get("content-type");
-        if (contentType && contentType.includes("application/json")) {
-          blogData = await response.json();
-        } else {
-          throw new Error("Non-JSON response (Cloudflare)");
-        }
-      } catch (e) {
-        console.warn("API Fetch failed, using local data:", e);
-        blogData = localBlogData;
-      }
-
-      // 处理数据
-      if (blogData && blogData.status === "success" && blogData.data && blogData.data.dataSet) {
-        // Limit to 12 recent posts to avoid main thread blocking by DOMParser
-        const recentPosts = blogData.data.dataSet.slice(0, 12);
-        const formattedBlogData: BlogPost[] = recentPosts.map((post: any) => {
-          // 从HTML内容中提取纯文本以显示摘要
-          const stripHtml = (html: string) => {
-            const doc = new DOMParser().parseFromString(html, 'text/html');
-            return doc.body.textContent || "";
-          };
-
-          // 计算阅读时间
-          const content = stripHtml(post.digest || '');
-          const wordsPerMinute = 200; // 假设平均阅读速度是每分钟200字
-          const wordCount = content.trim().split(/\s+/).length;
-          const readTime = Math.max(1, Math.ceil(wordCount / wordsPerMinute));
-
-          // 格式化日期
-          const formatDate = (timestamp: number) => {
-            const date = new Date(timestamp * 1000);
-            return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
-          };
-
-          // 提取分类或标签
-          const categories = post.categories ? post.categories.map((cat: any) => ({
-            mid: cat.mid || 0,
-            name: cat.name || '未分类',
-            slug: cat.slug || ''
-          })) : [];
-
-          // 返回格式化后的博客文章
-          return {
-            cid: post.cid || 0,
-            title: post.title || '无标题',
-            slug: post.slug || '',
-            created: post.created || 0,
-            modified: post.modified || 0,
-            text: post.digest || '',
-            summary: stripHtml(post.digest || '').substring(0, 200) + '...',
-            date: formatDate(post.created || 0),
-            readTime: `${readTime} min read`,
-            categories: categories,
-            tags: categories.map((cat: any) => ({
-              name: cat.name,
-              color: '#' + Math.floor(Math.random() * 16777215).toString(16)
-            }))
-          };
-        });
-
-        setBlogPosts(formattedBlogData);
-      } else {
-        console.error("本地博客数据格式不正确");
-        setBlogPosts([]);
-      }
-    } catch (error) {
-      console.error("加载博客数据时出错:", error);
-      setBlogPosts([]);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // 添加获取随机颜色的辅助函数
-  const getRandomColor = (seed: string) => {
-    // 使用种子生成稳定的颜色
-    let hash = 0;
-    for (let i = 0; i < seed.length; i++) {
-      hash = seed.charCodeAt(i) + ((hash << 5) - hash);
-    }
-    // 生成柔和的颜色
-    const hue = hash % 360;
-    return `hsl(${hue}, 70%, 80%)`;
-  };
-
-  // 在组件挂载时获取博客文章
-  useEffect(() => {
-    console.log("Home组件已挂载，开始获取博客数据");
-    fetchBlogPosts();
-  }, []);
 
   // 获取社交图标
   const getSocialIcon = (iconName: string) => {
@@ -699,44 +551,14 @@ const Home = () => {
     }
   };
 
-  // 添加全局鼠标移动监听器，确保卡片悬停状态正确清除
-  useEffect(() => {
-    const handleMouseMoveOutside = (e: MouseEvent) => {
-      // 检查鼠标是否在页面任何地方移动，但不在卡片内
-      const target = e.target as HTMLElement;
-      if (!target.closest('.card-container')) {
-        // 如果鼠标不在任何卡片内，重置所有卡片的悬停状态
-        setHoveredCards(initialHoveredCardsState);
-      }
-    };
-
-    // 添加全局点击事件，确保点击其他区域时卡片悬停状态被清除
-    const handleClickOutside = () => {
-      if (!modalOpen.personal && !modalOpen.skills && !modalOpen.stats &&
-        !modalOpen.devices && !modalOpen.countdown && !modalOpen.blogs) {
-        setHoveredCards(initialHoveredCardsState);
-      }
-    };
-
-    document.addEventListener('mousemove', handleMouseMoveOutside);
-    document.addEventListener('click', handleClickOutside);
-
-    return () => {
-      document.removeEventListener('mousemove', handleMouseMoveOutside);
-      document.removeEventListener('click', handleClickOutside);
-    };
-  }, [modalOpen]);
-
   return (
-    <motion.div
-      className="max-w-6xl mx-auto px-6 md:px-8 lg:px-12 pt-8 md:pt-12"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.3 }}
-    >
+    // 不做 opacity 淡入：祖先透明度 < 1 会禁用卡片的毛玻璃（backdrop-filter），
+    // 入场淡入由每张卡片的内容层自行处理
+    <div className="max-w-6xl mx-auto px-6 md:px-8 lg:px-12 pt-8 md:pt-12">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         {/* 个人信息卡片 - 使用新组件 */}
         <ProfileCard
+          index={0}
           onClick={() => openModal('personal')}
           hidden={modalOpen.personal}
           closing={!!closingModals.personal}
@@ -744,29 +566,20 @@ const Home = () => {
         />
 
         {/* Activity Card (Replaces Skills & Learning) */}
-        {/* Activity Card (Replaces Skills & Learning) */}
         <ActivityCard
-          // skills={skills} // Deprecated
-          // learningProgress={myLearningProgress} // Deprecated
+          index={1}
           timelineEvents={myData.timelineEvents}
           onClick={() => openModal('skills')}
-          isHovered={hoveredCards.skills}
-          onMouseEnter={() => handleMouseEnter('skills')}
-          onMouseLeave={() => handleMouseLeave('skills')}
-          // variants={fadeIn} // Removed per previous fix
-          custom={1}
           hidden={modalOpen.skills}
           closing={!!closingModals.skills}
           layoutId={enableMorph ? 'activity-card' : undefined}
         />
 
-
         {/* 我的设备卡片 - 使用新数据 */}
         <DevicesCard
+          index={2}
           devices={devices}
           onClick={() => openModal('devices')}
-          onMouseEnter={() => handleMouseEnter('devices')}
-          onMouseLeave={() => handleMouseLeave('devices')}
           layoutId={enableMorph ? 'devices-card' : undefined}
           hidden={modalOpen.devices}
           closing={!!closingModals.devices}
@@ -774,10 +587,9 @@ const Home = () => {
 
         {/* 倒计时卡片 - 使用新数据 */}
         <CountdownCard
+          index={3}
           events={countdownData}
           onClick={() => openModal('countdown')}
-          onMouseEnter={() => handleMouseEnter('countdown')}
-          onMouseLeave={() => handleMouseLeave('countdown')}
           layoutId={enableMorph ? 'countdown-card' : undefined}
           hidden={modalOpen.countdown}
           closing={!!closingModals.countdown}
@@ -785,12 +597,11 @@ const Home = () => {
 
         {/* 最新博客卡片 */}
         <BlogCard
+          index={4}
           blogPosts={blogPosts}
           loading={loading}
           apiError={apiError}
           onClick={() => openModal('blogs')}
-          onMouseEnter={() => handleMouseEnter('blogs')}
-          onMouseLeave={() => handleMouseLeave('blogs')}
           hidden={modalOpen.blogs}
           closing={!!closingModals.blogs}
           layoutId={enableMorph ? 'blog-card' : undefined}
@@ -852,7 +663,7 @@ const Home = () => {
         />
       </Suspense>
 
-    </motion.div >
+    </div>
   );
 };
 

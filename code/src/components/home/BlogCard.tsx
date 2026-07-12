@@ -1,33 +1,28 @@
 import { motion } from 'framer-motion';
 import { DocumentTextIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
 import { BlogPost, ApiError } from '../../types';
-import { useTiltPress } from '../../hooks/useTiltPress';
+import InteractiveCard from './InteractiveCard';
 
 interface BlogCardProps {
     blogPosts: BlogPost[];
     loading: boolean;
     apiError: ApiError | null;
     onClick: () => void;
-    onMouseEnter: () => void;
-    onMouseLeave: () => void;
     hidden?: boolean;
     closing?: boolean;
     layoutId?: string;
+    index?: number;
 }
 
 const BlogCard: React.FC<BlogCardProps> = ({
     blogPosts,
     loading,
     onClick,
-    onMouseEnter,
-    onMouseLeave,
     hidden = false,
     closing = false,
-    layoutId
+    layoutId,
+    index = 0
 }) => {
-    const { tiltStyle, onPointerDown, onPointerUp, onPointerLeave } = useTiltPress();
-    const isSuppressed = hidden || closing;
-    const isVisible = !hidden;
     const posts = blogPosts.slice(0, 4);
     const featured = posts[0];
     const topRight = posts[1];
@@ -37,20 +32,13 @@ const BlogCard: React.FC<BlogCardProps> = ({
         new Date(ts * 1000).toLocaleDateString('zh-CN', { month: 'short', day: 'numeric' });
 
     return (
-        <motion.div
+        <InteractiveCard
+            index={index}
+            className="md:col-span-3 aspect-auto md:h-[320px]"
             layoutId={layoutId}
-            className={`md:col-span-3 cursor-pointer group relative z-10 overflow-hidden rounded-[32px] duration-200 aspect-auto md:h-[320px] bg-white/40 dark:bg-[#1c1c1e]/60 backdrop-blur-xl transition-colors duration-300 ${isSuppressed ? 'pointer-events-none' : ''}`}
-            animate={{ opacity: isVisible ? 1 : 0 }}
-            onMouseEnter={isSuppressed ? undefined : onMouseEnter}
-            onMouseLeave={isSuppressed ? undefined : onMouseLeave}
-            onClick={isSuppressed ? undefined : onClick}
-            whileHover={isSuppressed ? undefined : { scale: 1.02 }}
-            whileTap={isSuppressed ? undefined : { scale: 0.98 }}
-            transition={{ type: "spring", stiffness: 250, damping: 25, mass: 1.0 }}
-            style={tiltStyle}
-            onPointerDown={isSuppressed ? undefined : onPointerDown}
-            onPointerUp={isSuppressed ? undefined : onPointerUp}
-            onPointerLeave={isSuppressed ? undefined : onPointerLeave}
+            hidden={hidden}
+            closing={closing}
+            onClick={onClick}
         >
             <div className="absolute inset-0 bg-gradient-to-br from-pink-50/50 to-rose-50/50 dark:from-pink-900/20 dark:to-rose-900/20 z-0 opacity-80" />
 
@@ -211,7 +199,7 @@ const BlogCard: React.FC<BlogCardProps> = ({
 
                 </div>{/* end content row */}
             </div>
-        </motion.div>
+        </InteractiveCard>
     );
 };
 

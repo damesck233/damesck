@@ -1,4 +1,5 @@
 import { motion, AnimatePresence } from 'framer-motion';
+import { morphSpring } from "../cardMotion";
 import {
     XMarkIcon,
     MinusIcon,
@@ -84,15 +85,7 @@ const CountdownModal: React.FC<CountdownModalProps> = ({
                             exit={!layoutId ? { opacity: 0, scale: 0.95 } : undefined}
                             className="w-full md:max-w-[900px] h-[85vh] md:h-[700px] bg-white/95 dark:bg-[#1c1c1e]/95 rounded-[32px] shadow-2xl overflow-y-auto md:overflow-hidden pointer-events-auto flex flex-col md:flex-row relative p-2"
                             style={{ willChange: "transform" }}
-                            transition={layoutId ? {
-                                type: "spring",
-                                stiffness: 300,
-                                damping: 30,
-                                mass: 1.0
-                            } : {
-                                duration: 0.2,
-                                ease: "easeOut"
-                            }}
+                            transition={layoutId ? morphSpring : { duration: 0.2, ease: "easeOut" }}
                         >
                             {/* Sidebar */}
                             <div className="w-full md:w-[280px] flex-shrink-0 bg-white/60 dark:bg-white/5 backdrop-blur-xl rounded-[24px] shadow-sm flex flex-col relative overflow-hidden border-b md:border-b-0 md:border-r border-[#FEF9F1] dark:border-white/5 z-20">

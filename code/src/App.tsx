@@ -198,17 +198,11 @@ function AppInner() {
 
       <Win98Easter isActive={isWin98} onClose={dismissWin98} />
 
-      {/* 主内容区域 - 使用Apple风格的动画 */}
-      <motion.div
+      {/* 主内容区域
+          注意：这里不能做 opacity 淡入 —— 祖先 opacity < 1 会让 Chrome
+          禁用子树里所有 backdrop-filter，毛玻璃会在淡入结束时突然出现 */}
+      <div
         key="main-content"
-        initial={{ opacity: isLowPerf ? 1 : 0 }}
-        animate={{ opacity: 1 }}
-        transition={isLowPerf ? { duration: 0 } : {
-          duration: 1.2,
-          ease: appleEaseOut,
-          delay: 0.1,
-          opacity: { duration: 1.2 }
-        }}
         className="min-h-screen flex flex-col relative"
         style={{ minHeight: '100dvh' }}
         ref={mainContentRef}
@@ -217,10 +211,10 @@ function AppInner() {
         <DynamicIslandNav />
 
 
-        {/* 分离的页面内容组件 */}
+        {/* 分离的页面内容组件（只做位移，opacity 淡入会禁用子树毛玻璃） */}
         <motion.div
-          initial={{ opacity: isLowPerf ? 1 : 0, y: isLowPerf ? 0 : 20 }}
-          animate={{ opacity: 1, y: 0 }}
+          initial={{ y: isLowPerf ? 0 : 20 }}
+          animate={{ y: 0 }}
           transition={isLowPerf ? { duration: 0 } : {
             duration: 0.8,
             ease: appleEaseOut,
@@ -248,7 +242,7 @@ function AppInner() {
             <span>All Right Reserved.</span>
           </div>
         </motion.footer>
-      </motion.div>
+      </div>
     </Router>
   )
 }

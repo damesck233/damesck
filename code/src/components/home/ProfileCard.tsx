@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import myData from '../../data/my/data.json';
-import { useTiltPress } from '../../hooks/useTiltPress';
+import InteractiveCard from './InteractiveCard';
 const { personalInfo } = myData;
 
 interface ProfileCardProps {
@@ -8,26 +8,18 @@ interface ProfileCardProps {
     layoutId?: string;
     hidden?: boolean;
     closing?: boolean;
+    index?: number;
 }
 
-const ProfileCard = ({ onClick, layoutId, hidden = false, closing = false }: ProfileCardProps) => {
-    const { tiltStyle, onPointerDown, onPointerUp, onPointerLeave } = useTiltPress();
-    const isSuppressed = hidden || closing;
-    const isVisible = !hidden;
-
+const ProfileCard = ({ onClick, layoutId, hidden = false, closing = false, index = 0 }: ProfileCardProps) => {
     return (
-        <motion.div
-            layoutId={layoutId} // 启用布局动画，实现无缝过渡
-            className={`aspect-square cursor-pointer group relative z-10 overflow-hidden rounded-[32px] duration-200 bg-white/40 dark:bg-[#1c1c1e]/60 backdrop-blur-xl transition-colors duration-300 ${isSuppressed ? 'pointer-events-none' : ''}`}
-            animate={{ opacity: isVisible ? 1 : 0 }}
-            onClick={isSuppressed ? undefined : onClick}
-            whileHover={isSuppressed ? undefined : { scale: 1.02 }}
-            whileTap={isSuppressed ? undefined : { scale: 0.98 }}
-            transition={{ type: "spring", stiffness: 250, damping: 25, mass: 1.0 }}
-            style={tiltStyle}
-            onPointerDown={isSuppressed ? undefined : onPointerDown}
-            onPointerUp={isSuppressed ? undefined : onPointerUp}
-            onPointerLeave={isSuppressed ? undefined : onPointerLeave}
+        <InteractiveCard
+            index={index}
+            className="aspect-square"
+            layoutId={layoutId}
+            hidden={hidden}
+            closing={closing}
+            onClick={onClick}
         >
             {/* Gradient Overlay for Pink Glassmorphism tint */}
             <div className="absolute inset-0 bg-gradient-to-br from-[#FCE7F3]/80 to-[#FBCFE8]/80 dark:from-pink-500/10 dark:to-rose-600/5 z-0"></div>
@@ -46,19 +38,29 @@ const ProfileCard = ({ onClick, layoutId, hidden = false, closing = false }: Pro
                 <div className="relative mt-4">
                     {/* Ring/Halo effect around avatar to match the 'cloud' look */}
                     <div className="w-32 h-32 rounded-full bg-white/50 dark:bg-pink-400/15 absolute -top-2 -left-2 blur-sm transition-colors duration-300"></div>
-                    <div className="w-28 h-28 rounded-full shadow-lg overflow-hidden relative z-10 transition-colors duration-300">
+                    {/* 头像与模态框侧栏共享 layoutId，展开时连贯 morph 过去 */}
+                    <motion.div
+                        layoutId={layoutId ? `${layoutId}-avatar` : undefined}
+                        className="w-28 h-28 rounded-full shadow-lg overflow-hidden relative z-10 transition-colors duration-300"
+                    >
                         <img src={personalInfo.avatar} alt="Avatar" className="w-full h-full object-cover" />
-                    </div>
+                    </motion.div>
                 </div>
 
                 {/* Text Info */}
                 <div className="flex flex-col items-start gap-0.5 mb-1 text-[#1d1d1f] dark:text-white transition-colors duration-300">
-                    <h2 className="text-[32px] font-bold tracking-tight leading-none mb-1">
+                    <motion.h2
+                        layoutId={layoutId ? `${layoutId}-name` : undefined}
+                        className="text-[32px] font-bold tracking-tight leading-none mb-1"
+                    >
                         {personalInfo.name}
-                    </h2>
-                    <p className="text-[15px] text-[#1d1d1f]/60 dark:text-white/60 font-medium">
+                    </motion.h2>
+                    <motion.p
+                        layoutId={layoutId ? `${layoutId}-email` : undefined}
+                        className="text-[15px] text-[#1d1d1f]/60 dark:text-white/60 font-medium"
+                    >
                         {personalInfo.email}
-                    </p>
+                    </motion.p>
                     <div className="mt-3 text-[14px] font-bold flex items-center gap-1">
                         致不完美的明天<span className="text-[16px] relative -top-[1px]">_</span>
                     </div>
@@ -67,8 +69,7 @@ const ProfileCard = ({ onClick, layoutId, hidden = false, closing = false }: Pro
 
             {/* Subtle Shine/Reflection */}
             <div className="absolute top-0 right-0 w-2/3 h-2/3 bg-gradient-to-bl from-white/20 dark:from-transparent to-transparent pointer-events-none rounded-tr-[32px]"></div>
-
-        </motion.div >
+        </InteractiveCard>
     );
 };
 

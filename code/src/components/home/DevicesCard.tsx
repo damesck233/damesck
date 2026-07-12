@@ -6,7 +6,7 @@ import {
     CpuChipIcon,
     ChevronRightIcon
 } from '@heroicons/react/24/outline';
-import { useTiltPress } from '../../hooks/useTiltPress';
+import InteractiveCard from './InteractiveCard';
 
 export interface Device {
     name: string;
@@ -23,25 +23,20 @@ export interface Device {
 interface DevicesCardProps {
     devices: Device[];
     onClick: () => void;
-    onMouseEnter: () => void;
-    onMouseLeave: () => void;
     layoutId?: string;
     hidden?: boolean;
     closing?: boolean;
+    index?: number;
 }
 
 const DevicesCard: React.FC<DevicesCardProps> = ({
     devices,
     onClick,
-    onMouseEnter,
-    onMouseLeave,
     layoutId,
     hidden = false,
-    closing = false
+    closing = false,
+    index = 0
 }) => {
-    const { tiltStyle, onPointerDown, onPointerUp, onPointerLeave } = useTiltPress();
-    const isSuppressed = hidden || closing;
-    const isVisible = !hidden;
     // Get top 3 devices
     const topDevices = devices ? devices.slice(0, 3) : [];
 
@@ -54,20 +49,13 @@ const DevicesCard: React.FC<DevicesCardProps> = ({
     };
 
     return (
-        <motion.div
+        <InteractiveCard
+            index={index}
+            className="md:col-span-2 aspect-auto md:h-full"
             layoutId={layoutId}
-            className={`md:col-span-2 cursor-pointer group relative z-10 overflow-hidden rounded-[32px] duration-200 aspect-auto md:h-full bg-white/40 dark:bg-[#1c1c1e]/60 backdrop-blur-xl transition-colors duration-300 ${isSuppressed ? 'pointer-events-none' : ''}`}
-            animate={{ opacity: isVisible ? 1 : 0 }}
-            onMouseEnter={isSuppressed ? undefined : onMouseEnter}
-            onMouseLeave={isSuppressed ? undefined : onMouseLeave}
-            onClick={isSuppressed ? undefined : onClick}
-            whileHover={isSuppressed ? undefined : { scale: 1.02 }}
-            whileTap={isSuppressed ? undefined : { scale: 0.98 }}
-            transition={{ type: "spring", stiffness: 250, damping: 25, mass: 1.0 }}
-            style={tiltStyle}
-            onPointerDown={isSuppressed ? undefined : onPointerDown}
-            onPointerUp={isSuppressed ? undefined : onPointerUp}
-            onPointerLeave={isSuppressed ? undefined : onPointerLeave}
+            hidden={hidden}
+            closing={closing}
+            onClick={onClick}
         >
             {/* Gradient Overlay */}
             <div className="absolute inset-0 bg-gradient-to-br from-orange-100/50 to-amber-100/50 dark:from-orange-900/20 dark:to-amber-900/20 z-0 opacity-80"></div>
@@ -143,7 +131,7 @@ const DevicesCard: React.FC<DevicesCardProps> = ({
                 </div>
 
             </div>
-        </motion.div>
+        </InteractiveCard>
     );
 };
 
